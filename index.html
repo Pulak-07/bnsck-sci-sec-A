@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BNSCK HSC 2027 Science Section A </title>
+  <title>BNSCK HSC 2027 Science Section A — Digital Batch Capsule</title>
   
-  <meta name="description" content="Dedicated digital batch archive and student capsule for HSC 2027 Science Section A, Bangladesh Noubahi School and College Kaptai. Located at BNS Shaheed Moazzam, Kaptai.">
+  <meta name="description" content="Dedicated digital batch archive and student capsule for HSC 2027 Science Section A, Bangladesh Noubahini School and College Kaptai. Located at BNS Shaheed Moazzam, Kaptai.">
   <link rel="icon" type="image/png" sizes="16x16" href="https://apiimage.astutebd.com/Uploads/bnsck/maincampus/About%20School//1072021113810AMzx.png">
     
   <!-- Tailwind CSS CDN -->
@@ -112,6 +112,7 @@
       box-shadow: 0 4px 18px rgba(29, 111, 238, 0.55), 0 0 12px rgba(0, 229, 255, 0.4);
     }
 
+    /* Student Card Design Tokens */
     .student-classic-card {
       background: rgba(8, 20, 42, 0.72);
       backdrop-filter: blur(14px);
@@ -162,6 +163,24 @@
       color: #38bdf8;
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
       border: 1px solid rgba(56, 189, 248, 0.6);
+    }
+
+    /* Photo Gallery Card Styles Matched to Preview Screenshot */
+    .gallery-preview-card {
+      background: rgba(7, 16, 35, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 229, 255, 0.22);
+      border-radius: 1.75rem;
+      overflow: hidden;
+      box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 229, 255, 0.08);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .gallery-preview-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0, 229, 255, 0.6);
+      box-shadow: 0 25px 50px -10px rgba(0, 229, 255, 0.22), 0 0 25px rgba(0, 229, 255, 0.15);
     }
 
     @keyframes locationPulse {
@@ -240,6 +259,12 @@
   <!-- Top Reading Scroll Progress Bar -->
   <div id="scroll-progress-bar"></div>
 
+  <!-- Toast Notice -->
+  <div id="toast-notice" class="fixed bottom-6 right-6 z-50 glass-panel px-4 py-2.5 rounded-2xl border-cyan-400/50 text-cyan-300 text-xs font-bold shadow-2xl flex items-center gap-2 opacity-0 pointer-events-none transform translate-y-2 transition-all duration-300">
+    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <span id="toast-message">Photo link copied to clipboard!</span>
+  </div>
+
   <header id="unified-navbar" class="fixed top-3 sm:top-5 left-0 w-full z-50 px-3 sm:px-6 pointer-events-none flex justify-center">
     <div class="pill-navbar inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 pointer-events-auto max-w-[96vw] sm:max-w-max mx-auto shadow-2xl">
       
@@ -275,6 +300,7 @@
 
   <main class="relative z-10 pt-24 sm:pt-32">
 
+    <!-- HERO SECTION -->
     <section id="hero" class="relative min-h-[88vh] flex items-center justify-center text-center px-4 py-12 sm:py-16 overflow-hidden">
       <div class="max-w-5xl mx-auto space-y-6 animate-pop">
         
@@ -318,13 +344,14 @@
           <a href="#students" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-500 text-white text-sm font-bold tracking-wider hover:shadow-lg hover:shadow-cyan-500/40 hover:scale-105 transition-all duration-300">
             About Us
           </a>
-          <a href="#constellation" class="px-7 py-3.5 rounded-full glass-panel border-white/15 text-slate-200 hover:text-cyan-300 hover:border-cyan-400/40 text-sm tracking-wider transition-all duration-300">
-            Open 3D Constellation
+          <a href="#gallery" class="px-7 py-3.5 rounded-full glass-panel border-white/15 text-slate-200 hover:text-cyan-300 hover:border-cyan-400/40 text-sm tracking-wider transition-all duration-300">
+            View Photo Gallery
           </a>
         </div>
       </div>
     </section>
 
+    <!-- SECTION A STORY -->
     <section id="story" class="relative py-20 px-4 sm:px-6 max-w-6xl mx-auto animate-pop">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-5xl font-bold text-white tracking-wide">The Legacy of Section A</h2>
@@ -393,6 +420,7 @@
       </div>
     </section>
 
+    <!-- 3D CONSTELLATION SECTION -->
     <section id="constellation" class="relative py-20 px-4 sm:px-6 max-w-6xl mx-auto animate-pop">
       <div class="text-center mb-8">
         <h2 class="text-3xl sm:text-5xl font-bold text-white">Our Batch, One Constellation</h2>
@@ -419,6 +447,7 @@
       </div>
     </section>
 
+    <!-- STUDENTS ARCHIVE SECTION -->
     <section id="students" class="relative py-24 px-4 sm:px-6 max-w-7xl mx-auto animate-pop">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
         <div>
@@ -465,6 +494,7 @@
       </div>
     </section>
 
+    <!-- FACULTY & MENTORS SECTION -->
     <section id="teachers" class="relative py-20 px-4 sm:px-6 max-w-6xl mx-auto animate-pop">
       <div class="text-center mb-12">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-2">
@@ -478,14 +508,10 @@
       </div>
 
       <!-- Leadership Grid: Principal & Vice Principal -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10" id="leadership-teachers-container">
-        <!-- Rendered permanently from verified local teacher data -->
-      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10" id="leadership-teachers-container"></div>
 
       <!-- Spotlight: Class Teacher (Biology Sir) -->
-      <div class="mb-10" id="class-teacher-container">
-        <!-- Rendered permanently from verified local teacher data -->
-      </div>
+      <div class="mb-10" id="class-teacher-container"></div>
 
       <!-- Subject Teachers Section Header -->
       <div class="text-center mb-6">
@@ -494,11 +520,10 @@
       </div>
 
       <!-- Complete Subject Teachers Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6" id="subject-teachers-grid">
-        <!-- Rendered permanently from verified local teacher data -->
-      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6" id="subject-teachers-grid"></div>
     </section>
 
+    <!-- ACADEMIC JOURNEY SECTION -->
     <section id="timeline" class="relative py-20 px-4 sm:px-6 max-w-5xl mx-auto animate-pop">
       <div class="text-center mb-12">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-2">
@@ -516,6 +541,7 @@
       </div>
     </section>
 
+    <!-- DIGITAL TIME CAPSULE SECTION -->
     <section id="memories" class="relative py-20 px-4 sm:px-6 max-w-6xl mx-auto animate-pop">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-5xl font-bold text-white">Digital Time Capsule</h2>
@@ -528,18 +554,26 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="capsule-container"></div>
     </section>
 
-    <section id="gallery" class="relative py-20 px-4 sm:px-6 max-w-6xl mx-auto animate-pop">
+    <!-- PHOTO GALLERY SECTION -->
+    <section id="gallery" class="relative py-20 px-4 sm:px-6 max-w-7xl mx-auto animate-pop">
       <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-2">
+          Visual Memories
+        </div>
         <h2 class="text-3xl sm:text-5xl font-bold text-white">Photo Gallery</h2>
-        <p class="text-sm sm:text-base text-slate-300 mt-2 italic">
-          Classroom frames, navy campus vistas, and cohort memories.
+        <p class="text-sm sm:text-base text-slate-300 mt-2 italic max-w-2xl mx-auto">
+          Classroom frames, navy campus vistas, family moments, and cohort memories. 
         </p>
         <div class="w-20 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent mx-auto mt-3"></div>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="gallery-container"></div>
+      <!-- Responsive Grid for Gallery Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" id="gallery-container">
+        <!-- Rendered dynamically -->
+      </div>
     </section>
 
+    <!-- FOOTER SECTION -->
     <footer class="relative bg-navy-950/95 border-t border-white/10 pt-16 pb-12 text-slate-400 text-sm">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-white/10">
@@ -566,7 +600,7 @@
               <li><a href="#constellation" class="hover:text-cyan-300">3D Stars Constellation</a></li>
               <li><a href="#students" class="hover:text-cyan-300">About Us (50 Stars)</a></li>
               <li><a href="#teachers" class="hover:text-cyan-300">Faculty & Mentors</a></li>
-              <li><a href="#timeline" class="hover:text-cyan-300">Academic Journey</a></li>
+              <li><a href="#gallery" class="hover:text-cyan-300">Photo Gallery</a></li>
             </ul>
           </div>
 
@@ -610,14 +644,12 @@
         </div>
 
         <div class="text-center sm:text-left space-y-1.5 flex-grow">
-          <!-- Tag and Badge Header -->
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 mb-1" id="modal-badge-container">
             <div class="inline-block px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold">
               HSC 2027 • Science • Section A
             </div>
-            <!-- Dynamic Sheet Title Badge (Shown ONLY if student has a title in Sheet) -->
-            <span id="modal-role-badge" class="hidden px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide shadow-md">
-            </span>
+            <!-- Dynamic Sheet Title Badge (Only shows if student has a title in Sheet) -->
+            <span id="modal-role-badge" class="hidden px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide shadow-md"></span>
           </div>
 
           <h3 id="modal-name" class="text-2xl font-bold text-white">Student Name</h3>
@@ -633,7 +665,7 @@
     </div>
   </div>
 
-  <!-- MODAL: DEDICATED TEACHER & MENTOR DOSSIER -->
+  <!-- MODAL: TEACHER & MENTOR DOSSIER -->
   <div id="teacher-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
     <div class="relative w-full max-w-xl glass-panel rounded-3xl border-cyan-400/50 p-6 sm:p-8 shadow-2xl bg-navy-950/95 overflow-hidden">
       <button id="btn-close-teacher-modal" aria-label="Close modal" class="absolute top-4 right-4 w-8 h-8 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-white border-white/20 transition-colors">
@@ -671,6 +703,48 @@
       <div class="mt-6 pt-4 border-t border-white/10 flex flex-col sm:flex-row justify-between text-xs text-slate-400 gap-2">
         <div><strong>Institution:</strong> Bangladesh Noubahini School & College Kaptai</div>
         <div><strong>Campus:</strong> BNS Shaheed Moazzam</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PHOTO GALLERY LIGHTBOX (MATCHED TO REFERENCE DESIGN) -->
+  <div id="gallery-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg hidden items-center justify-center p-4">
+    <div class="relative w-full max-w-3xl glass-panel rounded-3xl border-cyan-400/50 p-4 sm:p-6 shadow-2xl bg-navy-950/95 overflow-hidden flex flex-col max-h-[92vh]">
+      
+      <!-- Close Button -->
+      <button id="btn-close-gallery-modal" aria-label="Close modal" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-navy-950/90 hover:bg-cyan-500/20 flex items-center justify-center text-slate-200 hover:text-white border border-white/20 transition-all">
+        ✕
+      </button>
+
+      <!-- Lightbox Image Container -->
+      <div class="relative w-full rounded-2xl overflow-hidden bg-black/80 flex items-center justify-center min-h-[260px] max-h-[58vh]">
+        <img id="gallery-modal-img" src="" alt="Full Preview" class="max-w-full max-h-[58vh] object-contain hidden" />
+        <div id="gallery-modal-fallback" class="p-12 text-center text-cyan-300">
+          <svg class="w-16 h-16 mx-auto text-cyan-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span class="text-sm font-semibold mt-2 block">No preview image available</span>
+        </div>
+      </div>
+
+      <!-- Lightbox Details -->
+      <div class="mt-4 px-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2">
+            <span id="gallery-modal-tag" class="px-3 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-[10px] font-bold uppercase tracking-widest">
+              CAMPUS
+            </span>
+          </div>
+          <h3 id="gallery-modal-title" class="text-xl sm:text-2xl font-bold text-white font-serif tracking-wide">Photo Title</h3>
+          <p id="gallery-modal-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+            Description of the photo...
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 flex-shrink-0 self-end sm:self-center">
+          <button id="gallery-modal-share-btn" class="px-4 py-2 rounded-xl glass-panel border-cyan-400/40 text-cyan-300 hover:text-white hover:bg-cyan-500/20 text-xs font-bold transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+            Share Photo
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -742,23 +816,40 @@
     function getField(obj, ...names) {
       if (!obj || typeof obj !== 'object') return '';
       const keys = Object.keys(obj);
+      // Phase 1: EXACT match
       for (const name of names) {
         const target = name.toLowerCase().replace(/[\s_\-.]/g, '');
         for (const k of keys) {
-          if (k.toLowerCase().replace(/[\s_\-.]/g, '') === target) {
+          const cleanK = k.toLowerCase().replace(/[\s_\-.]/g, '');
+          if (cleanK === target) {
             const val = obj[k];
-            return val !== undefined && val !== null ? String(val).trim() : '';
+            if (val !== undefined && val !== null && String(val).trim() !== '') {
+              return String(val).trim();
+            }
+          }
+        }
+      }
+      // Phase 2: Prefix match only if no exact match (prevents "photo" matching "phototitle")
+      for (const name of names) {
+        const target = name.toLowerCase().replace(/[\s_\-.]/g, '');
+        for (const k of keys) {
+          const cleanK = k.toLowerCase().replace(/[\s_\-.]/g, '');
+          if (cleanK.indexOf(target) === 0 && cleanK.indexOf('title') === -1 && cleanK.indexOf('desc') === -1) {
+            const val = obj[k];
+            if (val !== undefined && val !== null && String(val).trim() !== '') {
+              return String(val).trim();
+            }
           }
         }
       }
       return '';
     }
 
-    // Google Apps Script URL for Students, Timeline, Capsule, and Gallery
-    const GOOGLE_SHEET_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwaagMCafhLnUqFB_MaSIfex2BuAmEOfuARwdqPBaHDlfbswdxXWPVk_3JWMMVnd5Ak/exec";
+    // Google Apps Script Live Web App Endpoint
+    const GOOGLE_SHEET_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynMB3yGW2U4le7WQwoHUzGoYj7wjqynZI5UFtBPrU9HLy76IekVoJgFl6Y7AohK6mg/exec";
 
     /**
-     * INITIAL STUDENTS DATASET (No demo badges: strictly populated from Google Sheet)
+     * INITIAL 50 STUDENTS DATASET (No demo roles: badges populated purely from sheet)
      */
     let STUDENTS_DATA = Array.from({ length: 50 }, (_, i) => {
       const rollNum = String(i + 1).padStart(2, '0');
@@ -766,7 +857,7 @@
         id: `s-${rollNum}`,
         roll: rollNum,
         name: `Classmate Roll ${rollNum}`,
-        role: "", // No hardcoded demo; will be populated purely from Google Sheet
+        role: "",
         photoUrl: "",
         bio: `Member of HSC 2027 Science Section A, Kaptai.`,
         group: "Science",
@@ -775,7 +866,7 @@
     });
 
     /**
-     * PERMANENT TEACHER DATASET
+     * PERMANENT VERIFIED TEACHER DATASET
      */
     const TEACHERS_DATA = [
       {
@@ -826,7 +917,7 @@
       {
         id: "t-math",
         name: "Md. Kamrul Alam Sir",
-        designation: "Lecturer in Mathematics & college co-ordinator ",
+        designation: "Lecturer in Mathematics & college co-ordinator",
         subject: "Higher Mathematics",
         category: "Subject Teacher",
         photoUrl: "https://eunobyvdokmswxbfxent.supabase.co/storage/v1/object/sign/bnsck/boys/WhatsApp%20Image%202026-09-06%20at%2010.59.39%20PM.jpeg?token=eyJraWQiOiJjOTk5NTg3MC0yODYxLTRlN2YtODMxMi0yNDBjYzg1NzQ4ODkiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJibnNjay9ib3lzL1doYXRzQXBwIEltYWdlIDIwMjYtMDktMDYgYXQgMTAuNTkuMzkgUE0uanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODg3MTQwMTIsImV4cCI6MjEwNDA3NDAxMn0.LZBipKRG8fDkmY_cf0KAUe9eaXI-kue_GXdI50KkqkM",
@@ -899,25 +990,55 @@
       }
     ];
 
+    /**
+     * INITIAL GALLERY DATASET
+     * Matched to uploaded reference card format: Title, URL, Desc, and Tag
+     */
     let GALLERY_DATA = [
-      { title: "Campus Entrance", url: "" },
-      { title: "Science Classroom", url: "" },
-      { title: "Physics Laboratory", url: "" },
-      { title: "Kaptai Hill Vista", url: "" }
+      {
+        title: "Family",
+        url: "",
+        desc: "Cherished moments with family, the foundation of character and core values.",
+        tag: "ROOTS"
+      },
+      {
+        title: "Campus Vista",
+        url: "",
+        desc: "Panoramic hills surrounding the naval base campus of BNS Shaheed Moazzam at Kaptai.",
+        tag: "CAMPUS"
+      },
+      {
+        title: "Section A Classroom",
+        url: "",
+        desc: "Cherished study desks and animated problem-solving discussions among classmates.",
+        tag: "ACADEMICS"
+      },
+      {
+        title: "Science Laboratory",
+        url: "",
+        desc: "Hands-on discovery through titration experiments, mechanics apparatus, and biological slides.",
+        tag: "EXPERIMENT"
+      }
     ];
 
-    /**
-     * Resolves badge theme and styling for any role/title from Google Sheets:
-     * - Bus Captain
-     * - Deputy Captain / Vice Captain
-     * - Captain / Class Captain
-     * - Any other custom appointment or title
-     */
+    function showToast(message) {
+      const toast = document.getElementById('toast-notice');
+      const msgEl = document.getElementById('toast-message');
+      if (!toast || !msgEl) return;
+      msgEl.innerText = message || "Copied to clipboard!";
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+      }, 2500);
+    }
+
     function getBadgeStyle(role) {
       if (!role || !role.trim()) return null;
       const rLower = role.toLowerCase().trim();
 
-      // 1. Bus Captain
+      // Bus Captain
       if (rLower.includes('bus')) {
         return {
           cssClass: 'badge-bus-glow',
@@ -926,7 +1047,7 @@
         };
       }
 
-      // 2. Deputy Captain / Vice Captain / Assistant
+      // Deputy Captain / Vice Captain
       if (rLower.includes('deputy') || rLower.includes('vice') || rLower.includes('assistant') || rLower.includes('asst')) {
         return {
           cssClass: 'badge-deputy-glow',
@@ -935,7 +1056,7 @@
         };
       }
 
-      // 3. Class Captain / Captain / Monitor / Head
+      // Class Captain / Captain
       if (rLower.includes('captain') || rLower.includes('monitor') || rLower.includes('prefect') || rLower.includes('cr') || rLower.includes('head')) {
         return {
           cssClass: 'badge-captain-glow',
@@ -944,7 +1065,7 @@
         };
       }
 
-      // 4. Any other custom title from Google Sheets
+      // Custom title
       return {
         cssClass: 'badge-general-glow',
         icon: '✦',
@@ -952,9 +1073,6 @@
       };
     }
 
-    /**
-     * Renders badge overlay on student photo strictly if a title is present in the sheet
-     */
     function getBadgeOverlayHTML(role) {
       if (!role || !role.trim()) return '';
       const styleInfo = getBadgeStyle(role);
@@ -968,10 +1086,6 @@
       `;
     }
 
-    /**
-     * Parses incoming data for students, timeline, capsule, gallery, and logo.
-     * Roles are mapped strictly from sheet columns without demo fallbacks.
-     */
     function processIncomingSheetData(data) {
       if (!data || typeof data !== 'object') return false;
 
@@ -1001,21 +1115,19 @@
         return null;
       };
 
-      // 2. Parse Students (Connects live with Apps Script)
+      // 2. Parse Students (Mapped strictly with their titles)
       const rawStudents = findArray(root, 'students', 'student', 'studentdetails', 'classmates', 'batch');
       if (rawStudents && rawStudents.length > 0) {
         STUDENTS_DATA = rawStudents.map((s, idx) => {
           const rollVal = getField(s, 'roll', 'rollno', 'rollnumber', 'id') || String(idx + 1);
           const formattedRoll = String(rollVal).padStart(2, '0');
-          
-          // Auto-detect title/badge directly from sheet columns without demo defaults:
           const roleVal = getField(s, 'badge', 'role', 'captain', 'buscaptain', 'deputycaptain', 'designation', 'position', 'title', 'tag', 'status', 'rank', 'appointment');
 
           return {
             id: `s-${formattedRoll}`,
             roll: formattedRoll,
             name: getField(s, 'name', 'fullname', 'studentname') || `Classmate Roll ${formattedRoll}`,
-            role: roleVal ? roleVal.trim() : "", // Purely from sheet; NO hardcoded fallback
+            role: roleVal ? roleVal.trim() : "",
             photoUrl: normalizeImageUrl(getField(s, 'photo', 'photourl', 'image', 'picture', 'driveurl')),
             bio: getField(s, 'bio', 'quote', 'message', 'about') || "Member of HSC 2027 Science Section A, Kaptai.",
             group: getField(s, 'group') || "Science",
@@ -1029,7 +1141,7 @@
       }
 
       // 3. Parse Timeline
-      const rawTimeline = findArray(root, 'timeline', 'journey', 'milestones', 'events');
+      const rawTimeline = findArray(root, 'timeline', 'journey', 'milestones', 'events', 'academicjourney');
       if (rawTimeline && rawTimeline.length > 0) {
         TIMELINE_DATA = rawTimeline.map(m => ({
           date: getField(m, 'date', 'year', 'time', 'period') || "2025–2027",
@@ -1040,7 +1152,7 @@
       }
 
       // 4. Parse Time Capsule
-      const rawCapsule = findArray(root, 'capsule', 'capsules', 'memories', 'recollections');
+      const rawCapsule = findArray(root, 'capsule', 'capsules', 'memories', 'recollections', 'timecapsule');
       if (rawCapsule && rawCapsule.length > 0) {
         CAPSULE_DATA = rawCapsule.map(c => ({
           title: getField(c, 'title', 'heading', 'memory', 'topic') || "Kaptai Memory",
@@ -1049,13 +1161,27 @@
         renderCapsule();
       }
 
-      // 5. Parse Gallery
+      // 5. Parse Gallery (Title, URL, Description, and Category Tag)
       const rawGallery = findArray(root, 'gallery', 'photos', 'images', 'pictures');
-      if (rawGallery && rawGallery.length > 0) {
-        GALLERY_DATA = rawGallery.map(g => ({
-          title: getField(g, 'title', 'caption', 'name', 'desc') || "Campus Vista",
-          url: normalizeImageUrl(getField(g, 'url', 'photo', 'image', 'photourl', 'link', 'src'))
-        }));
+      if (rawGallery !== null && rawGallery !== undefined) {
+        const validPhotos = rawGallery.map(g => {
+          const rawUrl = getField(g, 'url', 'photourl', 'imageurl', 'link', 'src', 'driveurl', 'drive', 'photo', 'image');
+          const cleanUrl = normalizeImageUrl(rawUrl);
+          const rawTitle = getField(g, 'title', 'phototitle', 'imagetitle', 'caption', 'heading', 'name');
+          const rawDesc = getField(g, 'desc', 'description', 'details', 'story', 'text', 'info', 'message', 'photodesc');
+          const rawTag = getField(g, 'tag', 'category', 'badge', 'album', 'type');
+
+          if (!cleanUrl) return null;
+
+          return {
+            title: rawTitle || "Section A Memory",
+            url: cleanUrl,
+            desc: rawDesc || "",
+            tag: (rawTag || "CAMPUS").toUpperCase()
+          };
+        }).filter(item => item !== null);
+
+        GALLERY_DATA = validPhotos;
         renderGallery();
       }
 
@@ -1067,8 +1193,6 @@
         return;
       }
 
-      let fetchSuccessful = false;
-
       try {
         const response = await fetch(GOOGLE_SHEET_APPS_SCRIPT_URL, {
           method: 'GET',
@@ -1076,58 +1200,30 @@
           mode: 'cors'
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          fetchSuccessful = processIncomingSheetData(data);
-          if (fetchSuccessful) return;
+        if (!response.ok) {
+          console.warn("Google Sheets response status:", response.status);
+          return;
         }
+
+        const rawText = await response.text();
+        if (!rawText || !rawText.trim()) {
+          console.warn("Empty response received from Google Apps Script endpoint.");
+          return;
+        }
+
+        let cleanText = rawText.trim();
+        const jsonpMatch = cleanText.match(/^[a-zA-Z0-9_$]+\s*\(([\s\S]*)\)\s*;?$/);
+        if (jsonpMatch && jsonpMatch[1]) {
+          cleanText = jsonpMatch[1].trim();
+        }
+
+        const data = JSON.parse(cleanText);
+        processIncomingSheetData(data);
       } catch (err) {
-        console.warn("Direct fetch had an issue; attempting JSONP fallback...", err);
-      }
-
-      if (!fetchSuccessful) {
-        try {
-          await new Promise((resolve, reject) => {
-            const callbackName = "bnsckSheetCallback_" + Math.floor(Math.random() * 100000);
-            window[callbackName] = function(data) {
-              try {
-                processIncomingSheetData(data);
-                resolve();
-              } catch (e) {
-                reject(e);
-              } finally {
-                delete window[callbackName];
-                if (script && script.parentNode) script.parentNode.removeChild(script);
-              }
-            };
-
-            const sep = GOOGLE_SHEET_APPS_SCRIPT_URL.includes('?') ? '&' : '?';
-            const script = document.createElement('script');
-            script.src = `${GOOGLE_SHEET_APPS_SCRIPT_URL}${sep}callback=${callbackName}`;
-            script.onerror = () => {
-              delete window[callbackName];
-              if (script.parentNode) script.parentNode.removeChild(script);
-              reject(new Error("JSONP request failed"));
-            };
-            document.body.appendChild(script);
-
-            setTimeout(() => {
-              if (window[callbackName]) {
-                delete window[callbackName];
-                if (script.parentNode) script.parentNode.removeChild(script);
-                reject(new Error("JSONP request timed out"));
-              }
-            }, 8000);
-          });
-        } catch (jsonpErr) {
-          console.warn("Using current dataset due to network/CORS restriction:", jsonpErr);
-        }
+        console.warn("Live Google Sheets sync skipped (using offline capsule dataset):", err);
       }
     }
 
-    /**
-     * Renders student cards: Only shows badge overlay and title subtitle if s.role is populated from Google Sheets
-     */
     function renderStudents(list) {
       const container = document.getElementById('student-cards-grid');
       const countEl = document.getElementById('student-count-display');
@@ -1320,7 +1416,6 @@
       if (bioEl) bioEl.innerText = `“${s.bio}”`;
       if (rollTagEl) rollTagEl.innerText = `Roll ${s.roll}`;
 
-      // Update badge strictly if a title is set from the Sheet
       if (roleBadgeEl) {
         if (s.role && s.role.trim().length > 0) {
           const styleInfo = getBadgeStyle(s.role);
@@ -1389,25 +1484,181 @@
     function renderGallery() {
       const el = document.getElementById('gallery-container');
       if (!el) return;
-      el.innerHTML = GALLERY_DATA.map(item => `
-        <div class="aspect-video rounded-2xl glass-panel border-white/10 overflow-hidden relative flex items-center justify-center group">
-          ${item.url ? `
-            <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
-              <span class="text-xs font-bold text-white truncate">${item.title}</span>
+
+      if (!GALLERY_DATA || GALLERY_DATA.length === 0) {
+        el.innerHTML = `
+          <div class="col-span-full py-12 text-center glass-panel rounded-3xl border-white/10 p-8">
+            <svg class="w-12 h-12 mx-auto text-cyan-400/50 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <p class="text-sm font-semibold text-slate-300">No photos in the gallery</p>
+            <p class="text-xs text-slate-500 mt-1">Add photo URLs with their titles and descriptions in the Google Sheet to display them here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      el.innerHTML = GALLERY_DATA.map((item, idx) => {
+        const tag = (item.tag || "CAMPUS").toUpperCase();
+        const title = item.title || "Campus Vista";
+        const desc = item.desc || "Cherished memories from BNSCK Kaptai.";
+
+        return `
+          <div class="gallery-preview-card flex flex-col group" data-gallery-idx="${idx}">
+            
+            <!-- Top Photo Container with Overlays -->
+            <div class="relative w-full aspect-[4/3] sm:aspect-[4/3.2] overflow-hidden bg-navy-950 flex items-center justify-center cursor-pointer" onclick="openGalleryModal(${idx})">
+              
+              <!-- Floating Category Pill at Top Right (Reference Design Match) -->
+              <div class="absolute top-3.5 right-3.5 z-20 px-3.5 py-1 rounded-full bg-navy-950/85 backdrop-blur-md border border-cyan-400/40 text-cyan-300 text-[11px] font-extrabold tracking-widest uppercase shadow-lg">
+                ${tag}
+              </div>
+
+              <!-- Main Image or Fallback SVG -->
+              ${item.url ? `
+                <img src="${item.url}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" />
+                <div class="w-full h-full flex flex-col items-center justify-center text-cyan-300/80 p-6 hidden">
+                  <svg class="w-12 h-12 text-cyan-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  <span class="text-xs font-bold text-slate-300 mt-2">${title}</span>
+                </div>
+              ` : `
+                <div class="w-full h-full flex flex-col items-center justify-center text-cyan-300/80 p-6">
+                  <svg class="w-12 h-12 text-cyan-400/50 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  <span class="text-xs font-bold text-slate-300 mt-2">${title}</span>
+                </div>
+              `}
+
+              <!-- In-Image Deep Gradient & Typography Overlay (Reference Match) -->
+              <div class="absolute inset-0 bg-gradient-to-t from-[#040a17] via-[#040a17]/65 to-transparent flex flex-col justify-end p-5 pointer-events-none">
+                <span class="text-[11px] font-bold text-cyan-400 tracking-wider uppercase mb-1">
+                  ${tag}
+                </span>
+                <h4 class="text-xl sm:text-2xl font-bold text-white tracking-normal font-serif leading-snug drop-shadow-md">
+                  ${title}
+                </h4>
+                <p class="text-xs text-slate-200/90 mt-1 leading-relaxed line-clamp-2 drop-shadow">
+                  ${desc}
+                </p>
+
+                <!-- "Click to view" Action Trigger with Expand Icon -->
+                <div class="mt-3 inline-flex items-center gap-1.5 text-xs text-cyan-300 font-semibold">
+                  <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                  </svg>
+                  <span>Click to view</span>
+                </div>
+              </div>
+
             </div>
-            <div class="text-center p-3 text-cyan-300/80 hidden">
-              <svg class="w-8 h-8 mx-auto text-cyan-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-              <span class="text-xs font-bold text-slate-300 mt-1 block">${item.title}</span>
+
+            <!-- Bottom Information and Control Bar (Reference Match) -->
+            <div class="p-4 sm:p-5 flex items-center justify-between gap-3 bg-[#030814]/90 border-t border-white/5 rounded-b-[1.75rem]">
+              
+              <!-- Left: Uppercase Title & Truncated Description -->
+              <div class="overflow-hidden space-y-0.5">
+                <h5 class="text-sm sm:text-base font-extrabold text-white uppercase tracking-wider font-serif truncate">
+                  ${title}
+                </h5>
+                <p class="text-xs text-slate-400 truncate">
+                  ${desc}
+                </p>
+              </div>
+
+              <!-- Right: Dual Action Buttons (Share & Expand) -->
+              <div class="flex items-center gap-2 flex-shrink-0">
+                
+                <!-- Share Button -->
+                <button type="button" aria-label="Share photo" onclick="shareGalleryItem(event, ${idx})" class="w-9 h-9 rounded-xl bg-navy-950/90 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-400/60 flex items-center justify-center text-slate-300 hover:text-cyan-300 transition-all shadow-sm active:scale-95" title="Share Photo">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                </button>
+
+                <!-- Fullscreen / Lightbox Button -->
+                <button type="button" aria-label="Expand photo" onclick="openGalleryModal(${idx})" class="w-9 h-9 rounded-xl bg-navy-950/90 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-400/60 flex items-center justify-center text-slate-300 hover:text-cyan-300 transition-all shadow-sm active:scale-95" title="Expand Photo">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                  </svg>
+                </button>
+
+              </div>
+
             </div>
-          ` : `
-            <div class="text-center p-3 text-cyan-300/80">
-              <svg class="w-8 h-8 mx-auto text-cyan-400/50 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-              <span class="text-xs font-bold text-slate-300 mt-1 block">${item.title}</span>
-            </div>
-          `}
-        </div>
-      `).join('');
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    let currentActiveGalleryItem = null;
+
+    function openGalleryModal(index) {
+      const item = GALLERY_DATA[index];
+      if (!item) return;
+
+      currentActiveGalleryItem = item;
+
+      const modal = document.getElementById('gallery-modal');
+      const imgEl = document.getElementById('gallery-modal-img');
+      const fallbackEl = document.getElementById('gallery-modal-fallback');
+      const titleEl = document.getElementById('gallery-modal-title');
+      const descEl = document.getElementById('gallery-modal-desc');
+      const tagEl = document.getElementById('gallery-modal-tag');
+
+      if (titleEl) titleEl.innerText = item.title || "Photo Preview";
+      if (descEl) descEl.innerText = item.desc || "Cherished memories from BNSCK Kaptai.";
+      if (tagEl) tagEl.innerText = (item.tag || "CAMPUS").toUpperCase();
+
+      if (item.url) {
+        imgEl.src = item.url;
+        imgEl.classList.remove('hidden');
+        fallbackEl.classList.add('hidden');
+      } else {
+        imgEl.classList.add('hidden');
+        fallbackEl.classList.remove('hidden');
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeGalleryModal() {
+      const modal = document.getElementById('gallery-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function shareGalleryItem(e, index) {
+      if (e) e.stopPropagation();
+      const item = GALLERY_DATA[index];
+      if (!item) return;
+
+      const shareText = `${item.title} — HSC 2027 Science Section A, BNSCK Kaptai: ${item.desc}`;
+      const shareUrl = item.url || window.location.href;
+
+      if (navigator.share) {
+        navigator.share({
+          title: item.title,
+          text: shareText,
+          url: shareUrl
+        }).catch(() => {
+          copyToClipboard(shareUrl);
+        });
+      } else {
+        copyToClipboard(shareUrl);
+      }
+    }
+
+    function copyToClipboard(text) {
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        showToast("Photo link copied to clipboard!");
+      } catch (err) {
+        showToast("Link: " + text);
+      }
+      document.body.removeChild(tempInput);
     }
 
     let constellationGroupRef = null;
@@ -1425,15 +1676,12 @@
       const normalMaterial = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
       const normalGlowMat = new THREE.MeshBasicMaterial({ color: 0x1d6fee, wireframe: true });
 
-      // Captain Star Theme (Amber Gold)
       const captainMaterial = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
       const captainGlowMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, wireframe: true });
 
-      // Deputy Captain Star Theme (Sky Blue)
       const deputyMaterial = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
       const deputyGlowMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
 
-      // Bus Captain Star Theme (Emerald Green)
       const busMaterial = new THREE.MeshBasicMaterial({ color: 0x10b981 });
       const busGlowMat = new THREE.MeshBasicMaterial({ color: 0x34d399, wireframe: true });
 
@@ -1448,7 +1696,6 @@
         const y = radius * Math.sin(theta) * Math.sin(phi);
         const z = radius * Math.cos(phi);
 
-        // Highlight stars only if an actual appointment/title exists in the sheet
         const hasRole = s.role && s.role.trim().length > 0;
         const rLower = hasRole ? s.role.toLowerCase() : '';
         let activeMaterial = normalMaterial;
@@ -1523,7 +1770,6 @@
 
       rebuildConstellation(STUDENTS_DATA);
 
-      // Ambient dust particles
       const particleGeo = new THREE.BufferGeometry();
       const particleCount = 200;
       const particlePos = [];
@@ -1700,10 +1946,31 @@
         });
       }
 
+      // Gallery Modal Events
+      const closeGalleryBtn = document.getElementById('btn-close-gallery-modal');
+      const galleryModal = document.getElementById('gallery-modal');
+      const galleryShareBtn = document.getElementById('gallery-modal-share-btn');
+
+      if (closeGalleryBtn) closeGalleryBtn.addEventListener('click', closeGalleryModal);
+      if (galleryModal) {
+        galleryModal.addEventListener('click', (e) => {
+          if (e.target === galleryModal) closeGalleryModal();
+        });
+      }
+
+      if (galleryShareBtn) {
+        galleryShareBtn.addEventListener('click', () => {
+          if (!currentActiveGalleryItem) return;
+          const shareUrl = currentActiveGalleryItem.url || window.location.href;
+          copyToClipboard(shareUrl);
+        });
+      }
+
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           closeModal();
           closeTeacherModal();
+          closeGalleryModal();
         }
       });
 
