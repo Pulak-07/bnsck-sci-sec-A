@@ -135,6 +135,35 @@
       overflow: hidden;
     }
 
+    /* Badge Themes strictly mapped to titles from Google Sheet */
+    .badge-captain-glow {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24, #d97706);
+      color: #030712;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.65), 0 2px 4px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .badge-deputy-glow {
+      background: linear-gradient(135deg, #0284c7, #00e5ff, #0369a1);
+      color: #030712;
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+    }
+
+    .badge-bus-glow {
+      background: linear-gradient(135deg, #059669, #10b981, #047857);
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .badge-general-glow {
+      background: rgba(8, 30, 60, 0.92);
+      color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+      border: 1px solid rgba(56, 189, 248, 0.6);
+    }
+
     @keyframes locationPulse {
       0%, 100% { transform: scale(1); opacity: 0.95; }
       50% { transform: scale(1.5); opacity: 0.25; }
@@ -274,9 +303,6 @@
           <div class="text-base sm:text-2xl font-bold text-cyan-300 tracking-wider uppercase mt-1">
             SCIENCE SECTION A
           </div>
-          <div class="text-[11px] sm:text-xs text-slate-300 uppercase tracking-widest mt-1">
-             
-          </div>
         </div>
 
         <!-- Subtitles -->
@@ -308,9 +334,9 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-7 space-y-4 text-slate-300 leading-relaxed text-base sm:text-lg">
           <p class="first-letter:text-5xl first-letter:font-bold first-letter:text-cyan-400 first-letter:float-left first-letter:mr-3">
-            Nested amidst the scenic hills of Kaptai and the tranquil expanse of Kaptai Lake,<strong Bangladesh Noubahini School and College Kaptai</strong>< stands as a beacon of discipline, intellectual curiosity, and shared fellowship.
+            Nested amidst the scenic hills of Kaptai and the tranquil expanse of Kaptai Lake, <strong>Bangladesh Noubahini School and College Kaptai</strong> stands as a beacon of discipline, intellectual curiosity, and shared fellowship.
 
-Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> our journey began with 56 dedicated classmates united under HSC 2027 Science Section A. As time shaped our paths, 6 of our classmates moved forward through transfers, leaving 50 students continuing the journey together. Yet, their departure remains an inseparable part of our story, memories, and legacy. <br>
+            Established in the historic naval base of <strong>BNS Shaheed Moazzam,</strong> our journey began with 56 dedicated classmates united under HSC 2027 Science Section A. As time shaped our paths, 6 of our classmates moved forward through transfers, leaving 50 students continuing the journey together. Yet, their departure remains an inseparable part of our story, memories, and legacy.
           </p>
           <p>
             Today, our 50 dedicated classmates strive toward the HSC 2027 examinations, guided by our respected Principal Sir, Vice Principal Sir, Section A Class Teacher, and Senior Subject Lecturers. Though our numbers have changed, the spirit of Section A remains unchanged—a bond built on friendship, perseverance, and memories that will endure far beyond our years at Kaptai.
@@ -401,7 +427,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
           </div>
           <h2 class="text-3xl sm:text-5xl font-bold text-white">About Us: The 50 Stars of Section A</h2>
           <p class="text-sm sm:text-base text-slate-300 max-w-xl mt-2 italic">
-            Fifty passionate minds united under our naval banner at BNS Shaheed Moazzam. Search by name or roll number to view individual profiles.
+            Fifty passionate minds united under our naval banner at BNS Shaheed Moazzam. Badges, titles, and appointments are dynamically updated from the official database.
           </p>
         </div>
 
@@ -413,7 +439,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
       <!-- Search and Filter Bar -->
       <div class="glass-panel p-4 rounded-2xl mb-8 border-white/10 flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div class="relative w-full sm:w-80">
-          <input type="text" id="student-search-input" placeholder="Search by name or roll number..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-navy-950/90 border border-white/15 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400" />
+          <input type="text" id="student-search-input" placeholder="Search by name, roll, or title (e.g. Captain, Bus Captain)..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-navy-950/90 border border-white/15 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400" />
           <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
@@ -422,6 +448,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         <div class="flex items-center gap-3 w-full sm:w-auto">
           <select id="student-sort-select" class="px-3 py-2 rounded-xl bg-navy-950/90 border border-white/15 text-slate-200 text-xs focus:outline-none focus:border-cyan-400">
             <option value="roll-asc">Roll (Ascending 01 → 50)</option>
+            <option value="leaders-first">★ Badges & Titles First</option>
             <option value="roll-desc">Roll (Descending 50 → 01)</option>
             <option value="name-asc">Name (A → Z)</option>
             <option value="name-desc">Name (Z → A)</option>
@@ -432,6 +459,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         </div>
       </div>
 
+      <!-- Grid of Student Cards -->
       <div id="student-cards-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
         <!-- Rendered dynamically -->
       </div>
@@ -565,7 +593,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
 
   </main>
 
-  <!-- MODAL: STUDENT DOSSIER -->
+  <!-- MODAL: STUDENT DOSSIER WITH DYNAMIC ROLE/TITLE BADGE -->
   <div id="student-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
     <div class="relative w-full max-w-lg glass-panel rounded-3xl border-cyan-400/40 p-6 sm:p-8 shadow-2xl bg-navy-950/95 overflow-hidden">
       <button id="btn-close-modal" aria-label="Close modal" class="absolute top-4 right-4 w-8 h-8 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-white border-white/20 transition-colors">
@@ -573,7 +601,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
       </button>
 
       <div class="flex flex-col sm:flex-row items-center gap-6">
-        <div class="w-32 h-36 rounded-2xl overflow-hidden border-2 border-cyan-400 bg-navy-900 flex-shrink-0 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+        <div class="w-32 h-36 rounded-2xl overflow-hidden border-2 border-cyan-400 bg-navy-900 flex-shrink-0 flex items-center justify-center shadow-lg shadow-cyan-500/20 relative">
           <img id="modal-photo" src="" alt="Student Photo" class="w-full h-full object-cover hidden" />
           <div id="modal-fallback-icon" class="w-full h-full flex flex-col items-center justify-center text-cyan-300">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -582,11 +610,18 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         </div>
 
         <div class="text-center sm:text-left space-y-1.5 flex-grow">
-          <div class="inline-block px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold">
-            HSC 2027 • Science • Section A
+          <!-- Tag and Badge Header -->
+          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 mb-1" id="modal-badge-container">
+            <div class="inline-block px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold">
+              HSC 2027 • Science • Section A
+            </div>
+            <!-- Dynamic Sheet Title Badge (Shown ONLY if student has a title in Sheet) -->
+            <span id="modal-role-badge" class="hidden px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide shadow-md">
+            </span>
           </div>
+
           <h3 id="modal-name" class="text-2xl font-bold text-white">Student Name</h3>
-          <p id="modal-roll-sub" class="text-xs text-slate-400">Roll: 01</p>
+          <p id="modal-roll-sub" class="text-xs text-slate-400 font-sans">Roll: 01</p>
           <p id="modal-bio" class="text-xs text-slate-300 italic pt-1 leading-relaxed">“Pursuing dreams through science and dedication.”</p>
         </div>
       </div>
@@ -643,13 +678,9 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
   <script>
     /**
      * DYNAMIC LOGO SYSTEM CONFIGURATION
-     * Updates automatically if changed here or if provided by Google Sheets.
      */
     let LOGO_URL = "https://apiimage.astutebd.com/Uploads/bnsck/maincampus/About%20School//1072021113810AMzx.png";
 
-    /**
-     * Updates all logo instances across the page cleanly with SVG fallbacks.
-     */
     function updateAppLogo(url) {
       if (url && typeof url === 'string') {
         LOGO_URL = url.trim();
@@ -696,10 +727,6 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
       }
     }
 
-    /**
-     * Normalizes image URLs, translating Google Drive share links
-     * to direct thumbnail/image links so photos load reliably.
-     */
     function normalizeImageUrl(url) {
       if (!url || typeof url !== 'string') return '';
       url = url.trim();
@@ -712,9 +739,6 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
       return url;
     }
 
-    /**
-     * Case-insensitive field extractor for Google Sheets columns
-     */
     function getField(obj, ...names) {
       if (!obj || typeof obj !== 'object') return '';
       const keys = Object.keys(obj);
@@ -733,12 +757,16 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
     // Google Apps Script URL for Students, Timeline, Capsule, and Gallery
     const GOOGLE_SHEET_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwaagMCafhLnUqFB_MaSIfex2BuAmEOfuARwdqPBaHDlfbswdxXWPVk_3JWMMVnd5Ak/exec";
 
+    /**
+     * INITIAL STUDENTS DATASET (No demo badges: strictly populated from Google Sheet)
+     */
     let STUDENTS_DATA = Array.from({ length: 50 }, (_, i) => {
       const rollNum = String(i + 1).padStart(2, '0');
       return {
         id: `s-${rollNum}`,
         roll: rollNum,
         name: `Classmate Roll ${rollNum}`,
+        role: "", // No hardcoded demo; will be populated purely from Google Sheet
         photoUrl: "",
         bio: `Member of HSC 2027 Science Section A, Kaptai.`,
         group: "Science",
@@ -747,9 +775,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
     });
 
     /**
-     * PERMANENT TEACHER DATASET (PERMANENTLY EMBEDDED)
-     * Disconnected completely from Google Apps Script to guarantee 100% stability,
-     * accurate titles, verified photos, and inspiring messages.
+     * PERMANENT TEACHER DATASET
      */
     const TEACHERS_DATA = [
       {
@@ -881,8 +907,70 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
     ];
 
     /**
+     * Resolves badge theme and styling for any role/title from Google Sheets:
+     * - Bus Captain
+     * - Deputy Captain / Vice Captain
+     * - Captain / Class Captain
+     * - Any other custom appointment or title
+     */
+    function getBadgeStyle(role) {
+      if (!role || !role.trim()) return null;
+      const rLower = role.toLowerCase().trim();
+
+      // 1. Bus Captain
+      if (rLower.includes('bus')) {
+        return {
+          cssClass: 'badge-bus-glow',
+          icon: '🚌',
+          textColor: 'text-emerald-300'
+        };
+      }
+
+      // 2. Deputy Captain / Vice Captain / Assistant
+      if (rLower.includes('deputy') || rLower.includes('vice') || rLower.includes('assistant') || rLower.includes('asst')) {
+        return {
+          cssClass: 'badge-deputy-glow',
+          icon: '★',
+          textColor: 'text-sky-300'
+        };
+      }
+
+      // 3. Class Captain / Captain / Monitor / Head
+      if (rLower.includes('captain') || rLower.includes('monitor') || rLower.includes('prefect') || rLower.includes('cr') || rLower.includes('head')) {
+        return {
+          cssClass: 'badge-captain-glow',
+          icon: '★',
+          textColor: 'text-amber-300'
+        };
+      }
+
+      // 4. Any other custom title from Google Sheets
+      return {
+        cssClass: 'badge-general-glow',
+        icon: '✦',
+        textColor: 'text-cyan-300'
+      };
+    }
+
+    /**
+     * Renders badge overlay on student photo strictly if a title is present in the sheet
+     */
+    function getBadgeOverlayHTML(role) {
+      if (!role || !role.trim()) return '';
+      const styleInfo = getBadgeStyle(role);
+      if (!styleInfo) return '';
+
+      return `
+        <div class="absolute top-2 left-2 z-10 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider uppercase backdrop-blur-md shadow-md ${styleInfo.cssClass}">
+          <span class="text-xs leading-none">${styleInfo.icon}</span>
+          <span class="truncate max-w-[105px] sm:max-w-[130px]">${role}</span>
+        </div>
+      `;
+    }
+
+    /**
      * Parses incoming data for students, timeline, capsule, gallery, and logo.
-     * TEACHER DATA IS INTENTIONALLY DISCONNECTED AND PRESERVED FROM OVERWRITES.
+     * Roles are mapped strictly from sheet columns without demo fallbacks.
      */
     function processIncomingSheetData(data) {
       if (!data || typeof data !== 'object') return false;
@@ -919,10 +1007,15 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         STUDENTS_DATA = rawStudents.map((s, idx) => {
           const rollVal = getField(s, 'roll', 'rollno', 'rollnumber', 'id') || String(idx + 1);
           const formattedRoll = String(rollVal).padStart(2, '0');
+          
+          // Auto-detect title/badge directly from sheet columns without demo defaults:
+          const roleVal = getField(s, 'badge', 'role', 'captain', 'buscaptain', 'deputycaptain', 'designation', 'position', 'title', 'tag', 'status', 'rank', 'appointment');
+
           return {
             id: `s-${formattedRoll}`,
             roll: formattedRoll,
             name: getField(s, 'name', 'fullname', 'studentname') || `Classmate Roll ${formattedRoll}`,
+            role: roleVal ? roleVal.trim() : "", // Purely from sheet; NO hardcoded fallback
             photoUrl: normalizeImageUrl(getField(s, 'photo', 'photourl', 'image', 'picture', 'driveurl')),
             bio: getField(s, 'bio', 'quote', 'message', 'about') || "Member of HSC 2027 Science Section A, Kaptai.",
             group: getField(s, 'group') || "Science",
@@ -935,9 +1028,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         }
       }
 
-      // NOTE: Teachers data is permanently embedded above and deliberately not overwritten by Google Sheets.
-
-      // 3. Parse Timeline (Connects live with Apps Script)
+      // 3. Parse Timeline
       const rawTimeline = findArray(root, 'timeline', 'journey', 'milestones', 'events');
       if (rawTimeline && rawTimeline.length > 0) {
         TIMELINE_DATA = rawTimeline.map(m => ({
@@ -948,7 +1039,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         renderTimeline();
       }
 
-      // 4. Parse Time Capsule (Connects live with Apps Script)
+      // 4. Parse Time Capsule
       const rawCapsule = findArray(root, 'capsule', 'capsules', 'memories', 'recollections');
       if (rawCapsule && rawCapsule.length > 0) {
         CAPSULE_DATA = rawCapsule.map(c => ({
@@ -958,7 +1049,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         renderCapsule();
       }
 
-      // 5. Parse Gallery (Connects live with Apps Script)
+      // 5. Parse Gallery
       const rawGallery = findArray(root, 'gallery', 'photos', 'images', 'pictures');
       if (rawGallery && rawGallery.length > 0) {
         GALLERY_DATA = rawGallery.map(g => ({
@@ -973,7 +1064,6 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
 
     async function fetchGoogleSheetsData() {
       if (!GOOGLE_SHEET_APPS_SCRIPT_URL || GOOGLE_SHEET_APPS_SCRIPT_URL.trim() === "") {
-        console.log("No Google Apps Script URL configured. Using local defaults.");
         return;
       }
 
@@ -989,10 +1079,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         if (response.ok) {
           const data = await response.json();
           fetchSuccessful = processIncomingSheetData(data);
-          if (fetchSuccessful) {
-            console.log("Synced student and archive items successfully from Google Apps Script!");
-            return;
-          }
+          if (fetchSuccessful) return;
         }
       } catch (err) {
         console.warn("Direct fetch had an issue; attempting JSONP fallback...", err);
@@ -1033,11 +1120,14 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
             }, 8000);
           });
         } catch (jsonpErr) {
-          console.warn("Using offline dataset due to network/CORS restriction on Apps Script:", jsonpErr);
+          console.warn("Using current dataset due to network/CORS restriction:", jsonpErr);
         }
       }
     }
 
+    /**
+     * Renders student cards: Only shows badge overlay and title subtitle if s.role is populated from Google Sheets
+     */
     function renderStudents(list) {
       const container = document.getElementById('student-cards-grid');
       const countEl = document.getElementById('student-count-display');
@@ -1045,27 +1135,44 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
 
       if (countEl) countEl.innerText = list.length;
 
-      container.innerHTML = list.map(s => `
-        <div class="student-classic-card group cursor-pointer" onclick="openStudentModal('${s.id}')">
-          <div class="student-photo-wrapper">
-            <img src="${s.photoUrl || ''}" alt="Student Photo" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${s.photoUrl ? '' : 'hidden'}" />
-            <div class="w-full h-full flex flex-col items-center justify-center text-cyan-300/80 p-4 ${s.photoUrl ? 'hidden' : ''}">
-              <svg class="w-12 h-12 text-cyan-400/60 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4" stroke-width="1.5"/>
-                <path d="M6 20v-2a6 6 0 0112 0v2" stroke-width="1.5"/>
-              </svg>
-              <span class="mt-2 text-xs font-bold text-cyan-400">Roll ${s.roll}</span>
+      container.innerHTML = list.map(s => {
+        const hasRole = s.role && s.role.trim().length > 0;
+        const badgeOverlay = hasRole ? getBadgeOverlayHTML(s.role) : '';
+        
+        let roleSubHtml = '';
+        if (hasRole) {
+          const styleInfo = getBadgeStyle(s.role);
+          roleSubHtml = `<div class="text-[11px] ${styleInfo.textColor} font-bold truncate mt-0.5 flex items-center justify-center gap-1"><span>${styleInfo.icon}</span><span>${s.role}</span></div>`;
+        }
+
+        return `
+          <div class="student-classic-card group cursor-pointer" onclick="openStudentModal('${s.id}')">
+            <div class="student-photo-wrapper">
+              ${badgeOverlay}
+              
+              <img src="${s.photoUrl || ''}" alt="Student Photo" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${s.photoUrl ? '' : 'hidden'}" />
+              
+              <div class="w-full h-full flex flex-col items-center justify-center text-cyan-300/80 p-4 ${s.photoUrl ? 'hidden' : ''}">
+                <svg class="w-12 h-12 text-cyan-400/60 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" stroke-width="1.5"/>
+                  <path d="M6 20v-2a6 6 0 0112 0v2" stroke-width="1.5"/>
+                </svg>
+                <span class="mt-2 text-xs font-bold text-cyan-400">Roll ${s.roll}</span>
+              </div>
+              
+              <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-navy-950/85 border border-cyan-400/40 text-[10px] text-cyan-300 font-bold shadow-md">
+                ${s.roll}
+              </div>
             </div>
-            <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-navy-950/80 border border-cyan-400/40 text-[10px] text-cyan-300 font-bold">
-              ${s.roll}
+            
+            <div class="p-3 text-center">
+              <h4 class="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors truncate">${s.name}</h4>
+              ${roleSubHtml}
+              <p class="text-[10px] text-slate-400 ${hasRole ? 'mt-0.5' : 'mt-1'}">Science • Sec A</p>
             </div>
           </div>
-          <div class="p-3 text-center">
-            <h4 class="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors truncate">${s.name}</h4>
-            <p class="text-[11px] text-slate-400 mt-0.5">Science • Sec A</p>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function renderTeachers() {
@@ -1122,7 +1229,7 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         }
       }
 
-      // 3. Subject Teachers (Physics, Chemistry, Higher Math, ICT, English, Bangla)
+      // 3. Subject Teachers
       const subjectContainer = document.getElementById('subject-teachers-grid');
       if (subjectContainer) {
         const leaders = TEACHERS_DATA.filter(t => t.category === "Principal" || t.category === "Deputy Principal");
@@ -1206,11 +1313,25 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
       const photoEl = document.getElementById('modal-photo');
       const fallbackEl = document.getElementById('modal-fallback-icon');
       const rollTagEl = document.getElementById('modal-roll-tag');
+      const roleBadgeEl = document.getElementById('modal-role-badge');
 
       if (nameEl) nameEl.innerText = s.name;
       if (rollEl) rollEl.innerText = `Roll: ${s.roll}`;
       if (bioEl) bioEl.innerText = `“${s.bio}”`;
       if (rollTagEl) rollTagEl.innerText = `Roll ${s.roll}`;
+
+      // Update badge strictly if a title is set from the Sheet
+      if (roleBadgeEl) {
+        if (s.role && s.role.trim().length > 0) {
+          const styleInfo = getBadgeStyle(s.role);
+          roleBadgeEl.classList.remove('hidden');
+          roleBadgeEl.className = `px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide inline-block shadow-md ${styleInfo.cssClass}`;
+          roleBadgeEl.innerHTML = `${styleInfo.icon} ${s.role}`;
+        } else {
+          roleBadgeEl.classList.add('hidden');
+          roleBadgeEl.innerText = '';
+        }
+      }
 
       if (s.photoUrl) {
         photoEl.src = s.photoUrl;
@@ -1301,8 +1422,20 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
       starMeshesGlobal = [];
 
       const starGeometry = new THREE.SphereGeometry(1.2, 16, 16);
-      const starMaterial = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
-      const starGlowMaterial = new THREE.MeshBasicMaterial({ color: 0x1d6fee, wireframe: true });
+      const normalMaterial = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
+      const normalGlowMat = new THREE.MeshBasicMaterial({ color: 0x1d6fee, wireframe: true });
+
+      // Captain Star Theme (Amber Gold)
+      const captainMaterial = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+      const captainGlowMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, wireframe: true });
+
+      // Deputy Captain Star Theme (Sky Blue)
+      const deputyMaterial = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
+      const deputyGlowMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
+
+      // Bus Captain Star Theme (Emerald Green)
+      const busMaterial = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+      const busGlowMat = new THREE.MeshBasicMaterial({ color: 0x34d399, wireframe: true });
 
       const starPositions = [];
 
@@ -1315,11 +1448,32 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         const y = radius * Math.sin(theta) * Math.sin(phi);
         const z = radius * Math.cos(phi);
 
-        const starMesh = new THREE.Mesh(starGeometry, starMaterial);
+        // Highlight stars only if an actual appointment/title exists in the sheet
+        const hasRole = s.role && s.role.trim().length > 0;
+        const rLower = hasRole ? s.role.toLowerCase() : '';
+        let activeMaterial = normalMaterial;
+        let activeGlow = normalGlowMat;
+        let auraSize = 2.2;
+
+        if (hasRole) {
+          auraSize = 2.7;
+          if (rLower.includes('bus')) {
+            activeMaterial = busMaterial;
+            activeGlow = busGlowMat;
+          } else if (rLower.includes('deputy') || rLower.includes('vice')) {
+            activeMaterial = deputyMaterial;
+            activeGlow = deputyGlowMat;
+          } else if (rLower.includes('captain')) {
+            activeMaterial = captainMaterial;
+            activeGlow = captainGlowMat;
+          }
+        }
+
+        const starMesh = new THREE.Mesh(starGeometry, activeMaterial);
         starMesh.position.set(x, y, z);
         starMesh.userData = s;
 
-        const starWire = new THREE.Mesh(new THREE.SphereGeometry(2.2, 8, 8), starGlowMaterial);
+        const starWire = new THREE.Mesh(new THREE.SphereGeometry(auraSize, 8, 8), activeGlow);
         starMesh.add(starWire);
 
         constellationGroupRef.add(starMesh);
@@ -1419,7 +1573,8 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
           const hoveredStar = intersects[0].object;
           if (hud && hudName && hudRoll) {
             hudName.innerText = hoveredStar.userData.name;
-            hudRoll.innerText = `Roll: ${hoveredStar.userData.roll} • Science A`;
+            const roleTxt = hoveredStar.userData.role ? ` • ★ ${hoveredStar.userData.role}` : ' • Science A';
+            hudRoll.innerText = `Roll: ${hoveredStar.userData.roll}${roleTxt}`;
             hud.style.opacity = '1';
           }
           container.style.cursor = 'pointer';
@@ -1463,17 +1618,17 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Initialize logo dynamically
+      // 1. Initialize dynamic logo
       updateAppLogo(LOGO_URL);
 
       // 2. Initial component rendering
       renderStudents(STUDENTS_DATA);
-      renderTeachers(); // Permanently renders all teacher data
+      renderTeachers();
       renderTimeline();
       renderCapsule();
       renderGallery();
 
-      // 3. Connect live Google Apps Script endpoint (for students, timeline, capsule, gallery)
+      // 3. Connect live Google Apps Script endpoint
       fetchGoogleSheetsData();
 
       // 4. Initialize Three.js 3D Constellation
@@ -1489,13 +1644,28 @@ Established in the historic naval base of<strong> BNS Shaheed Moazzam,</strong> 
         const sortVal = sortSelect ? sortSelect.value : "roll-asc";
 
         let filtered = STUDENTS_DATA.filter(s => {
-          return s.name.toLowerCase().includes(query) || s.roll.includes(query);
+          const matchName = s.name.toLowerCase().includes(query);
+          const matchRoll = s.roll.includes(query);
+          const matchRole = (s.role || '').toLowerCase().includes(query);
+          return matchName || matchRoll || matchRole;
         });
 
-        if (sortVal === "roll-asc") filtered.sort((a, b) => parseInt(a.roll) - parseInt(b.roll));
-        else if (sortVal === "roll-desc") filtered.sort((a, b) => parseInt(b.roll) - parseInt(a.roll));
-        else if (sortVal === "name-asc") filtered.sort((a, b) => a.name.localeCompare(b.name));
-        else if (sortVal === "name-desc") filtered.sort((a, b) => b.name.localeCompare(a.name));
+        if (sortVal === "roll-asc") {
+          filtered.sort((a, b) => parseInt(a.roll) - parseInt(b.roll));
+        } else if (sortVal === "roll-desc") {
+          filtered.sort((a, b) => parseInt(b.roll) - parseInt(a.roll));
+        } else if (sortVal === "name-asc") {
+          filtered.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortVal === "name-desc") {
+          filtered.sort((a, b) => b.name.localeCompare(a.name));
+        } else if (sortVal === "leaders-first") {
+          filtered.sort((a, b) => {
+            const aHasBadge = a.role && a.role.trim().length > 0 ? 1 : 0;
+            const bHasBadge = b.role && b.role.trim().length > 0 ? 1 : 0;
+            if (aHasBadge !== bHasBadge) return bHasBadge - aHasBadge;
+            return parseInt(a.roll) - parseInt(b.roll);
+          });
+        }
 
         renderStudents(filtered);
       }
