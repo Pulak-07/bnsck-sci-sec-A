@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BNSCK HSC 2027 Science Section A </title>
+  <title>BNSCK HSC 2027 Science Section A</title>
   
-  <meta name="description" content="Dedicated digital batch archive and student capsule for HSC 2027 Science Section A, Bangladesh Noubahini School and College Kaptai. Located at BNS Shaheed Moazzam, Kaptai.">
+  <meta name="description" content="Dedicated digital batch archive, notice board, and student capsule for HSC 2027 Science Section A, Bangladesh Noubahini School and College Kaptai. Located at BNS Shaheed Moazzam, Kaptai.">
   <link rel="icon" type="image/png" sizes="16x16" href="https://apiimage.astutebd.com/Uploads/bnsck/maincampus/About%20School//1072021113810AMzx.png">
     
   <!-- Tailwind CSS CDN -->
@@ -61,11 +61,11 @@
 
     /* Floating Pill Navbar */
     .pill-navbar {
-      background: rgba(5, 16, 38, 0.45);
+      background: rgba(5, 16, 38, 0.55);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 229, 255, 0.22);
-      box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.7), 0 0 22px rgba(0, 153, 255, 0.16);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.7), 0 0 22px rgba(0, 153, 255, 0.18);
       border-radius: 9999px;
       transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     }
@@ -94,9 +94,9 @@
       color: #94A3B8;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       border-radius: 9999px;
-      padding: 6px 16px;
+      padding: 6px 15px;
       white-space: nowrap;
-      font-size: 14px;
+      font-size: 13.5px;
       position: relative;
     }
 
@@ -165,7 +165,35 @@
       border: 1px solid rgba(56, 189, 248, 0.6);
     }
 
-    /* Photo Gallery Card Styles Matched to Preview Screenshot */
+    /* Notice Card Styling */
+    .notice-card {
+      background: rgba(7, 18, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .notice-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(0, 229, 255, 0.6);
+      box-shadow: 0 20px 40px -10px rgba(0, 229, 255, 0.25), 0 0 20px rgba(0, 229, 255, 0.12);
+    }
+
+    /* 5-Second Timer Bar */
+    @keyframes noticeTimerProgress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+    .timer-bar-running {
+      animation: noticeTimerProgress 5s linear forwards;
+    }
+    .timer-bar-paused {
+      animation-play-state: paused;
+    }
+
+    /* Photo Gallery Card Styles */
     .gallery-preview-card {
       background: rgba(7, 16, 35, 0.88);
       backdrop-filter: blur(16px);
@@ -239,6 +267,9 @@
       transition: width 0.1s linear;
     }
 
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -258,6 +289,79 @@
 
   <!-- Top Reading Scroll Progress Bar -->
   <div id="scroll-progress-bar"></div>
+
+  <!-- ==================== AUTOMATIC 5-SECOND POP-UP NOTICE MODAL ==================== -->
+  <div id="notice-popup-modal" class="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div id="notice-popup-card" class="relative w-full max-w-lg glass-panel rounded-3xl border-2 border-cyan-400/60 p-6 sm:p-7 shadow-[0_0_50px_rgba(0,229,255,0.35)] bg-navy-950/95 overflow-hidden flex flex-col transform transition-all duration-300 scale-95" onmouseenter="pausePopupTimer()" onmouseleave="resumePopupTimer()">
+      
+      <!-- 5-Second Animated Progress Bar -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-slate-900">
+        <div id="popup-timer-progress" class="h-full bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 w-full"></div>
+      </div>
+
+      <!-- Header with Status Badge & Countdown -->
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 mt-1">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-300 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            <span id="popup-badge-label">Official Notice</span>
+          </span>
+        </div>
+        <div class="flex items-center space-x-2.5">
+          <span id="popup-timer-text" class="text-[11px] font-mono font-bold text-slate-300 bg-navy-900/90 px-2 py-0.5 rounded-full border border-cyan-400/30">5s</span>
+          <button type="button" onclick="closeNoticePopup()" class="text-slate-400 hover:text-white bg-white/10 hover:bg-white/20 p-1.5 rounded-full transition" title="Close">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Notice Body -->
+      <div class="mt-4 space-y-4 max-h-[62vh] overflow-y-auto pr-1 hide-scrollbar">
+        <h3 id="popup-notice-title" class="text-xl sm:text-2xl font-bold text-white tracking-wide leading-snug">
+          Academic Announcement
+        </h3>
+
+        <!-- Smart URL Preview Box (Image or Web Link Card) -->
+        <div id="popup-url-preview-container" class="hidden rounded-2xl overflow-hidden border border-cyan-400/30 bg-navy-900/90 shadow-md">
+          <!-- Image preview if image link -->
+          <div id="popup-img-wrapper" class="hidden aspect-video w-full overflow-hidden bg-black/80 cursor-pointer" onclick="openLightboxFromNotice(this)">
+            <img id="popup-notice-img" src="" alt="Notice Attachment" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+          </div>
+          <!-- Web Link Card -->
+          <div id="popup-link-wrapper" class="p-3 bg-navy-950/80 flex items-center justify-between gap-3">
+            <div class="flex items-center space-x-3 overflow-hidden">
+              <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-300 flex items-center justify-center shrink-0 border border-cyan-400/30">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </div>
+              <div class="overflow-hidden">
+                <p class="text-xs font-bold text-slate-200 truncate" id="popup-link-domain">Attached Resource</p>
+                <p class="text-[11px] text-slate-400 truncate" id="popup-link-url">https://...</p>
+              </div>
+            </div>
+            <a id="popup-open-link-btn" href="" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:to-blue-600 text-slate-950 font-bold text-xs shrink-0 transition shadow-sm flex items-center gap-1">
+              <span>Open</span>
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Description text -->
+        <div id="popup-notice-desc" class="text-slate-300 text-sm leading-relaxed whitespace-pre-line">
+          Notice details will appear here.
+        </div>
+      </div>
+
+      <!-- Footer of Popup -->
+      <div class="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+        <span class="text-slate-400 text-[11px]" id="popup-notice-date">Auto closes in 5 seconds</span>
+        <a href="#notices" onclick="closeNoticePopup()" class="text-cyan-300 hover:underline font-bold text-xs flex items-center gap-1">
+          <span>View All Notices</span>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- Toast Notice -->
   <div id="toast-notice" class="fixed bottom-6 right-6 z-50 glass-panel px-4 py-2.5 rounded-2xl border-cyan-400/50 text-cyan-300 text-xs font-bold shadow-2xl flex items-center gap-2 opacity-0 pointer-events-none transform translate-y-2 transition-all duration-300">
@@ -286,6 +390,10 @@
       <!-- Navigation Pill Links -->
       <nav id="nav-pill-links" class="nav-links-scroll flex items-center space-x-1 overflow-x-auto py-0.5 px-0.5 max-w-[70vw] sm:max-w-none text-xs sm:text-sm tracking-wide">
         <a href="#hero" class="pill-nav-item active-pill" data-target="hero">Home</a>
+        <a href="#notices" class="pill-nav-item flex items-center gap-1.5" data-target="notices">
+          <span>Notice</span>
+          <span id="nav-notice-indicator" class="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
+        </a>
         <a href="#story" class="pill-nav-item" data-target="story">Story</a>
         <a href="#constellation" class="pill-nav-item" data-target="constellation">Network</a>
         <a href="#students" class="pill-nav-item" data-target="students">About Us</a>
@@ -341,12 +449,39 @@
         </p>
 
         <div class="pt-4 sm:pt-6 flex flex-wrap items-center justify-center gap-4">
-          <a href="#students" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-500 text-white text-sm font-bold tracking-wider hover:shadow-lg hover:shadow-cyan-500/40 hover:scale-105 transition-all duration-300">
+          <a href="#notices" class="px-7 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 text-slate-950 font-bold text-sm tracking-wider hover:shadow-lg hover:shadow-cyan-400/40 hover:scale-105 transition-all duration-300 flex items-center gap-2">
+            <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            <span>Notice Board</span>
+          </a>
+          <a href="#students" class="px-7 py-3.5 rounded-full glass-panel border-white/15 text-slate-200 hover:text-cyan-300 hover:border-cyan-400/40 text-sm tracking-wider transition-all duration-300">
             About Us
           </a>
           <a href="#gallery" class="px-7 py-3.5 rounded-full glass-panel border-white/15 text-slate-200 hover:text-cyan-300 hover:border-cyan-400/40 text-sm tracking-wider transition-all duration-300">
-            View Photo Gallery
+            Photo Gallery
           </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== DEDICATED NOTICE BOARD SECTION ==================== -->
+    <section id="notices" class="relative py-20 px-4 sm:px-6 max-w-7xl mx-auto animate-pop">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold tracking-wider uppercase mb-2">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          <span>Live Section Bulletin</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-bold text-white tracking-wide">Notice Board</h2>
+        <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto mt-2 italic">
+          Academic routines, examination updates, practical schedules, and important notifications connected directly to our Google Sheet.
+        </p>
+        <div class="w-20 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent mx-auto mt-3"></div>
+      </div>
+
+      <!-- Notices Grid Container -->
+      <div id="notice-board-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="col-span-full py-12 text-center glass-panel rounded-3xl border-white/10 p-8 text-slate-400">
+          <svg class="w-10 h-10 mx-auto text-cyan-400/60 animate-spin mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <p class="text-sm font-semibold text-slate-300">Syncing live notices with Google Sheets...</p>
         </div>
       </div>
     </section>
@@ -585,20 +720,34 @@
             </div>
             <p class="text-slate-400 text-xs leading-relaxed max-w-md mt-1">
               Located at <strong>BNS Shaheed Moazzam</strong>, Kaptai, Rangamati Hill Tracts, Bangladesh. Official college portal: 
-              <a href="https://bnsck.edu.bd" target="_blank" rel="noopener noreferrer" class="text-cyan-300 hover:underline">https://bnsk.edu.bd</a>
+              <a href="https://bnsck.edu.bd" target="_blank" rel="noopener noreferrer" class="text-cyan-300 hover:underline">https://bnsck.edu.bd</a>
             </p>
             <a href="https://maps.google.com/?cid=3871538084898210974" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-cyan-300 hover:underline mt-1">
               <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
               <span>📍 View BNS Shaheed Moazzam on Google Maps</span>
             </a>
+
+            <!-- Footer Notice Shortcut Pill -->
+            <div id="footer-notice-pill" class="pt-2">
+              <a href="#notices" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-cyan-950/60 hover:bg-cyan-950/90 border border-cyan-400/30 text-xs text-cyan-300 transition-all shadow-md group">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span class="font-bold">Latest Notice:</span>
+                <span id="footer-notice-text" class="text-slate-300 group-hover:text-white truncate max-w-[230px] sm:max-w-xs">Connecting to announcements...</span>
+                <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </a>
+            </div>
           </div>
 
           <div class="md:col-span-3 space-y-2">
             <h5 class="text-xs uppercase font-bold text-white tracking-wider">Quick Navigation</h5>
             <ul class="space-y-1.5 text-xs">
               <li><a href="#hero" class="hover:text-cyan-300">Home</a></li>
+              <li><a href="#notices" class="hover:text-cyan-300 font-bold text-cyan-400 flex items-center gap-1">
+                <span>Notice Board</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              </a></li>
               <li><a href="#constellation" class="hover:text-cyan-300">3D Stars Constellation</a></li>
-              <li><a href="#students" class="hover:text-cyan-300">About Us </a></li>
+              <li><a href="#students" class="hover:text-cyan-300">About Us</a></li>
               <li><a href="#teachers" class="hover:text-cyan-300">Faculty & Mentors</a></li>
               <li><a href="#gallery" class="hover:text-cyan-300">Photo Gallery</a></li>
             </ul>
@@ -707,7 +856,7 @@
     </div>
   </div>
 
-  <!-- MODAL: PHOTO GALLERY LIGHTBOX (MATCHED TO REFERENCE DESIGN) -->
+  <!-- MODAL: PHOTO GALLERY LIGHTBOX -->
   <div id="gallery-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg hidden items-center justify-center p-4">
     <div class="relative w-full max-w-3xl glass-panel rounded-3xl border-cyan-400/50 p-4 sm:p-6 shadow-2xl bg-navy-950/95 overflow-hidden flex flex-col max-h-[92vh]">
       
@@ -813,6 +962,24 @@
       return url;
     }
 
+    function isImageUrl(url) {
+      if (!url) return false;
+      return /\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(url) || 
+             url.indexOf('googleusercontent.com') !== -1 ||
+             url.indexOf('drive.google.com/thumbnail') !== -1 ||
+             url.indexOf('supabase.co/storage') !== -1;
+    }
+
+    function extractDomain(url) {
+      try {
+        const a = document.createElement('a');
+        a.href = url;
+        return a.hostname.replace('www.', '');
+      } catch (e) {
+        return 'External Link';
+      }
+    }
+
     function getField(obj, ...names) {
       if (!obj || typeof obj !== 'object') return '';
       const keys = Object.keys(obj);
@@ -829,7 +996,7 @@
           }
         }
       }
-      // Phase 2: Prefix match only if no exact match (prevents "photo" matching "phototitle")
+      // Phase 2: Prefix match
       for (const name of names) {
         const target = name.toLowerCase().replace(/[\s_\-.]/g, '');
         for (const k of keys) {
@@ -846,10 +1013,296 @@
     }
 
     // Google Apps Script Live Web App Endpoint
-    const GOOGLE_SHEET_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynMB3yGW2U4le7WQwoHUzGoYj7wjqynZI5UFtBPrU9HLy76IekVoJgFl6Y7AohK6mg/exec";
+    const GOOGLE_SHEET_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbJQQ8Ovo4Yxsrl9EqmqDcWUcHl1JypOU0hY0Y-WYIbUrwtNg70ju-OY-S5tiljgTp/exec";
+
+    /* ==================== NOTICE BOARD & POPUP CONTROLLER ==================== */
+    let NOTICES_DATA = [
+      {
+        id: "notice-default-1",
+        title: "Welcome to BNSCK HSC 2027 Science Section A Portal",
+        description: "Official digital capsule, classmate records, academic milestones, and class bulletin board for Section A at BNS Shaheed Moazzam, Kaptai.",
+        url: "https://bnsck.edu.bd",
+        popup: "pop up",
+        date: "Current Bulletin"
+      },
+      {
+        id: "notice-default-2",
+        title: "Laboratory Practical Sessions Scheduled",
+        description: "All students are requested to complete physics optics experiments and chemistry titration notebooks for faculty review.",
+        url: "",
+        popup: "",
+        date: "Academic Notice"
+      }
+    ];
+
+    let popupSecondsLeft = 5;
+    let popupIntervalTimer = null;
+    let isPopupPaused = false;
+
+    function renderNoticeBoard() {
+      const container = document.getElementById('notice-board-grid');
+      const footerText = document.getElementById('footer-notice-text');
+      if (!container) return;
+
+      if (!NOTICES_DATA || NOTICES_DATA.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center glass-panel rounded-3xl border-white/10 p-8 text-slate-400">
+            <p class="text-sm font-semibold text-slate-300">No active notices at this time.</p>
+            <p class="text-xs text-slate-500 mt-1">Updates posted in the Google Sheet will appear here live.</p>
+          </div>
+        `;
+        if (footerText) footerText.innerText = "No announcements at this time.";
+        return;
+      }
+
+      // Update footer snippet with the most recent notice
+      if (footerText && NOTICES_DATA[0]) {
+        footerText.innerText = NOTICES_DATA[0].title || "Latest Section Notice";
+      }
+
+      container.innerHTML = NOTICES_DATA.map((item, idx) => {
+        const hasUrl = item.url && item.url.trim().length > 0;
+        const hasDesc = item.description && item.description.trim().length > 0;
+        const isImg = hasUrl && isImageUrl(item.url);
+        const isPop = item.popup && (item.popup.toLowerCase().includes('pop') || item.popup.toLowerCase() === 'yes' || item.popup.toLowerCase() === 'true');
+
+        let previewHtml = '';
+        if (hasUrl) {
+          if (isImg) {
+            previewHtml = `
+              <div class="mt-4 rounded-xl overflow-hidden aspect-video bg-black/80 border border-white/10 relative group/img cursor-pointer" onclick="openLightboxFromNoticeUrl('${item.url}')">
+                <img src="${item.url}" alt="${item.title || 'Attachment'}" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300" onerror="this.parentElement.classList.add('hidden');">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center text-xs text-cyan-300 font-bold">
+                  <span>Click to view full preview</span>
+                </div>
+              </div>
+            `;
+          } else {
+            previewHtml = `
+              <div class="mt-4 p-3 rounded-xl bg-navy-950/90 border border-white/10 flex items-center justify-between gap-3">
+                <div class="overflow-hidden">
+                  <span class="text-[10px] font-bold uppercase text-cyan-400 tracking-wider block">RESOURCE LINK</span>
+                  <span class="text-xs text-slate-300 truncate block max-w-[180px] font-mono">${extractDomain(item.url)}</span>
+                </div>
+                <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-black text-xs font-bold transition flex items-center gap-1 shrink-0 border border-cyan-400/40">
+                  <span>Visit</span>
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            `;
+          }
+        }
+
+        return `
+          <div class="notice-card p-6 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full ${isPop ? 'bg-red-500/20 text-red-400 border border-red-500/40' : 'bg-cyan-500/15 text-cyan-300 border border-cyan-400/30'}">
+                  ${isPop ? '★ POP-UP NOTICE' : (item.date || 'ANNOUNCEMENT')}
+                </span>
+                ${hasUrl ? `
+                  <a href="${item.url}" target="_blank" class="text-slate-400 hover:text-cyan-300 transition" title="Open Attachment">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </a>
+                ` : ''}
+              </div>
+
+              <h4 class="text-xl font-bold text-white mt-4 leading-snug group-hover:text-cyan-300 transition-colors">
+                ${item.title || 'Section A Announcement'}
+              </h4>
+
+              ${hasDesc ? `
+                <p class="text-slate-300 text-xs sm:text-sm mt-3 leading-relaxed line-clamp-4 whitespace-pre-line">
+                  ${item.description}
+                </p>
+              ` : ''}
+
+              ${previewHtml}
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+              <button type="button" onclick="openNoticeModalByIdx(${idx})" class="text-xs font-bold text-cyan-300 hover:underline flex items-center gap-1">
+                <span>Read Full Notice</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+              ${hasUrl ? `
+                <a href="${item.url}" target="_blank" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
+                  <span>Open URL</span>
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function checkAndTriggerPopup() {
+      if (!NOTICES_DATA || NOTICES_DATA.length === 0) return;
+
+      // Find any notice that has "pop up" in its logic column
+      const popItem = NOTICES_DATA.find(n => {
+        const flag = String(n.popup || '').toLowerCase().trim();
+        return flag.includes('pop') || flag === 'yes' || flag === 'true';
+      });
+
+      if (popItem) {
+        setTimeout(() => {
+          openNoticePopup(popItem);
+        }, 500);
+      }
+    }
+
+    function openNoticePopup(notice) {
+      const modal = document.getElementById('notice-popup-modal');
+      const card = document.getElementById('notice-popup-card');
+      const titleEl = document.getElementById('popup-notice-title');
+      const descEl = document.getElementById('popup-notice-desc');
+      const previewBox = document.getElementById('popup-url-preview-container');
+      const imgWrapper = document.getElementById('popup-img-wrapper');
+      const noticeImg = document.getElementById('popup-notice-img');
+      const linkWrapper = document.getElementById('popup-link-wrapper');
+      const linkDomain = document.getElementById('popup-link-domain');
+      const linkUrl = document.getElementById('popup-link-url');
+      const openBtn = document.getElementById('popup-open-link-btn');
+      const dateEl = document.getElementById('popup-notice-date');
+
+      if (!modal || !card) return;
+
+      titleEl.innerText = notice.title || "Academic Announcement";
+      dateEl.innerText = notice.date || "Auto closes in 5 seconds";
+
+      // Description Handling: show only if text exists
+      if (notice.description && notice.description.trim().length > 0) {
+        descEl.innerText = notice.description;
+        descEl.classList.remove('hidden');
+      } else {
+        descEl.classList.add('hidden');
+      }
+
+      // URL Handling: Image preview or Link Card preview
+      if (notice.url && notice.url.trim().length > 0) {
+        previewBox.classList.remove('hidden');
+        linkWrapper.classList.remove('hidden');
+        openBtn.href = notice.url;
+        linkUrl.innerText = notice.url;
+        linkDomain.innerText = extractDomain(notice.url);
+
+        if (isImageUrl(notice.url)) {
+          noticeImg.src = notice.url;
+          imgWrapper.classList.remove('hidden');
+        } else {
+          imgWrapper.classList.add('hidden');
+        }
+      } else {
+        previewBox.classList.add('hidden');
+        imgWrapper.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+
+      startPopupTimer();
+    }
+
+    function openNoticeModalByIdx(idx) {
+      const notice = NOTICES_DATA[idx];
+      if (notice) {
+        openNoticePopup(notice);
+      }
+    }
+
+    function openLightboxFromNotice(imgContainer) {
+      const img = imgContainer.querySelector('img');
+      if (img && img.src) {
+        openLightboxFromNoticeUrl(img.src);
+      }
+    }
+
+    function openLightboxFromNoticeUrl(src) {
+      closeNoticePopup();
+      const modal = document.getElementById('gallery-modal');
+      const imgEl = document.getElementById('gallery-modal-img');
+      const fallbackEl = document.getElementById('gallery-modal-fallback');
+      const titleEl = document.getElementById('gallery-modal-title');
+      const descEl = document.getElementById('gallery-modal-desc');
+      const tagEl = document.getElementById('gallery-modal-tag');
+
+      if (titleEl) titleEl.innerText = "Notice Attachment";
+      if (descEl) descEl.innerText = "High-resolution preview of attached notice resource.";
+      if (tagEl) tagEl.innerText = "NOTICE";
+
+      imgEl.src = src;
+      imgEl.classList.remove('hidden');
+      fallbackEl.classList.add('hidden');
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function startPopupTimer() {
+      clearPopupTimers();
+      popupSecondsLeft = 5;
+      isPopupPaused = false;
+      
+      const timerText = document.getElementById('popup-timer-text');
+      const progressBar = document.getElementById('popup-timer-progress');
+
+      if (timerText) timerText.innerText = "5s";
+      if (progressBar) {
+        progressBar.classList.remove('timer-bar-running', 'timer-bar-paused');
+        void progressBar.offsetWidth; // Reflow
+        progressBar.classList.add('timer-bar-running');
+      }
+
+      popupIntervalTimer = setInterval(() => {
+        if (!isPopupPaused) {
+          popupSecondsLeft--;
+          if (timerText) timerText.innerText = `${popupSecondsLeft}s`;
+          if (popupSecondsLeft <= 0) {
+            closeNoticePopup();
+          }
+        }
+      }, 1000);
+    }
+
+    function pausePopupTimer() {
+      isPopupPaused = true;
+      const progressBar = document.getElementById('popup-timer-progress');
+      if (progressBar) progressBar.classList.add('timer-bar-paused');
+    }
+
+    function resumePopupTimer() {
+      isPopupPaused = false;
+      const progressBar = document.getElementById('popup-timer-progress');
+      if (progressBar) progressBar.classList.remove('timer-bar-paused');
+    }
+
+    function clearPopupTimers() {
+      if (popupIntervalTimer) {
+        clearInterval(popupIntervalTimer);
+        popupIntervalTimer = null;
+      }
+    }
+
+    function closeNoticePopup() {
+      clearPopupTimers();
+      const modal = document.getElementById('notice-popup-modal');
+      const card = document.getElementById('notice-popup-card');
+      if (card) {
+        card.classList.remove('scale-100');
+        card.classList.add('scale-95');
+      }
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
 
     /**
-     * INITIAL 50 STUDENTS DATASET (No demo roles: badges populated purely from sheet)
+     * INITIAL 50 STUDENTS DATASET
      */
     let STUDENTS_DATA = Array.from({ length: 50 }, (_, i) => {
       const rollNum = String(i + 1).padStart(2, '0');
@@ -876,7 +1329,7 @@
         subject: "Institutional Leadership",
         category: "Principal",
         photoUrl: "https://apiimage.astutebd.com/Uploads/bnsck/maincampus/Messages/324202520410PMIMG-20250324-WA0003.jpg",
-        message: "First and গুণগত ও মানসম্মত শিক্ষার পাশাপাশি মানবিক মূল্যবোধসম্পন্ন আধুনিক ও আদর্শ নাগরিক গড়ার প্রত্যয় নিয়ে এগিয়ে চলেছে এ প্রতিষ্ঠান। ভৌগোলিক অবস্থানগত সীমাবদ্ধতা, আর্থ-সামাজিক প্রেক্ষাপট ও অন্যান্য পশ্চাৎপদতা সত্ত্বেও এ প্রতিষ্ঠানটি তিন পার্বত্য জেলায় শ্রেষ্ঠ প্রতিষ্ঠানের স্বীকৃতি অর্জন করেছে। শুধু শিক্ষাক্ষেত্রেই নয়, সহশিক্ষামূলক কার্যক্রমেও পিছিয়ে নেই এই প্রতিষ্ঠান।  <br> বাংলাদেশ নৌবাহিনী স্কুল এন্ড কলেজ কাপ্তাই-এর শিক্ষার্থী, অভিভাবক, শিক্ষক ও সংশ্লিষ্ট সকলের প্রতি রইলো আন্তরিক শুভকামনা। "
+        message: "First and গুণগত ও মানসম্মত শিক্ষার পাশাপাশি মানবিক মূল্যবোধসম্পন্ন আধুনিক ও আদর্শ নাগরিক গড়ার প্রত্যয় নিয়ে এগিয়ে চলেছে এ প্রতিষ্ঠান। ভৌগোলিক অবস্থানগত সীমাবদ্ধতা, আর্থ-সামাজিক প্রেক্ষাপট ও অন্যান্য পশ্চাৎপদতা সত্ত্বেও এ প্রতিষ্ঠানটি তিন পার্বত্য জেলায় শ্রেষ্ঠ প্রতিষ্ঠানের স্বীকৃতি অর্জন করেছে। শুধু শিক্ষাক্ষেত্রেই নয়, সহশিক্ষামূলক কার্যক্রমেও পিছিয়ে নেই এই প্রতিষ্ঠান। <br> বাংলাদেশ নৌবাহিনী স্কুল এন্ড কলেজ কাপ্তাই-এর শিক্ষার্থী, অভিভাবক, শিক্ষক ও সংশ্লিষ্ট সকলের প্রতি রইলো আন্তরিক শুভকামনা।"
       },
       {
         id: "t-vp",
@@ -990,10 +1443,6 @@
       }
     ];
 
-    /**
-     * INITIAL GALLERY DATASET
-     * Matched to uploaded reference card format: Title, URL, Desc, and Tag
-     */
     let GALLERY_DATA = [
       {
         title: "Family",
@@ -1115,7 +1564,25 @@
         return null;
       };
 
-      // 2. Parse Students (Mapped strictly with their titles)
+      // 2. Parse Notices & Announcements
+      const rawNotices = findArray(root, 'notices', 'notice', 'announcements', 'updates', 'bulletin');
+      if (rawNotices && rawNotices.length > 0) {
+        NOTICES_DATA = rawNotices.map((n, idx) => {
+          return {
+            id: `notice-${idx + 1}`,
+            title: getField(n, 'title', 'noticetitle', 'heading', 'name') || "Official Notice",
+            description: getField(n, 'description', 'desc', 'details', 'body', 'message', 'text', 'content') || "",
+            url: normalizeImageUrl(getField(n, 'url', 'link', 'attachment', 'photourl', 'image', 'preview')),
+            popup: getField(n, 'popup', 'ispopup', 'type', 'modal', 'showpopup', 'logic') || "",
+            date: getField(n, 'date', 'time', 'publishdate', 'status', 'tag') || "Announcement"
+          };
+        }).filter(n => n.title || n.description || n.url);
+
+        renderNoticeBoard();
+        checkAndTriggerPopup();
+      }
+
+      // 3. Parse Students
       const rawStudents = findArray(root, 'students', 'student', 'studentdetails', 'classmates', 'batch');
       if (rawStudents && rawStudents.length > 0) {
         STUDENTS_DATA = rawStudents.map((s, idx) => {
@@ -1140,7 +1607,7 @@
         }
       }
 
-      // 3. Parse Timeline
+      // 4. Parse Timeline
       const rawTimeline = findArray(root, 'timeline', 'journey', 'milestones', 'events', 'academicjourney');
       if (rawTimeline && rawTimeline.length > 0) {
         TIMELINE_DATA = rawTimeline.map(m => ({
@@ -1151,7 +1618,7 @@
         renderTimeline();
       }
 
-      // 4. Parse Time Capsule
+      // 5. Parse Time Capsule
       const rawCapsule = findArray(root, 'capsule', 'capsules', 'memories', 'recollections', 'timecapsule');
       if (rawCapsule && rawCapsule.length > 0) {
         CAPSULE_DATA = rawCapsule.map(c => ({
@@ -1161,7 +1628,7 @@
         renderCapsule();
       }
 
-      // 5. Parse Gallery (Title, URL, Description, and Category Tag)
+      // 6. Parse Gallery
       const rawGallery = findArray(root, 'gallery', 'photos', 'images', 'pictures');
       if (rawGallery !== null && rawGallery !== undefined) {
         const validPhotos = rawGallery.map(g => {
@@ -1206,10 +1673,7 @@
         }
 
         const rawText = await response.text();
-        if (!rawText || !rawText.trim()) {
-          console.warn("Empty response received from Google Apps Script endpoint.");
-          return;
-        }
+        if (!rawText || !rawText.trim()) return;
 
         let cleanText = rawText.trim();
         const jsonpMatch = cleanText.match(/^[a-zA-Z0-9_$]+\s*\(([\s\S]*)\)\s*;?$/);
@@ -1220,7 +1684,7 @@
         const data = JSON.parse(cleanText);
         processIncomingSheetData(data);
       } catch (err) {
-        console.warn("Live Google Sheets sync skipped (using offline capsule dataset):", err);
+        console.warn("Notice sync running on fallback dataset:", err);
       }
     }
 
@@ -1272,7 +1736,7 @@
     }
 
     function renderTeachers() {
-      // 1. Leadership (Principal & Vice Principal)
+      // Leadership
       const leadershipContainer = document.getElementById('leadership-teachers-container');
       if (leadershipContainer) {
         const leaders = TEACHERS_DATA.filter(t => t.category === "Principal" || t.category === "Deputy Principal");
@@ -1293,7 +1757,7 @@
         `).join('');
       }
 
-      // 2. Class Teacher (Biology Sir)
+      // Class Teacher
       const classTeacherContainer = document.getElementById('class-teacher-container');
       if (classTeacherContainer) {
         const ct = TEACHERS_DATA.find(t => t.category === "Class Teacher") || TEACHERS_DATA[2];
@@ -1325,7 +1789,7 @@
         }
       }
 
-      // 3. Subject Teachers
+      // Subject Teachers
       const subjectContainer = document.getElementById('subject-teachers-grid');
       if (subjectContainer) {
         const leaders = TEACHERS_DATA.filter(t => t.category === "Principal" || t.category === "Deputy Principal");
@@ -1343,11 +1807,9 @@
             <span class="px-2.5 py-0.5 rounded-md bg-cyan-500/15 text-cyan-300 text-[10px] font-bold uppercase mb-1">${t.subject}</span>
             <h5 class="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors w-full line-clamp-1">${t.name}</h5>
             <p class="text-[11px] text-slate-400 line-clamp-1">${t.designation}</p>
-            
             <p class="mt-2 text-[11px] text-slate-300/90 italic line-clamp-2 px-1 leading-snug">
               “${t.message || 'Excellence through knowledge and discipline.'}”
             </p>
-            
             <div class="mt-auto pt-2.5">
               <span class="text-[10px] text-cyan-400 font-semibold group-hover:underline inline-flex items-center gap-1">
                 View Dossier →
@@ -1504,15 +1966,14 @@
         return `
           <div class="gallery-preview-card flex flex-col group" data-gallery-idx="${idx}">
             
-            <!-- Top Photo Container with Overlays -->
+            <!-- Top Photo Container -->
             <div class="relative w-full aspect-[4/3] sm:aspect-[4/3.2] overflow-hidden bg-navy-950 flex items-center justify-center cursor-pointer" onclick="openGalleryModal(${idx})">
               
-              <!-- Floating Category Pill at Top Right (Reference Design Match) -->
+              <!-- Floating Category Pill -->
               <div class="absolute top-3.5 right-3.5 z-20 px-3.5 py-1 rounded-full bg-navy-950/85 backdrop-blur-md border border-cyan-400/40 text-cyan-300 text-[11px] font-extrabold tracking-widest uppercase shadow-lg">
                 ${tag}
               </div>
 
-              <!-- Main Image or Fallback SVG -->
               ${item.url ? `
                 <img src="${item.url}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" />
                 <div class="w-full h-full flex flex-col items-center justify-center text-cyan-300/80 p-6 hidden">
@@ -1526,7 +1987,7 @@
                 </div>
               `}
 
-              <!-- In-Image Deep Gradient & Typography Overlay (Reference Match) -->
+              <!-- Gradient & Typography Overlay -->
               <div class="absolute inset-0 bg-gradient-to-t from-[#040a17] via-[#040a17]/65 to-transparent flex flex-col justify-end p-5 pointer-events-none">
                 <span class="text-[11px] font-bold text-cyan-400 tracking-wider uppercase mb-1">
                   ${tag}
@@ -1538,7 +1999,6 @@
                   ${desc}
                 </p>
 
-                <!-- "Click to view" Action Trigger with Expand Icon -->
                 <div class="mt-3 inline-flex items-center gap-1.5 text-xs text-cyan-300 font-semibold">
                   <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
@@ -1549,10 +2009,8 @@
 
             </div>
 
-            <!-- Bottom Information and Control Bar (Reference Match) -->
+            <!-- Bottom Information and Control Bar -->
             <div class="p-4 sm:p-5 flex items-center justify-between gap-3 bg-[#030814]/90 border-t border-white/5 rounded-b-[1.75rem]">
-              
-              <!-- Left: Uppercase Title & Truncated Description -->
               <div class="overflow-hidden space-y-0.5">
                 <h5 class="text-sm sm:text-base font-extrabold text-white uppercase tracking-wider font-serif truncate">
                   ${title}
@@ -1562,23 +2020,17 @@
                 </p>
               </div>
 
-              <!-- Right: Dual Action Buttons (Share & Expand) -->
               <div class="flex items-center gap-2 flex-shrink-0">
-                
-                <!-- Share Button -->
                 <button type="button" aria-label="Share photo" onclick="shareGalleryItem(event, ${idx})" class="w-9 h-9 rounded-xl bg-navy-950/90 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-400/60 flex items-center justify-center text-slate-300 hover:text-cyan-300 transition-all shadow-sm active:scale-95" title="Share Photo">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
                 </button>
 
-                <!-- Fullscreen / Lightbox Button -->
                 <button type="button" aria-label="Expand photo" onclick="openGalleryModal(${idx})" class="w-9 h-9 rounded-xl bg-navy-950/90 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-400/60 flex items-center justify-center text-slate-300 hover:text-cyan-300 transition-all shadow-sm active:scale-95" title="Expand Photo">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
                   </svg>
                 </button>
-
               </div>
-
             </div>
 
           </div>
@@ -1868,6 +2320,7 @@
       updateAppLogo(LOGO_URL);
 
       // 2. Initial component rendering
+      renderNoticeBoard();
       renderStudents(STUDENTS_DATA);
       renderTeachers();
       renderTimeline();
@@ -1958,6 +2411,14 @@
         });
       }
 
+      // Notice Popup Modal Background Click
+      const noticePopupModal = document.getElementById('notice-popup-modal');
+      if (noticePopupModal) {
+        noticePopupModal.addEventListener('click', (e) => {
+          if (e.target === noticePopupModal) closeNoticePopup();
+        });
+      }
+
       if (galleryShareBtn) {
         galleryShareBtn.addEventListener('click', () => {
           if (!currentActiveGalleryItem) return;
@@ -1968,6 +2429,7 @@
 
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
+          closeNoticePopup();
           closeModal();
           closeTeacherModal();
           closeGalleryModal();
