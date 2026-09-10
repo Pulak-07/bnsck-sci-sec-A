@@ -1,0 +1,2413 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BNSCK HSC 2027 Science Section A - Admin Portal</title>
+  
+  <!-- Inter & Plus Jakarta Sans typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+            },
+            surface: {
+              950: '#07090e',
+              900: '#0c1017',
+              850: '#111722',
+              800: '#17202f',
+              700: '#232f42',
+              600: '#334155',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Sleek custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0c1017;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #232f42;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4f46e5;
+    }
+    .fade-in {
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .glass-panel {
+      background: rgba(12, 16, 23, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+  </style>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-surface-950 text-slate-100 font-sans antialiased min-h-screen selection:bg-brand-500/30 selection:text-brand-200">
+
+  <!-- ========================================================================= -->
+  <!-- 1. AUTHENTICATION VIEW (Protected Gateway)                               -->
+  <!-- ========================================================================= -->
+  <div id="loginView" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-950/95 backdrop-blur-xl">
+    <div class="w-full max-w-md bg-surface-900 border border-surface-700/80 rounded-3xl p-8 shadow-2xl relative overflow-hidden fade-in">
+      <!-- Glow effect -->
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex items-center gap-3.5 mb-7">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center shadow-lg shadow-brand-500/20 text-white font-bold text-lg">
+          B
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-tight">BNSCK Science '27</h1>
+          <p class="text-xs text-slate-400">Class Section A &bull; Admin Portal</p>
+        </div>
+      </div>
+
+      <div id="loginError" class="hidden mb-5 p-3.5 rounded-xl bg-rose-950/70 border border-rose-500/30 text-xs text-rose-200 flex items-start gap-2.5">
+        <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
+        <span id="loginErrorMsg">Invalid email or password.</span>
+      </div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Admin Email</label>
+          <div class="relative">
+            <i data-lucide="mail" class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input type="email" id="loginEmail" required placeholder="admin@bnsck.edu"
+              class="w-full pl-10 pr-4 py-2.5 bg-surface-850 border border-surface-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Master Password</label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input type="password" id="loginPassword" required placeholder="••••••••"
+              class="w-full pl-10 pr-4 py-2.5 bg-surface-850 border border-surface-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" />
+          </div>
+        </div>
+
+        <button type="submit" id="loginBtn"
+          class="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 text-white font-semibold text-sm shadow-lg shadow-brand-600/25 flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-50">
+          <span>Sign In to Dashboard</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- Developer attribution on login screen -->
+      <div class="mt-8 pt-5 border-t border-surface-700/50 text-center text-xs text-slate-500">
+        Engineered by 
+        <a href="https://pulakchakma.dev.cv" target="_blank" rel="noopener noreferrer" class="font-medium text-brand-400 hover:text-brand-300 underline underline-offset-2 transition-colors">
+          Pulak chakma
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN APPLICATION SHELL (Protected Layout)                             -->
+  <!-- ========================================================================= -->
+  <div id="adminApp" class="hidden min-h-screen flex flex-col md:flex-row bg-surface-950">
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden backdrop-blur-sm"></div>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside id="sidebar"
+      class="fixed md:sticky top-0 left-0 z-40 h-screen w-64 bg-surface-900 border-r border-surface-700/70 flex flex-col justify-between transition-transform duration-200 ease-out -translate-x-full md:translate-x-0">
+      
+      <div>
+        <!-- Brand Header -->
+        <div class="p-5 border-b border-surface-700/70 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-brand-500/20">
+              B
+            </div>
+            <div>
+              <h2 class="text-sm font-bold text-white tracking-tight">BNSCK Admin</h2>
+              <p class="text-[11px] text-slate-400 font-mono">HSC '27 Science A</p>
+            </div>
+          </div>
+          <button onclick="toggleMobileSidebar()" class="md:hidden p-1.5 text-slate-400 hover:text-white rounded-lg">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Nav items -->
+        <nav class="p-3 space-y-1">
+          <button onclick="switchTab('dashboard')" data-tab="dashboard"
+            class="nav-link w-full px-3 py-2.5 rounded-xl text-xs font-medium flex items-center gap-3 transition-colors bg-brand-600/20 text-brand-300 font-semibold">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span>Dashboard</span>
+          </button>
+
+          <button onclick="switchTab('students')" data-tab="students"
+            class="nav-link w-full px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-surface-800 hover:text-white flex items-center justify-between transition-colors">
+            <div class="flex items-center gap-3">
+              <i data-lucide="users" class="w-4 h-4"></i>
+              <span>Students</span>
+            </div>
+            <span id="badgeStudents" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-800 text-slate-400 border border-surface-700">0</span>
+          </button>
+
+          <button onclick="switchTab('notices')" data-tab="notices"
+            class="nav-link w-full px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-surface-800 hover:text-white flex items-center justify-between transition-colors">
+            <div class="flex items-center gap-3">
+              <i data-lucide="bell" class="w-4 h-4"></i>
+              <span>Notices (notice)</span>
+            </div>
+            <span id="badgeNotices" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-800 text-slate-400 border border-surface-700">0</span>
+          </button>
+
+          <button onclick="switchTab('timeline')" data-tab="timeline"
+            class="nav-link w-full px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-surface-800 hover:text-white flex items-center justify-between transition-colors">
+            <div class="flex items-center gap-3">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>Timeline</span>
+            </div>
+            <span id="badgeTimeline" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-800 text-slate-400 border border-surface-700">0</span>
+          </button>
+
+          <button onclick="switchTab('capsule')" data-tab="capsule"
+            class="nav-link w-full px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-surface-800 hover:text-white flex items-center justify-between transition-colors">
+            <div class="flex items-center gap-3">
+              <i data-lucide="archive" class="w-4 h-4"></i>
+              <span>Time Capsule</span>
+            </div>
+            <span id="badgeCapsule" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-800 text-slate-400 border border-surface-700">0</span>
+          </button>
+
+          <button onclick="switchTab('gallery')" data-tab="gallery"
+            class="nav-link w-full px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-surface-800 hover:text-white flex items-center justify-between transition-colors">
+            <div class="flex items-center gap-3">
+              <i data-lucide="image" class="w-4 h-4"></i>
+              <span>Gallery</span>
+            </div>
+            <span id="badgeGallery" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-800 text-slate-400 border border-surface-700">0</span>
+          </button>
+
+          <button onclick="switchTab('settings')" data-tab="settings"
+            class="nav-link w-full px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-surface-800 hover:text-white flex items-center gap-3 transition-colors">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            <span>Settings & Keys</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- User profile & Developer attribution -->
+      <div class="p-3 border-t border-surface-700/70 space-y-2.5">
+        <div class="px-3 py-2 rounded-xl bg-surface-850/60 border border-surface-700/40 flex items-center justify-between">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div id="userAvatar" class="w-8 h-8 rounded-lg bg-brand-600/30 border border-brand-500/30 flex items-center justify-center font-bold text-xs text-brand-300">
+              AD
+            </div>
+            <div class="truncate">
+              <div id="userName" class="text-xs font-semibold text-white truncate">Administrator</div>
+              <div id="userRole" class="text-[10px] text-brand-400 font-mono">admin</div>
+            </div>
+          </div>
+          <button onclick="handleLogout()" title="Sign Out" class="text-slate-400 hover:text-rose-400 p-1 rounded-lg transition-colors">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="px-3 py-2 rounded-xl bg-surface-950/60 border border-surface-800/80 text-[11px] text-slate-400 text-center">
+          Developer: 
+          <a href="https://pulakchakma.dev.cv" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:text-brand-300 font-medium underline underline-offset-2 transition-colors">
+            Pulak chakma
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT VIEWPORT -->
+    <main class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+      
+      <!-- Top Navigation Bar -->
+      <header class="h-16 px-6 glass-panel border-b border-surface-700/70 sticky top-0 z-20 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="toggleMobileSidebar()" class="md:hidden p-2 text-slate-400 hover:text-white rounded-lg">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+          <div>
+            <h2 id="topBarTitle" class="text-sm font-bold text-white tracking-tight">Dashboard Overview</h2>
+            <p id="topBarSubtitle" class="text-[11px] text-slate-400">Class Section A live management console</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Refresh Sync Button -->
+          <button onclick="loadRemoteData(true)" class="px-3 py-1.5 rounded-xl bg-surface-850 hover:bg-surface-800 border border-surface-700/80 text-xs font-medium text-slate-200 flex items-center gap-1.5 transition-colors">
+            <i data-lucide="refresh-cw" id="refreshIcon" class="w-3.5 h-3.5 text-brand-400"></i>
+            <span class="hidden sm:inline">Sync Sheets</span>
+          </button>
+          
+          <a href="/" target="_blank" class="px-3 py-1.5 rounded-xl bg-brand-600/10 hover:bg-brand-600/20 border border-brand-500/30 text-xs font-semibold text-brand-300 flex items-center gap-1.5 transition-colors">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">Live Website</span>
+          </a>
+        </div>
+      </header>
+
+      <div class="p-6 md:p-8 flex-1 max-w-7xl w-full mx-auto space-y-6">
+
+        <!-- ================================================================= -->
+        <!-- TAB 1: DASHBOARD VIEW                                             -->
+        <!-- ================================================================= -->
+        <section id="tab-dashboard" class="tab-pane space-y-6 fade-in">
+          
+          <!-- Quick Stat Cards -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-5 relative overflow-hidden">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-slate-400">Total Students</span>
+                <i data-lucide="users" class="w-4 h-4 text-brand-400"></i>
+              </div>
+              <div id="statStudents" class="text-2xl font-bold text-white font-mono">0</div>
+              <div class="text-[10px] text-slate-500 mt-1">Class Roster (Science A)</div>
+            </div>
+
+            <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-5 relative overflow-hidden">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-slate-400">Notices Published</span>
+                <i data-lucide="bell" class="w-4 h-4 text-amber-400"></i>
+              </div>
+              <div id="statNotices" class="text-2xl font-bold text-white font-mono">0</div>
+              <div class="text-[10px] text-slate-500 mt-1">Active Announcements</div>
+            </div>
+
+            <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-5 relative overflow-hidden">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-slate-400">Timeline Milestones</span>
+                <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i>
+              </div>
+              <div id="statTimeline" class="text-2xl font-bold text-white font-mono">0</div>
+              <div class="text-[10px] text-slate-500 mt-1">Key academic events</div>
+            </div>
+
+            <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-5 relative overflow-hidden">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-slate-400">Gallery Photos</span>
+                <i data-lucide="image" class="w-4 h-4 text-sky-400"></i>
+              </div>
+              <div id="statGallery" class="text-2xl font-bold text-white font-mono">0</div>
+              <div class="text-[10px] text-slate-500 mt-1">Supabase storage links</div>
+            </div>
+          </div>
+
+          <!-- System Status & Quick Actions -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Quick Actions -->
+            <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-6">
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-brand-400"></i>
+                <span>Quick Actions</span>
+              </h3>
+              <div class="grid grid-cols-2 gap-2.5">
+                <button onclick="openStudentModal()" class="p-3 rounded-xl bg-surface-850 hover:bg-surface-800 border border-surface-700/70 text-left transition-colors">
+                  <i data-lucide="user-plus" class="w-4 h-4 text-brand-400 mb-1.5"></i>
+                  <div class="text-xs font-semibold text-white">Add Student</div>
+                  <div class="text-[10px] text-slate-400">Create new roll</div>
+                </button>
+                <button onclick="openNoticeModal()" class="p-3 rounded-xl bg-surface-850 hover:bg-surface-800 border border-surface-700/70 text-left transition-colors">
+                  <i data-lucide="file-plus" class="w-4 h-4 text-amber-400 mb-1.5"></i>
+                  <div class="text-xs font-semibold text-white">Post Notice</div>
+                  <div class="text-[10px] text-slate-400">Popup & notice row</div>
+                </button>
+                <button onclick="openTimelineModal()" class="p-3 rounded-xl bg-surface-850 hover:bg-surface-800 border border-surface-700/70 text-left transition-colors">
+                  <i data-lucide="calendar-plus" class="w-4 h-4 text-emerald-400 mb-1.5"></i>
+                  <div class="text-xs font-semibold text-white">Add Event</div>
+                  <div class="text-[10px] text-slate-400">Batch timeline</div>
+                </button>
+                <button onclick="openGalleryModal()" class="p-3 rounded-xl bg-surface-850 hover:bg-surface-800 border border-surface-700/70 text-left transition-colors">
+                  <i data-lucide="upload-cloud" class="w-4 h-4 text-sky-400 mb-1.5"></i>
+                  <div class="text-xs font-semibold text-white">Add Photo</div>
+                  <div class="text-[10px] text-slate-400">Direct to Supabase</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Health Checks -->
+            <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-6">
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
+                <span>System Connectivity</span>
+              </h3>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 rounded-xl bg-surface-850 border border-surface-700/60">
+                  <div class="flex items-center gap-2.5">
+                    <div id="healthAppsScriptDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                    <span class="text-xs font-medium text-slate-200">Google Apps Script</span>
+                  </div>
+                  <span id="healthAppsScriptText" class="text-[11px] font-mono text-emerald-400">Connected</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-xl bg-surface-850 border border-surface-700/60">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                    <span class="text-xs font-medium text-slate-200">Supabase Auth</span>
+                  </div>
+                  <span class="text-[11px] font-mono text-emerald-400">Active Session</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-xl bg-surface-850 border border-surface-700/60">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                    <span class="text-xs font-medium text-slate-200">Storage Bucket ('bnsck')</span>
+                  </div>
+                  <span class="text-[11px] font-mono text-emerald-400">Ready</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Activity Log -->
+            <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <h3 class="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <i data-lucide="history" class="w-4 h-4 text-slate-400"></i>
+                  <span>Recent Admin Activity</span>
+                </h3>
+                <div id="recentActivityList" class="space-y-2.5 text-xs">
+                  <div class="flex items-start gap-2.5 text-slate-400">
+                    <div class="w-2 h-2 rounded-full bg-brand-500 mt-1.5 shrink-0"></div>
+                    <div>
+                      <span class="text-white font-medium">Session initialized</span>
+                      <div class="text-[10px] text-slate-500">Synced live data with Google Sheets</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer Developer Tag -->
+              <div class="mt-4 pt-3 border-t border-surface-800 text-[11px] text-slate-400 flex items-center justify-between">
+                <span>Admin Console</span>
+                <span>Dev: <a href="https://pulakchakma.dev.cv" target="_blank" class="text-brand-400 hover:underline">Pulak chakma</a></span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 2: STUDENTS VIEW                                              -->
+        <!-- ================================================================= -->
+        <section id="tab-students" class="tab-pane hidden space-y-4 fade-in">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <div class="relative flex-1 sm:w-72">
+                <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="studentSearch" oninput="handleStudentSearch()" placeholder="Search roll, name, title..."
+                  class="w-full pl-9 pr-3 py-2 bg-surface-900 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+              </div>
+              <select id="studentSort" onchange="handleStudentSort()" class="px-3 py-2 bg-surface-900 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none">
+                <option value="roll_asc">Roll (Ascending)</option>
+                <option value="roll_desc">Roll (Descending)</option>
+                <option value="name_asc">Name (A-Z)</option>
+              </select>
+            </div>
+            <button onclick="openStudentModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs flex items-center justify-center gap-2 transition-colors">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Add Student</span>
+            </button>
+          </div>
+
+          <!-- Students Table -->
+          <div class="bg-surface-900 border border-surface-700/80 rounded-2xl overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-surface-850/80 border-b border-surface-700/80 text-slate-400 uppercase text-[10px] font-semibold tracking-wider">
+                  <tr>
+                    <th class="py-3 px-4">Photo</th>
+                    <th class="py-3 px-4">Roll</th>
+                    <th class="py-3 px-4">Full Name</th>
+                    <th class="py-3 px-4">Section / Group</th>
+                    <th class="py-3 px-4">Designation / Title</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody" class="divide-y divide-surface-700/60">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="p-3 border-t border-surface-700/70 flex items-center justify-between text-xs text-slate-400">
+              <span id="studentPageInfo">Showing 0 of 0 entries</span>
+              <div class="flex items-center gap-1.5">
+                <button id="studentPrevBtn" onclick="changeStudentPage(-1)" class="px-2.5 py-1.5 rounded-lg bg-surface-850 hover:bg-surface-800 disabled:opacity-30">Previous</button>
+                <button id="studentNextBtn" onclick="changeStudentPage(1)" class="px-2.5 py-1.5 rounded-lg bg-surface-850 hover:bg-surface-800 disabled:opacity-30">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 3: NOTICES VIEW (notice sheet)                                -->
+        <!-- ================================================================= -->
+        <section id="tab-notices" class="tab-pane hidden space-y-4 fade-in">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="noticeSearch" oninput="renderNoticesTable()" placeholder="Search announcements..."
+                class="w-full pl-9 pr-3 py-2 bg-surface-900 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+            </div>
+            <button onclick="openNoticeModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs flex items-center justify-center gap-2 transition-colors">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Create Notice</span>
+            </button>
+          </div>
+
+          <div class="bg-surface-900 border border-surface-700/80 rounded-2xl overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-surface-850/80 border-b border-surface-700/80 text-slate-400 uppercase text-[10px] font-semibold tracking-wider">
+                  <tr>
+                    <th class="py-3 px-4">Date (data)</th>
+                    <th class="py-3 px-4">Type (Table1) & Popup</th>
+                    <th class="py-3 px-4">Description</th>
+                    <th class="py-3 px-4">Attachment (url)</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="noticesTableBody" class="divide-y divide-surface-700/60">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 4: TIMELINE VIEW                                              -->
+        <!-- ================================================================= -->
+        <section id="tab-timeline" class="tab-pane hidden space-y-4 fade-in">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="timelineSearch" oninput="renderTimelineTable()" placeholder="Search milestones..."
+                class="w-full pl-9 pr-3 py-2 bg-surface-900 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+            </div>
+            <button onclick="openTimelineModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs flex items-center justify-center gap-2 transition-colors">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Add Event</span>
+            </button>
+          </div>
+
+          <div class="bg-surface-900 border border-surface-700/80 rounded-2xl overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-surface-850/80 border-b border-surface-700/80 text-slate-400 uppercase text-[10px] font-semibold tracking-wider">
+                  <tr>
+                    <th class="py-3 px-4">Date (Column)</th>
+                    <th class="py-3 px-4">Milestone Title</th>
+                    <th class="py-3 px-4">Event Description (desc)</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="timelineTableBody" class="divide-y divide-surface-700/60">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 5: CAPSULE VIEW                                               -->
+        <!-- ================================================================= -->
+        <section id="tab-capsule" class="tab-pane hidden space-y-4 fade-in">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="capsuleSearch" oninput="renderCapsuleTable()" placeholder="Search memories..."
+                class="w-full pl-9 pr-3 py-2 bg-surface-900 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+            </div>
+            <button onclick="openCapsuleModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs flex items-center justify-center gap-2 transition-colors">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Add Memory</span>
+            </button>
+          </div>
+
+          <div class="bg-surface-900 border border-surface-700/80 rounded-2xl overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-surface-850/80 border-b border-surface-700/80 text-slate-400 uppercase text-[10px] font-semibold tracking-wider">
+                  <tr>
+                    <th class="py-3 px-4">Memory Title</th>
+                    <th class="py-3 px-4">Message / Story (desc)</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="capsuleTableBody" class="divide-y divide-surface-700/60">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 6: GALLERY VIEW                                               -->
+        <!-- ================================================================= -->
+        <section id="tab-gallery" class="tab-pane hidden space-y-4 fade-in">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="gallerySearch" oninput="renderGalleryGrid()" placeholder="Search photos..."
+                class="w-full pl-9 pr-3 py-2 bg-surface-900 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+            </div>
+            <button onclick="openGalleryModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs flex items-center justify-center gap-2 transition-colors">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span>Upload Photo</span>
+            </button>
+          </div>
+
+          <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 7: WEBSITE SETTINGS VIEW                                      -->
+        <!-- ================================================================= -->
+        <section id="tab-settings" class="tab-pane hidden space-y-6 fade-in">
+          <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-6 max-w-2xl">
+            <h3 class="text-sm font-bold text-white mb-1">Global Website Parameters</h3>
+            <p class="text-xs text-slate-400 mb-6">Values saved here write directly to your Settings Google Sheet.</p>
+
+            <form onsubmit="handleSaveSettings(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">Official College / Batch Logo</label>
+                <div class="flex items-center gap-4">
+                  <div class="w-16 h-16 rounded-xl bg-surface-850 border border-surface-700 flex items-center justify-center overflow-hidden shrink-0">
+                    <img id="settingsLogoPreview" src="" class="w-full h-full object-contain p-1 hidden" />
+                    <span id="settingsLogoPlaceholder" class="text-xs text-slate-500 font-mono">No Logo</span>
+                  </div>
+                  <div class="space-y-1.5 flex-1">
+                    <input type="file" id="logoFileInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)" />
+                    <button type="button" id="logoUploadBtn" onclick="document.getElementById('logoFileInput').click()"
+                      class="px-3 py-1.5 rounded-lg bg-surface-850 hover:bg-surface-800 border border-surface-700 text-xs text-slate-200 flex items-center gap-1.5 transition-colors">
+                      <i data-lucide="upload" class="w-3.5 h-3.5 text-brand-400"></i>
+                      <span>Upload to Supabase</span>
+                    </button>
+                    <input type="text" id="settingLogoUrl" placeholder="Direct Logo URL" class="w-full px-3 py-1.5 bg-surface-850 border border-surface-700/80 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none font-mono text-[11px]" />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Website Headline / Title</label>
+                <input type="text" id="settingSiteTitle" placeholder="BNSCK HSC 2027 Science Section A"
+                  class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-brand-500" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Running Marquee Notice Text</label>
+                <textarea id="settingNoticeBar" rows="3" placeholder="Important announcement shown across the top marquee..."
+                  class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-brand-500"></textarea>
+              </div>
+
+              <button type="submit" id="saveSettingsBtn"
+                class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs transition-colors flex items-center gap-2">
+                <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                <span>Save Website Settings</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Connection Configuration Panel -->
+          <div class="bg-surface-900 border border-surface-700/80 rounded-2xl p-6 max-w-2xl">
+            <h3 class="text-sm font-bold text-white mb-1">Live Backend Connection Keys</h3>
+            <p class="text-xs text-slate-400 mb-4">Credentials currently powering this session.</p>
+
+            <div class="space-y-3 text-xs">
+              <div>
+                <label class="block font-medium text-slate-400 mb-1">Google Apps Script URL</label>
+                <input type="text" id="configAppsScriptUrl" class="w-full px-3 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-white font-mono text-[11px] focus:outline-none" />
+              </div>
+
+              <div>
+                <label class="block font-medium text-slate-400 mb-1">Apps Script Admin Secret Key</label>
+                <input type="password" id="configAppsScriptKey" class="w-full px-3 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-white font-mono text-[11px] focus:outline-none" />
+              </div>
+
+              <div>
+                <label class="block font-medium text-slate-400 mb-1">Supabase Project URL</label>
+                <input type="text" id="configSupabaseUrl" class="w-full px-3 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-white font-mono text-[11px] focus:outline-none" />
+              </div>
+
+              <div>
+                <label class="block font-medium text-slate-400 mb-1">Supabase Public Anon Key</label>
+                <input type="password" id="configSupabaseKey" class="w-full px-3 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-white font-mono text-[11px] focus:outline-none" />
+              </div>
+
+              <div>
+                <label class="block font-medium text-slate-400 mb-1">Supabase Storage Bucket</label>
+                <input type="text" id="configStorageBucket" value="bnsck" class="w-full px-3 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-white font-mono text-[11px] focus:outline-none" />
+              </div>
+
+              <div class="pt-2 flex justify-end">
+                <button type="button" onclick="saveConnectionConfig()" class="px-4 py-2 rounded-xl bg-surface-800 hover:bg-surface-700 text-white font-medium text-xs transition-colors">
+                  Save Connection Keys
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. MODAL DIALOGS & OVERLAYS                                              -->
+  <!-- ========================================================================= -->
+
+  <!-- STUDENT MODAL -->
+  <div id="studentModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface-900 border border-surface-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl fade-in max-h-[90vh] flex flex-col">
+      <div class="px-6 py-4 border-b border-surface-700 flex items-center justify-between">
+        <h3 id="studentModalTitle" class="text-sm font-semibold text-white">Add Student</h3>
+        <button onclick="closeStudentModal()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="studentForm" onsubmit="handleSaveStudent(event)" class="p-6 space-y-4 overflow-y-auto flex-1">
+        <input type="hidden" id="studentOriginalRoll" />
+        
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5">ID (e.g. s-04)</label>
+            <input type="text" id="studentId" placeholder="s-04"
+              class="w-full px-3 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5">Roll *</label>
+            <input type="number" id="studentRoll" required placeholder="4"
+              class="w-full px-3 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5">Section *</label>
+            <input type="text" id="studentSection" required value="A" placeholder="A"
+              class="w-full px-3 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5">Student Full Name *</label>
+            <input type="text" id="studentName" required placeholder="Towsif Reza"
+              class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5">Group *</label>
+            <input type="text" id="studentGroup" value="Science" required placeholder="Science"
+              class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Title / Designation (Optional)</label>
+          <input type="text" id="studentTitle" placeholder="class Captain / Bus Captain"
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Bio</label>
+          <input type="text" id="studentBio" value="Member of HSC 2027 Science Section A, Kaptai."
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+        </div>
+
+        <!-- Student Photo Upload Dropzone -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Student Photo (photoUrl)</label>
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-xl bg-surface-850 border border-surface-700 overflow-hidden flex items-center justify-center shrink-0">
+              <img id="studentPhotoPreview" src="" class="w-full h-full object-cover hidden" />
+              <i id="studentPhotoIcon" data-lucide="user" class="w-6 h-6 text-slate-600"></i>
+            </div>
+            <div class="flex-1 space-y-1.5">
+              <input type="file" id="studentPhotoFile" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'students', onStudentPhotoUploaded, 'saveStudentBtn')" />
+              <button type="button" id="studentUploadBtn" onclick="document.getElementById('studentPhotoFile').click()"
+                class="px-3 py-1.5 rounded-lg bg-surface-850 hover:bg-surface-800 border border-surface-700 text-xs text-slate-200 flex items-center gap-1.5 transition-colors">
+                <i data-lucide="upload" class="w-3.5 h-3.5 text-brand-400"></i>
+                <span>Upload to Supabase ('bnsck')</span>
+              </button>
+              <input type="text" id="studentPhotoUrl" placeholder="Direct Supabase photoUrl"
+                class="w-full px-3 py-1.5 bg-surface-850 border border-surface-700/80 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none font-mono text-[11px]" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-surface-700 flex justify-end gap-3">
+          <button type="button" onclick="closeStudentModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-medium">Cancel</button>
+          <button type="submit" id="saveStudentBtn" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-2">
+            <span>Save Student</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- NOTICE MODAL -->
+  <div id="noticeModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface-900 border border-surface-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl fade-in max-h-[90vh] flex flex-col">
+      <div class="px-6 py-4 border-b border-surface-700 flex items-center justify-between">
+        <h3 id="noticeModalTitle" class="text-sm font-semibold text-white">Create Notice</h3>
+        <button onclick="closeNoticeModal()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="noticeForm" onsubmit="handleSaveNotice(event)" class="p-6 space-y-4 overflow-y-auto flex-1">
+        <input type="hidden" id="noticeOriginalRowId" />
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5">Category / Table1 *</label>
+            <input type="text" id="noticeCategory" required placeholder="Important"
+              class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-brand-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5">Popup Notification? *</label>
+            <select id="noticePopup" class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-brand-500">
+              <option value="">No (Standard Feed Notice)</option>
+              <option value="yes">yes (Trigger Alert Popup)</option>
+              <option value="true">true</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Date (Column 'data') *</label>
+          <input type="text" id="noticeDate" required placeholder="09.09.2026"
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-brand-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Notice Description *</label>
+          <textarea id="noticeDescription" rows="4" required placeholder="Write the notice description here..."
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Attachment / URL (url)</label>
+          <div class="flex items-center gap-3">
+            <input type="file" id="noticeFile" accept="image/*,.pdf" class="hidden" onchange="handleImageUpload(event, 'notices', onNoticePhotoUploaded, 'saveNoticeBtn')" />
+            <button type="button" onclick="document.getElementById('noticeFile').click()"
+              class="px-3 py-1.5 rounded-lg bg-surface-850 hover:bg-surface-800 border border-surface-700 text-xs text-slate-200 flex items-center gap-1.5 transition-colors">
+              <i data-lucide="upload" class="w-3.5 h-3.5 text-brand-400"></i>
+              <span>Upload to Supabase</span>
+            </button>
+            <input type="text" id="noticeUrl" placeholder="https://..."
+              class="flex-1 px-3 py-1.5 bg-surface-850 border border-surface-700/80 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none font-mono text-[11px]" />
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-surface-700 flex justify-end gap-3">
+          <button type="button" onclick="closeNoticeModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-medium">Cancel</button>
+          <button type="submit" id="saveNoticeBtn" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-2">
+            <span>Save Notice</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TIMELINE MODAL -->
+  <div id="timelineModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface-900 border border-surface-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl fade-in">
+      <div class="px-6 py-4 border-b border-surface-700 flex items-center justify-between">
+        <h3 id="timelineModalTitle" class="text-sm font-semibold text-white">Add Timeline Event</h3>
+        <button onclick="closeTimelineModal()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="timelineForm" onsubmit="handleSaveTimeline(event)" class="p-6 space-y-4">
+        <input type="hidden" id="timelineOriginalTitle" />
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Date (Column header) *</label>
+          <input type="text" id="timelineDate" required placeholder="24.09.2025"
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Event Title *</label>
+          <input type="text" id="timelineTitle" required placeholder="Freshers' Welcome 2025"
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Event Description (desc) *</label>
+          <textarea id="timelineDesc" rows="3" required placeholder="A beautiful beginning to a new chapter..."
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"></textarea>
+        </div>
+
+        <div class="pt-4 border-t border-surface-700 flex justify-end gap-3">
+          <button type="button" onclick="closeTimelineModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-medium">Cancel</button>
+          <button type="submit" id="saveTimelineBtn" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-2">
+            <span>Save Event</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CAPSULE MODAL -->
+  <div id="capsuleModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface-900 border border-surface-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl fade-in">
+      <div class="px-6 py-4 border-b border-surface-700 flex items-center justify-between">
+        <h3 id="capsuleModalTitle" class="text-sm font-semibold text-white">Add Capsule Entry</h3>
+        <button onclick="closeCapsuleModal()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="capsuleForm" onsubmit="handleSaveCapsule(event)" class="p-6 space-y-4">
+        <input type="hidden" id="capsuleOriginalTitle" />
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Title *</label>
+          <input type="text" id="capsuleTitle" required placeholder="A message for the future"
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Message / Story (desc) *</label>
+          <textarea id="capsuleDesc" rows="4" required placeholder="Write your capsule memory here..."
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"></textarea>
+        </div>
+
+        <div class="pt-4 border-t border-surface-700 flex justify-end gap-3">
+          <button type="button" onclick="closeCapsuleModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-medium">Cancel</button>
+          <button type="submit" id="saveCapsuleBtn" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-2">
+            <span>Save Capsule</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GALLERY MODAL -->
+  <div id="galleryModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface-900 border border-surface-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl fade-in">
+      <div class="px-6 py-4 border-b border-surface-700 flex items-center justify-between">
+        <h3 id="galleryModalTitle" class="text-sm font-semibold text-white">Upload Gallery Image</h3>
+        <button onclick="closeGalleryModal()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="galleryForm" onsubmit="handleSaveGallery(event)" class="p-6 space-y-4">
+        <input type="hidden" id="galleryOriginalTitle" />
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Image File (Direct to Supabase)</label>
+          <div class="border-2 border-dashed border-surface-700 hover:border-brand-500 rounded-2xl p-4 text-center cursor-pointer transition-colors bg-surface-850/50"
+            onclick="document.getElementById('galleryFile').click()">
+            <input type="file" id="galleryFile" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'gallery', onGalleryPhotoUploaded, 'saveGalleryBtn')" />
+            <div id="galleryUploadBox">
+              <i data-lucide="cloud-upload" class="w-7 h-7 text-brand-400 mx-auto mb-1.5"></i>
+              <p class="text-xs font-semibold text-white">Click to browse image</p>
+              <p class="text-[10px] text-slate-500 mt-0.5">Bucket 'bnsck'</p>
+            </div>
+            <div id="galleryFilePreviewContainer" class="hidden">
+              <img id="galleryFilePreview" src="" class="max-h-36 mx-auto rounded-xl shadow-md" />
+              <p class="text-[11px] text-brand-400 mt-1.5 font-medium">Uploaded to Supabase!</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Image URL (url) *</label>
+          <input type="text" id="galleryImageUrl" required placeholder="https://jcvjudhtywjamfjqoopo.supabase.co/storage/..."
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none font-mono text-[11px]" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Title *</label>
+          <input type="text" id="galleryTitle" required placeholder="Campus / cricket / captain"
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-brand-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Description (descripti) [Optional]</label>
+          <input type="text" id="galleryDescription" placeholder="BNSCK Campus View"
+            class="w-full px-3.5 py-2 bg-surface-850 border border-surface-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-brand-500" />
+        </div>
+
+        <div class="pt-4 border-t border-surface-700 flex justify-end gap-3">
+          <button type="button" onclick="closeGalleryModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-medium">Cancel</button>
+          <button type="submit" id="saveGalleryBtn" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-2">
+            <span>Save to Gallery</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DELETION CONFIRMATION DIALOG (No native confirm() used) -->
+  <div id="confirmDialog" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface-900 border border-rose-500/30 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 text-center fade-in">
+      <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="trash-2" class="w-6 h-6"></i>
+      </div>
+      <h4 id="confirmTitle" class="text-sm font-bold text-white mb-1">Confirm Deletion</h4>
+      <p id="confirmMessage" class="text-xs text-slate-400 mb-5">Are you sure you want to delete this entry? This will update your live Google Sheet immediately.</p>
+      <div class="flex items-center justify-center gap-3">
+        <button type="button" onclick="closeConfirmDialog()" class="px-4 py-2 rounded-xl bg-surface-850 hover:bg-surface-800 text-slate-300 text-xs font-medium">Cancel</button>
+        <button type="button" id="confirmProceedBtn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold">Delete Entry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. JAVASCRIPT APPLICATION LOGIC                                          -->
+  <!-- ========================================================================= -->
+  <script>
+    /* Pre-populated with your exact live endpoints */
+    const CONFIG = {
+      SUPABASE_URL: localStorage.getItem("BNSCK_SUPABASE_URL") || "https://jcvjudhtywjamfjqoopo.supabase.co",
+      SUPABASE_ANON_KEY: localStorage.getItem("BNSCK_SUPABASE_ANON_KEY") || "sb_publishable_K3TG27Gm0LtjTmcYXdk_uQ_X4_Cx64J",
+      APPS_SCRIPT_URL: localStorage.getItem("BNSCK_APPS_SCRIPT_URL") || "https://script.google.com/macros/s/AKfycbwgFchidCCsDxZ5XnI01l55fjTsRL8AZNr-uAQaAdwfIat3GpmZzM2juv_HaNouX3O1/exec",
+      APPS_SCRIPT_API_KEY: localStorage.getItem("BNSCK_APPS_SCRIPT_KEY") || "bnsck-hsc27-secure-key",
+      STORAGE_BUCKET: localStorage.getItem("BNSCK_STORAGE_BUCKET") || "bnsck"
+    };
+
+    let supabaseClient = null;
+
+    /* Application Reactive State */
+    const state = {
+      user: null,
+      profile: null,
+      activeTab: 'dashboard',
+      data: {
+        students: [],
+        notices: [],
+        timeline: [],
+        capsule: [],
+        gallery: [],
+        settings: []
+      },
+      pagination: {
+        students: { page: 1, perPage: 15, sort: 'roll_asc' }
+      },
+      isLoading: false
+    };
+
+    function initSupabaseClient() {
+      try {
+        if (window.supabase && CONFIG.SUPABASE_URL) {
+          supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+          setupAuthListener();
+        }
+      } catch (e) {
+        console.warn("Supabase client init error:", e);
+      }
+    }
+
+    async function setupAuthListener() {
+      if (!supabaseClient) return;
+
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session && session.user) {
+          await setupAuthenticatedSession(session.user);
+        } else {
+          showLoginView();
+        }
+
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+          if (session && session.user) {
+            await setupAuthenticatedSession(session.user);
+          } else {
+            showLoginView();
+          }
+        });
+      } catch (err) {
+        console.error("Auth session check error:", err);
+        showLoginView();
+      }
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const errorBox = document.getElementById("loginError");
+      const errorMsg = document.getElementById("loginErrorMsg");
+      const loginBtn = document.getElementById("loginBtn");
+
+      errorBox.classList.add("hidden");
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = `<span>Signing in...</span>`;
+
+      try {
+        if (!supabaseClient) {
+          throw new Error("Supabase is not initialized. Please verify configuration keys.");
+        }
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        showToast("Welcome back! Signed in successfully.", "success");
+        await setupAuthenticatedSession(data.user);
+      } catch (err) {
+        errorMsg.textContent = err.message || "Invalid login credentials.";
+        errorBox.classList.remove("hidden");
+        showToast(err.message || "Authentication failed", "error");
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = `<span>Sign In to Dashboard</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+        lucide.createIcons();
+      }
+    }
+
+    async function setupAuthenticatedSession(user) {
+      state.user = user;
+      let role = 'admin';
+      let displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Administrator';
+
+      try {
+        const { data: profile } = await supabaseClient
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          state.profile = profile;
+          role = profile.role || role;
+          displayName = profile.name || displayName;
+        }
+      } catch (e) {
+        console.warn("Profile fetch fallback:", e);
+      }
+
+      document.getElementById("userName").textContent = displayName;
+      document.getElementById("userRole").textContent = role;
+      document.getElementById("userAvatar").textContent = displayName.substring(0, 2).toUpperCase();
+
+      document.getElementById("loginView").classList.add("hidden");
+      document.getElementById("adminApp").classList.remove("hidden");
+
+      initSettingsFormValues();
+      await loadRemoteData(false);
+      switchTab('dashboard');
+    }
+
+    function showLoginView() {
+      state.user = null;
+      state.profile = null;
+      document.getElementById("adminApp").classList.add("hidden");
+      document.getElementById("loginView").classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    async function handleLogout() {
+      try {
+        if (supabaseClient) {
+          await supabaseClient.auth.signOut();
+        }
+      } catch (err) {
+        console.warn("Logout error:", err);
+      }
+      showLoginView();
+      showToast("Logged out successfully", "info");
+    }
+
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+      
+      document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.add("hidden"));
+      const activePane = document.getElementById("tab-" + tabName);
+      if (activePane) activePane.classList.remove("hidden");
+
+      document.querySelectorAll(".nav-link").forEach(btn => {
+        if (btn.dataset.tab === tabName) {
+          btn.classList.add("bg-brand-600/20", "text-brand-300", "font-semibold");
+          btn.classList.remove("text-slate-300");
+        } else {
+          btn.classList.remove("bg-brand-600/20", "text-brand-300", "font-semibold");
+          btn.classList.add("text-slate-300");
+        }
+      });
+
+      const tabTitles = {
+        dashboard: ["Dashboard Overview", "Class Section A live management console"],
+        students: ["Students (Class Roster)", "Manage student IDs, rolls, photos and titles"],
+        notices: ["Notice Board (notice)", "Publish announcements, attachments and popups"],
+        timeline: ["Batch Milestones", "Academic timeline events and calendar"],
+        capsule: ["Time Capsule", "Archive memories, farewell letters and stories"],
+        gallery: ["Media Gallery", "Cloud-hosted campus and laboratory photo repository"],
+        settings: ["Website Settings & Keys", "Global titles, marquee and connection endpoints"]
+      };
+
+      if (tabTitles[tabName]) {
+        document.getElementById("topBarTitle").textContent = tabTitles[tabName][0];
+        document.getElementById("topBarSubtitle").textContent = tabTitles[tabName][1];
+      }
+
+      const sidebar = document.getElementById("sidebar");
+      const backdrop = document.getElementById("sidebarBackdrop");
+      if (sidebar && !sidebar.classList.contains("-translate-x-full") && window.innerWidth < 768) {
+        toggleMobileSidebar();
+      }
+
+      lucide.createIcons();
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const backdrop = document.getElementById("sidebarBackdrop");
+      if (!sidebar) return;
+
+      const isHidden = sidebar.classList.contains("-translate-x-full");
+      if (isHidden) {
+        sidebar.classList.remove("-translate-x-full");
+        if (backdrop) backdrop.classList.remove("hidden");
+      } else {
+        sidebar.classList.add("-translate-x-full");
+        if (backdrop) backdrop.classList.add("hidden");
+      }
+    }
+
+    function normalizeKey(str) {
+      if (!str) return "";
+      return String(str).toLowerCase().replace(/[\s_\-.]/g, '');
+    }
+
+    function normalizeRowObject(obj) {
+      if (!obj || typeof obj !== 'object') return obj;
+      const normalized = {};
+      for (const [key, value] of Object.entries(obj)) {
+        normalized[normalizeKey(key)] = value;
+      }
+
+      // Exact mapping according to your Google Sheets:
+      normalized.id = normalized.id || "";
+      normalized.roll = normalized.roll || normalized.rollno || "";
+      normalized.name = normalized.name || normalized.fullname || "";
+      normalized.photourl = normalized.photourl || normalized.photo || "";
+      normalized.bio = normalized.bio || "";
+      normalized.group = normalized.group || "Science";
+      normalized.section = normalized.section || "A";
+      normalized.title = normalized.title || "";
+
+      // Notice mapping: Table1, description, url, popup, data
+      normalized.table1 = normalized.table1 || normalized.category || "Important";
+      normalized.description = normalized.description || normalized.desc || "";
+      normalized.url = normalized.url || "";
+      normalized.popup = normalized.popup || "";
+      normalized.data = normalized.data || normalized.date || "";
+
+      // Timeline mapping: Column (date), title, desc
+      normalized.column = normalized.column || normalized.date || "";
+      normalized.desc = normalized.desc || normalized.description || "";
+
+      // Gallery mapping: title, url, description/descripti
+      normalized.descripti = normalized.descripti || normalized.description || "";
+
+      return normalized;
+    }
+
+    async function loadRemoteData(showNotification = false) {
+      const refreshIcon = document.getElementById("refreshIcon");
+      if (refreshIcon) refreshIcon.classList.add("animate-spin");
+
+      try {
+        const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+          method: "GET",
+          headers: { "Accept": "application/json" }
+        });
+
+        if (!response.ok) throw new Error("HTTP Status " + response.status);
+        const result = await response.json();
+
+        if (result.status === "error") {
+          throw new Error(result.message || "Backend returned an error");
+        }
+
+        const payload = result.data || result;
+        
+        state.data.students = (payload.students || []).map(normalizeRowObject);
+        state.data.notices = (payload.notices || payload.notice || []).map(normalizeRowObject);
+        state.data.timeline = (payload.timeline || []).map(normalizeRowObject);
+        state.data.capsule = (payload.capsule || []).map(normalizeRowObject);
+        state.data.gallery = (payload.gallery || []).map(normalizeRowObject);
+        state.data.settings = (payload.settings || []).map(normalizeRowObject);
+
+        document.getElementById("healthAppsScriptDot").className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+        document.getElementById("healthAppsScriptText").textContent = "Connected";
+        document.getElementById("healthAppsScriptText").className = "text-[11px] font-mono text-emerald-400";
+
+        updateDashboardMetrics();
+        renderStudentsTable();
+        renderNoticesTable();
+        renderTimelineTable();
+        renderCapsuleTable();
+        renderGalleryGrid();
+        renderSettingsData(payload);
+
+        if (showNotification) {
+          showToast("Data synchronized with live Google Sheets", "success");
+          addActivity("Sync completed with Google Sheets");
+        }
+      } catch (err) {
+        console.warn("Apps Script fetch error:", err);
+        document.getElementById("healthAppsScriptDot").className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+        document.getElementById("healthAppsScriptText").textContent = "Disconnected";
+        document.getElementById("healthAppsScriptText").className = "text-[11px] font-mono text-rose-400";
+
+        if (showNotification) {
+          showToast("Could not connect to Apps Script: " + err.message, "error");
+        }
+      } finally {
+        if (refreshIcon) refreshIcon.classList.remove("animate-spin");
+        lucide.createIcons();
+      }
+    }
+
+    async function sendAppsScriptMutation(payload) {
+      payload.apiKey = CONFIG.APPS_SCRIPT_API_KEY;
+      
+      const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error("HTTP mutation error status: " + response.status);
+      }
+
+      const resJson = await response.json();
+      if (resJson.status === "error") {
+        throw new Error(resJson.message || "Apps Script write operation failed");
+      }
+
+      return resJson;
+    }
+
+    async function uploadToSupabaseStorage(file, folder = "general") {
+      if (!supabaseClient) {
+        throw new Error("Supabase is not configured yet.");
+      }
+
+      const bucketName = CONFIG.STORAGE_BUCKET || "bnsck";
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+      const fileName = `${folder}/${Date.now()}_${sanitizedName}`;
+
+      const { data, error } = await supabaseClient.storage
+        .from(bucketName)
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabaseClient.storage
+        .from(bucketName)
+        .getPublicUrl(fileName);
+
+      return publicUrl;
+    }
+
+    async function handleImageUpload(e, folder, callback, submitBtnIdToLock) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        showToast("Please select a valid image file", "error");
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        showToast("Image size must be under 10MB", "warning");
+        return;
+      }
+
+      let lockBtn = null;
+      if (submitBtnIdToLock) {
+        lockBtn = document.getElementById(submitBtnIdToLock);
+        if (lockBtn) {
+          lockBtn.disabled = true;
+          lockBtn.dataset.origText = lockBtn.innerHTML;
+          lockBtn.innerHTML = `<span>Uploading...</span>`;
+        }
+      }
+
+      showToast("Uploading image to Supabase...", "info");
+
+      try {
+        const publicUrl = await uploadToSupabaseStorage(file, folder);
+        showToast("Image uploaded to Supabase!", "success");
+        if (callback) callback(publicUrl);
+      } catch (err) {
+        showToast("Upload failed: " + err.message, "error");
+      } finally {
+        if (lockBtn) {
+          lockBtn.disabled = false;
+          if (lockBtn.dataset.origText) lockBtn.innerHTML = lockBtn.dataset.origText;
+        }
+      }
+    }
+
+    function updateDashboardMetrics() {
+      const countStudents = state.data.students.length;
+      const countNotices = state.data.notices.length;
+      const countTimeline = state.data.timeline.length;
+      const countGallery = state.data.gallery.length;
+      const countCapsule = state.data.capsule.length;
+
+      document.getElementById("statStudents").textContent = countStudents;
+      document.getElementById("statNotices").textContent = countNotices;
+      document.getElementById("statTimeline").textContent = countTimeline;
+      document.getElementById("statGallery").textContent = countGallery;
+
+      document.getElementById("badgeStudents").textContent = countStudents;
+      document.getElementById("badgeNotices").textContent = countNotices;
+      document.getElementById("badgeTimeline").textContent = countTimeline;
+      document.getElementById("badgeGallery").textContent = countGallery;
+      document.getElementById("badgeCapsule").textContent = countCapsule;
+    }
+
+    function addActivity(text) {
+      const list = document.getElementById("recentActivityList");
+      const item = document.createElement("div");
+      item.className = "flex items-start gap-2.5 text-slate-400 fade-in";
+      item.innerHTML = `
+        <div class="w-2 h-2 rounded-full bg-brand-500 mt-1.5 shrink-0"></div>
+        <div>
+          <span class="text-white font-medium">${escapeHtml(text)}</span>
+          <div class="text-[10px] text-slate-500">Just now</div>
+        </div>
+      `;
+      list.prepend(item);
+    }
+
+    /* =========================================================================
+       STUDENTS CONTROLLER
+       ========================================================================= */
+    function renderStudentsTable() {
+      const tbody = document.getElementById("studentsTableBody");
+      const search = (document.getElementById("studentSearch").value || "").toLowerCase().trim();
+      const sort = state.pagination.students.sort;
+
+      let filtered = state.data.students.filter(s => {
+        const name = (s.name || "").toLowerCase();
+        const roll = String(s.roll || "").toLowerCase();
+        const title = (s.title || "").toLowerCase();
+        return name.includes(search) || roll.includes(search) || title.includes(search);
+      });
+
+      filtered.sort((a, b) => {
+        if (sort === "roll_asc") return (parseInt(a.roll) || 0) - (parseInt(b.roll) || 0);
+        if (sort === "roll_desc") return (parseInt(b.roll) || 0) - (parseInt(a.roll) || 0);
+        if (sort === "name_asc") return (a.name || "").localeCompare(b.name || "");
+        return 0;
+      });
+
+      const totalItems = filtered.length;
+      const perPage = state.pagination.students.perPage;
+      const totalPages = Math.ceil(totalItems / perPage) || 1;
+
+      if (state.pagination.students.page > totalPages) state.pagination.students.page = totalPages;
+      const currentPage = state.pagination.students.page;
+
+      const startIndex = (currentPage - 1) * perPage;
+      const paginated = filtered.slice(startIndex, startIndex + perPage);
+
+      document.getElementById("studentPageInfo").textContent = totalItems === 0 
+        ? "Showing 0 to 0 of 0 entries"
+        : `Showing ${startIndex + 1} to ${Math.min(startIndex + perPage, totalItems)} of ${totalItems} entries`;
+
+      document.getElementById("studentPrevBtn").disabled = currentPage <= 1;
+      document.getElementById("studentNextBtn").disabled = currentPage >= totalPages;
+
+      if (paginated.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-10 text-center text-slate-500">
+              <i data-lucide="users" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+              <p>No student records found.</p>
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      tbody.innerHTML = paginated.map(s => {
+        const roll = s.roll || "";
+        const name = s.name || "Unnamed";
+        const section = s.section || "A";
+        const group = s.group || "Science";
+        const title = s.title || "-";
+        const photo = s.photourl || "";
+
+        return `
+          <tr class="hover:bg-surface-850/50 transition-colors">
+            <td class="py-3 px-4">
+              <div class="w-8 h-8 rounded-full bg-surface-850 border border-surface-700 overflow-hidden flex items-center justify-center">
+                ${photo ? `<img src="${photo}" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=312e81&color=fff'" />` : `<span class="text-[10px] font-bold text-brand-400">${name.substring(0, 2).toUpperCase()}</span>`}
+              </div>
+            </td>
+            <td class="py-3 px-4 font-mono font-semibold text-slate-300">${escapeHtml(roll)}</td>
+            <td class="py-3 px-4 font-medium text-white">${escapeHtml(name)}</td>
+            <td class="py-3 px-4 text-slate-400">${escapeHtml(section)} &bull; ${escapeHtml(group)}</td>
+            <td class="py-3 px-4 text-slate-400">${escapeHtml(title)}</td>
+            <td class="py-3 px-4 text-right space-x-2">
+              <button onclick="editStudent('${roll}')" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-800 transition-colors" title="Edit Student">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>
+              </button>
+              <button onclick="confirmDelete('Students', 'roll', '${roll}', '${escapeHtml(name)}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-surface-800 transition-colors" title="Delete Student">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function handleStudentSearch() {
+      state.pagination.students.page = 1;
+      renderStudentsTable();
+    }
+
+    function handleStudentSort() {
+      state.pagination.students.sort = document.getElementById("studentSort").value;
+      renderStudentsTable();
+    }
+
+    function changeStudentPage(delta) {
+      state.pagination.students.page += delta;
+      renderStudentsTable();
+    }
+
+    function openStudentModal(student = null) {
+      document.getElementById("studentForm").reset();
+      document.getElementById("studentPhotoPreview").classList.add("hidden");
+      document.getElementById("studentPhotoIcon").classList.remove("hidden");
+
+      if (student) {
+        document.getElementById("studentModalTitle").textContent = "Edit Student";
+        document.getElementById("studentOriginalRoll").value = student.roll || "";
+        document.getElementById("studentId").value = student.id || "";
+        document.getElementById("studentRoll").value = student.roll || "";
+        document.getElementById("studentName").value = student.name || "";
+        document.getElementById("studentGroup").value = student.group || "Science";
+        document.getElementById("studentSection").value = student.section || "A";
+        document.getElementById("studentTitle").value = student.title || "";
+        document.getElementById("studentBio").value = student.bio || "Member of HSC 2027 Science Section A, Kaptai.";
+        
+        const photo = student.photourl || "";
+        document.getElementById("studentPhotoUrl").value = photo;
+        if (photo) {
+          document.getElementById("studentPhotoPreview").src = photo;
+          document.getElementById("studentPhotoPreview").classList.remove("hidden");
+          document.getElementById("studentPhotoIcon").classList.add("hidden");
+        }
+      } else {
+        document.getElementById("studentModalTitle").textContent = "Add Student";
+        document.getElementById("studentOriginalRoll").value = "";
+        document.getElementById("studentId").value = "";
+        document.getElementById("studentGroup").value = "Science";
+        document.getElementById("studentSection").value = "A";
+        document.getElementById("studentBio").value = "Member of HSC 2027 Science Section A, Kaptai.";
+      }
+
+      document.getElementById("studentModal").classList.remove("hidden");
+    }
+
+    function closeStudentModal() {
+      document.getElementById("studentModal").classList.add("hidden");
+    }
+
+    function onStudentPhotoUploaded(url) {
+      document.getElementById("studentPhotoUrl").value = url;
+      document.getElementById("studentPhotoPreview").src = url;
+      document.getElementById("studentPhotoPreview").classList.remove("hidden");
+      document.getElementById("studentPhotoIcon").classList.add("hidden");
+    }
+
+    function editStudent(roll) {
+      const student = state.data.students.find(s => String(s.roll) === String(roll));
+      if (student) openStudentModal(student);
+    }
+
+    async function handleSaveStudent(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById("saveStudentBtn");
+      saveBtn.disabled = true;
+
+      const originalRoll = document.getElementById("studentOriginalRoll").value;
+      const roll = document.getElementById("studentRoll").value.trim();
+      const id = document.getElementById("studentId").value.trim() || ("s-" + (roll.length < 2 ? "0" + roll : roll));
+      const name = document.getElementById("studentName").value.trim();
+      const group = document.getElementById("studentGroup").value.trim() || "Science";
+      const section = document.getElementById("studentSection").value.trim() || "A";
+      const title = document.getElementById("studentTitle").value.trim();
+      const bio = document.getElementById("studentBio").value.trim();
+      const photoUrl = document.getElementById("studentPhotoUrl").value.trim();
+
+      const payloadData = {
+        id, roll, name, photoUrl, bio, group, section, title,
+        photourl: photoUrl
+      };
+
+      try {
+        showToast("Saving student record to Google Sheets...", "info");
+        if (originalRoll) {
+          await sendAppsScriptMutation({
+            action: "update",
+            sheet: "Students",
+            idField: "roll",
+            idValue: originalRoll,
+            data: payloadData
+          });
+          
+          const idx = state.data.students.findIndex(s => String(s.roll) === String(originalRoll));
+          if (idx !== -1) state.data.students[idx] = normalizeRowObject(payloadData);
+          showToast(`Student ${name} updated successfully!`, "success");
+        } else {
+          await sendAppsScriptMutation({
+            action: "create",
+            sheet: "Students",
+            idField: "roll",
+            data: payloadData
+          });
+          state.data.students.push(normalizeRowObject(payloadData));
+          showToast(`Student ${name} added!`, "success");
+        }
+
+        renderStudentsTable();
+        updateDashboardMetrics();
+        closeStudentModal();
+      } catch (err) {
+        showToast("Error saving student: " + err.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    /* =========================================================================
+       NOTICES CONTROLLER (notice sheet)
+       ========================================================================= */
+    function renderNoticesTable() {
+      const tbody = document.getElementById("noticesTableBody");
+      const search = (document.getElementById("noticeSearch").value || "").toLowerCase();
+
+      const filtered = state.data.notices.filter(n => {
+        const desc = (n.description || "").toLowerCase();
+        const cat = (n.table1 || "").toLowerCase();
+        return desc.includes(search) || cat.includes(search);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-10 text-center text-slate-500">
+              <i data-lucide="bell-off" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+              <p>No notices found in sheet 'notice'.</p>
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((n, index) => {
+        const date = n.data || n.date || "-";
+        const cat = n.table1 || "Important";
+        const desc = n.description || "";
+        const url = n.url || "";
+        const popup = n.popup || "";
+
+        return `
+          <tr class="hover:bg-surface-850/50 transition-colors">
+            <td class="py-3 px-4 font-mono text-slate-400 whitespace-nowrap">${escapeHtml(date)}</td>
+            <td class="py-3 px-4 font-semibold text-white whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-300 border border-brand-500/20 text-[11px]">${escapeHtml(cat)}</span>
+              ${popup ? `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold">POPUP (${escapeHtml(popup)})</span>` : ''}
+            </td>
+            <td class="py-3 px-4 text-slate-300 max-w-sm truncate">${escapeHtml(desc)}</td>
+            <td class="py-3 px-4">
+              ${url ? `<a href="${url}" target="_blank" class="text-brand-400 hover:underline flex items-center gap-1 font-mono text-[11px]"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Link</a>` : `<span class="text-slate-600">-</span>`}
+            </td>
+            <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
+              <button onclick="editNotice(${index})" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-800 transition-colors">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>
+              </button>
+              <button onclick="confirmDelete('notice', 'description', '${escapeHtml(desc)}', 'Notice')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-surface-800 transition-colors">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function openNoticeModal(notice = null, index = null) {
+      document.getElementById("noticeForm").reset();
+      if (notice) {
+        document.getElementById("noticeModalTitle").textContent = "Edit Notice";
+        document.getElementById("noticeOriginalRowId").value = notice.description;
+        document.getElementById("noticeCategory").value = notice.table1 || "Important";
+        document.getElementById("noticePopup").value = notice.popup || "";
+        document.getElementById("noticeDate").value = notice.data || notice.date || "";
+        document.getElementById("noticeDescription").value = notice.description || "";
+        document.getElementById("noticeUrl").value = notice.url || "";
+      } else {
+        document.getElementById("noticeModalTitle").textContent = "Create Notice";
+        document.getElementById("noticeOriginalRowId").value = "";
+        document.getElementById("noticeCategory").value = "Important";
+        document.getElementById("noticePopup").value = "";
+        document.getElementById("noticeDate").value = new Date().toLocaleDateString('en-GB').replace(/\//g, '.');
+      }
+      document.getElementById("noticeModal").classList.remove("hidden");
+    }
+
+    function closeNoticeModal() {
+      document.getElementById("noticeModal").classList.add("hidden");
+    }
+
+    function onNoticePhotoUploaded(url) {
+      document.getElementById("noticeUrl").value = url;
+    }
+
+    function editNotice(index) {
+      const notice = state.data.notices[index];
+      if (notice) openNoticeModal(notice, index);
+    }
+
+    async function handleSaveNotice(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById("saveNoticeBtn");
+      saveBtn.disabled = true;
+
+      const origDesc = document.getElementById("noticeOriginalRowId").value;
+      const table1 = document.getElementById("noticeCategory").value.trim() || "Important";
+      const popup = document.getElementById("noticePopup").value.trim();
+      const dataVal = document.getElementById("noticeDate").value.trim();
+      const description = document.getElementById("noticeDescription").value.trim();
+      const url = document.getElementById("noticeUrl").value.trim();
+
+      const payloadData = {
+        Table1: table1,
+        table1: table1,
+        description: description,
+        url: url,
+        popup: popup,
+        data: dataVal
+      };
+
+      try {
+        showToast("Saving notice to Google Sheets...", "info");
+        if (origDesc) {
+          await sendAppsScriptMutation({
+            action: "update",
+            sheet: "notice",
+            idField: "description",
+            idValue: origDesc,
+            data: payloadData
+          });
+          const idx = state.data.notices.findIndex(n => n.description === origDesc);
+          if (idx !== -1) state.data.notices[idx] = normalizeRowObject(payloadData);
+          showToast("Notice updated successfully!", "success");
+        } else {
+          await sendAppsScriptMutation({
+            action: "create",
+            sheet: "notice",
+            idField: "description",
+            data: payloadData
+          });
+          state.data.notices.unshift(normalizeRowObject(payloadData));
+          showToast("Notice posted successfully!", "success");
+        }
+
+        renderNoticesTable();
+        updateDashboardMetrics();
+        closeNoticeModal();
+      } catch (err) {
+        showToast("Error saving notice: " + err.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    /* =========================================================================
+       TIMELINE CONTROLLER (Timeline sheet: Column, title, desc)
+       ========================================================================= */
+    function renderTimelineTable() {
+      const tbody = document.getElementById("timelineTableBody");
+      const search = (document.getElementById("timelineSearch").value || "").toLowerCase();
+
+      const filtered = state.data.timeline.filter(t => {
+        const title = (t.title || "").toLowerCase();
+        const desc = (t.desc || "").toLowerCase();
+        return title.includes(search) || desc.includes(search);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="py-10 text-center text-slate-500">
+              <i data-lucide="calendar" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+              <p>No timeline events recorded.</p>
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((t, idx) => {
+        const date = t.column || t.date || "-";
+        const title = t.title || "Milestone";
+        const desc = t.desc || "";
+
+        return `
+          <tr class="hover:bg-surface-850/50 transition-colors">
+            <td class="py-3 px-4 font-mono text-brand-400 font-medium whitespace-nowrap">${escapeHtml(date)}</td>
+            <td class="py-3 px-4 font-medium text-white">${escapeHtml(title)}</td>
+            <td class="py-3 px-4 text-slate-400 max-w-sm truncate">${escapeHtml(desc)}</td>
+            <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
+              <button onclick="editTimeline(${idx})" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-800 transition-colors">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>
+              </button>
+              <button onclick="confirmDelete('Timeline', 'title', '${escapeHtml(title)}', '${escapeHtml(title)}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-surface-800 transition-colors">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function openTimelineModal(item = null, index = null) {
+      document.getElementById("timelineForm").reset();
+      if (item) {
+        document.getElementById("timelineModalTitle").textContent = "Edit Timeline Milestone";
+        document.getElementById("timelineOriginalTitle").value = item.title;
+        document.getElementById("timelineDate").value = item.column || item.date || "";
+        document.getElementById("timelineTitle").value = item.title || "";
+        document.getElementById("timelineDesc").value = item.desc || item.description || "";
+      } else {
+        document.getElementById("timelineModalTitle").textContent = "Add Timeline Milestone";
+        document.getElementById("timelineOriginalTitle").value = "";
+      }
+      document.getElementById("timelineModal").classList.remove("hidden");
+    }
+
+    function closeTimelineModal() {
+      document.getElementById("timelineModal").classList.add("hidden");
+    }
+
+    function editTimeline(idx) {
+      const item = state.data.timeline[idx];
+      if (item) openTimelineModal(item, idx);
+    }
+
+    async function handleSaveTimeline(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById("saveTimelineBtn");
+      saveBtn.disabled = true;
+
+      const origTitle = document.getElementById("timelineOriginalTitle").value;
+      const date = document.getElementById("timelineDate").value.trim();
+      const title = document.getElementById("timelineTitle").value.trim();
+      const desc = document.getElementById("timelineDesc").value.trim();
+
+      const payloadData = {
+        Column: date,
+        column: date,
+        title: title,
+        desc: desc,
+        description: desc
+      };
+
+      try {
+        showToast("Saving timeline event to Google Sheets...", "info");
+        if (origTitle) {
+          await sendAppsScriptMutation({
+            action: "update",
+            sheet: "Timeline",
+            idField: "title",
+            idValue: origTitle,
+            data: payloadData
+          });
+          const idx = state.data.timeline.findIndex(t => t.title === origTitle);
+          if (idx !== -1) state.data.timeline[idx] = normalizeRowObject(payloadData);
+          showToast("Timeline event updated!", "success");
+        } else {
+          await sendAppsScriptMutation({
+            action: "create",
+            sheet: "Timeline",
+            idField: "title",
+            data: payloadData
+          });
+          state.data.timeline.push(normalizeRowObject(payloadData));
+          showToast("Milestone added to timeline!", "success");
+        }
+
+        renderTimelineTable();
+        updateDashboardMetrics();
+        closeTimelineModal();
+      } catch (err) {
+        showToast("Error saving timeline: " + err.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    /* =========================================================================
+       CAPSULE CONTROLLER (Capsule sheet: title, desc)
+       ========================================================================= */
+    function renderCapsuleTable() {
+      const tbody = document.getElementById("capsuleTableBody");
+      const search = (document.getElementById("capsuleSearch").value || "").toLowerCase();
+
+      const filtered = state.data.capsule.filter(c => {
+        const title = (c.title || "").toLowerCase();
+        const msg = (c.desc || "").toLowerCase();
+        return title.includes(search) || msg.includes(search);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="3" class="py-10 text-center text-slate-500">
+              <i data-lucide="archive" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+              <p>No capsule memories recorded.</p>
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((c, idx) => {
+        const title = c.title || "Memory";
+        const desc = c.desc || "";
+
+        return `
+          <tr class="hover:bg-surface-850/50 transition-colors">
+            <td class="py-3 px-4 font-semibold text-white">${escapeHtml(title)}</td>
+            <td class="py-3 px-4 text-slate-400 max-w-sm truncate">${escapeHtml(desc)}</td>
+            <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
+              <button onclick="editCapsule(${idx})" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-800 transition-colors">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>
+              </button>
+              <button onclick="confirmDelete('Capsule', 'title', '${escapeHtml(title)}', '${escapeHtml(title)}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-surface-800 transition-colors">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function openCapsuleModal(item = null, index = null) {
+      document.getElementById("capsuleForm").reset();
+      if (item) {
+        document.getElementById("capsuleModalTitle").textContent = "Edit Capsule Entry";
+        document.getElementById("capsuleOriginalTitle").value = item.title;
+        document.getElementById("capsuleTitle").value = item.title || "";
+        document.getElementById("capsuleDesc").value = item.desc || "";
+      } else {
+        document.getElementById("capsuleModalTitle").textContent = "Add Capsule Memory";
+        document.getElementById("capsuleOriginalTitle").value = "";
+      }
+      document.getElementById("capsuleModal").classList.remove("hidden");
+    }
+
+    function closeCapsuleModal() {
+      document.getElementById("capsuleModal").classList.add("hidden");
+    }
+
+    function editCapsule(idx) {
+      const item = state.data.capsule[idx];
+      if (item) openCapsuleModal(item, idx);
+    }
+
+    async function handleSaveCapsule(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById("saveCapsuleBtn");
+      saveBtn.disabled = true;
+
+      const origTitle = document.getElementById("capsuleOriginalTitle").value;
+      const title = document.getElementById("capsuleTitle").value.trim();
+      const desc = document.getElementById("capsuleDesc").value.trim();
+
+      const payloadData = { title: title, desc: desc, description: desc };
+
+      try {
+        showToast("Saving capsule to Google Sheets...", "info");
+        if (origTitle) {
+          await sendAppsScriptMutation({
+            action: "update",
+            sheet: "Capsule",
+            idField: "title",
+            idValue: origTitle,
+            data: payloadData
+          });
+          const idx = state.data.capsule.findIndex(c => c.title === origTitle);
+          if (idx !== -1) state.data.capsule[idx] = normalizeRowObject(payloadData);
+          showToast("Capsule entry updated!", "success");
+        } else {
+          await sendAppsScriptMutation({
+            action: "create",
+            sheet: "Capsule",
+            idField: "title",
+            data: payloadData
+          });
+          state.data.capsule.push(normalizeRowObject(payloadData));
+          showToast("Capsule memory archived!", "success");
+        }
+
+        renderCapsuleTable();
+        updateDashboardMetrics();
+        closeCapsuleModal();
+      } catch (err) {
+        showToast("Error saving capsule: " + err.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    /* =========================================================================
+       GALLERY CONTROLLER (Gallery sheet: title, url, description)
+       ========================================================================= */
+    function renderGalleryGrid() {
+      const grid = document.getElementById("galleryGrid");
+      const search = (document.getElementById("gallerySearch").value || "").toLowerCase();
+
+      const filtered = state.data.gallery.filter(g => {
+        const title = (g.title || "").toLowerCase();
+        const desc = (g.description || g.descripti || "").toLowerCase();
+        return title.includes(search) || desc.includes(search);
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-10 text-center text-slate-500">
+            <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+            <p>No gallery images found in sheet 'Gallery'.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = filtered.map((g, idx) => {
+        const title = g.title || "Photo";
+        const image = g.url || "";
+        const desc = g.description || g.descripti || "";
+
+        return `
+          <div class="bg-surface-900 border border-surface-700/80 rounded-2xl overflow-hidden shadow-sm flex flex-col group">
+            <div class="relative h-40 bg-surface-850 overflow-hidden">
+              <img src="${image}" alt="${escapeHtml(title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/600x400/111722/white?text=Preview+Error'" />
+            </div>
+            <div class="p-3.5 flex-1 flex flex-col justify-between">
+              <div>
+                <h4 class="text-xs font-semibold text-white truncate">${escapeHtml(title)}</h4>
+                <p class="text-[10px] text-slate-400 truncate mt-0.5">${escapeHtml(desc)}</p>
+              </div>
+              <div class="mt-3 pt-2.5 border-t border-surface-800 flex items-center justify-between">
+                <button onclick="editGallery(${idx})" class="text-xs font-medium text-brand-400 hover:text-brand-300 flex items-center gap-1">
+                  <i data-lucide="edit-2" class="w-3 h-3"></i> Edit
+                </button>
+                <button onclick="confirmDelete('Gallery', 'title', '${escapeHtml(title)}', '${escapeHtml(title)}')" class="text-xs font-medium text-rose-400 hover:text-rose-300 flex items-center gap-1">
+                  <i data-lucide="trash-2" class="w-3 h-3"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function openGalleryModal(item = null, index = null) {
+      document.getElementById("galleryForm").reset();
+      document.getElementById("galleryFilePreviewContainer").classList.add("hidden");
+      document.getElementById("galleryUploadBox").classList.remove("hidden");
+
+      if (item) {
+        document.getElementById("galleryModalTitle").textContent = "Edit Gallery Item";
+        document.getElementById("galleryOriginalTitle").value = item.title;
+        document.getElementById("galleryTitle").value = item.title || "";
+        document.getElementById("galleryImageUrl").value = item.url || "";
+        document.getElementById("galleryDescription").value = item.description || item.descripti || "";
+        
+        const previewUrl = item.url;
+        if (previewUrl) {
+          document.getElementById("galleryFilePreview").src = previewUrl;
+          document.getElementById("galleryFilePreviewContainer").classList.remove("hidden");
+          document.getElementById("galleryUploadBox").classList.add("hidden");
+        }
+      } else {
+        document.getElementById("galleryModalTitle").textContent = "Upload Gallery Image";
+        document.getElementById("galleryOriginalTitle").value = "";
+      }
+
+      document.getElementById("galleryModal").classList.remove("hidden");
+    }
+
+    function closeGalleryModal() {
+      document.getElementById("galleryModal").classList.add("hidden");
+    }
+
+    function onGalleryPhotoUploaded(url) {
+      document.getElementById("galleryImageUrl").value = url;
+      document.getElementById("galleryFilePreview").src = url;
+      document.getElementById("galleryFilePreviewContainer").classList.remove("hidden");
+      document.getElementById("galleryUploadBox").classList.add("hidden");
+    }
+
+    function editGallery(idx) {
+      const item = state.data.gallery[idx];
+      if (item) openGalleryModal(item, idx);
+    }
+
+    async function handleSaveGallery(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById("saveGalleryBtn");
+      saveBtn.disabled = true;
+
+      const origTitle = document.getElementById("galleryOriginalTitle").value;
+      const url = document.getElementById("galleryImageUrl").value.trim();
+      const title = document.getElementById("galleryTitle").value.trim();
+      const desc = document.getElementById("galleryDescription").value.trim();
+
+      const payloadData = {
+        title: title,
+        url: url,
+        description: desc,
+        descripti: desc
+      };
+
+      try {
+        showToast("Saving media to Google Sheets...", "info");
+        if (origTitle) {
+          await sendAppsScriptMutation({
+            action: "update",
+            sheet: "Gallery",
+            idField: "title",
+            idValue: origTitle,
+            data: payloadData
+          });
+          const idx = state.data.gallery.findIndex(g => g.title === origTitle);
+          if (idx !== -1) state.data.gallery[idx] = normalizeRowObject(payloadData);
+          showToast("Gallery media updated!", "success");
+        } else {
+          await sendAppsScriptMutation({
+            action: "create",
+            sheet: "Gallery",
+            idField: "title",
+            data: payloadData
+          });
+          state.data.gallery.unshift(normalizeRowObject(payloadData));
+          showToast("Media saved to gallery!", "success");
+        }
+
+        renderGalleryGrid();
+        updateDashboardMetrics();
+        closeGalleryModal();
+      } catch (err) {
+        showToast("Error saving gallery item: " + err.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    /* =========================================================================
+       SETTINGS CONTROLLER
+       ========================================================================= */
+    function renderSettingsData(payload) {
+      let logoUrl = payload.logo || "";
+      if (!logoUrl && state.data.settings) {
+        const logoSetting = state.data.settings.find(s => (s.key || s.setting || "").toLowerCase() === "logo");
+        if (logoSetting) logoUrl = logoSetting.value || logoSetting.url || "";
+      }
+
+      const logoImg = document.getElementById("settingsLogoPreview");
+      const logoPlc = document.getElementById("settingsLogoPlaceholder");
+      const logoInput = document.getElementById("settingLogoUrl");
+
+      if (logoUrl) {
+        logoImg.src = logoUrl;
+        logoImg.classList.remove("hidden");
+        logoPlc.classList.add("hidden");
+        logoInput.value = logoUrl;
+      }
+
+      const titleSetting = (state.data.settings || []).find(s => (s.key || s.setting || "").toLowerCase() === "title");
+      if (titleSetting) document.getElementById("settingSiteTitle").value = titleSetting.value || "";
+
+      const marqueeSetting = (state.data.settings || []).find(s => (s.key || s.setting || "").toLowerCase() === "marquee" || (s.key || s.setting || "").toLowerCase() === "notice");
+      if (marqueeSetting) document.getElementById("settingNoticeBar").value = marqueeSetting.value || "";
+    }
+
+    async function handleLogoUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const uploadBtn = document.getElementById("logoUploadBtn");
+      uploadBtn.disabled = true;
+      
+      try {
+        const url = await uploadToSupabaseStorage(file, "website");
+        document.getElementById("settingLogoUrl").value = url;
+        
+        const logoImg = document.getElementById("settingsLogoPreview");
+        logoImg.src = url;
+        logoImg.classList.remove("hidden");
+        document.getElementById("settingsLogoPlaceholder").classList.add("hidden");
+        
+        showToast("Logo uploaded to Supabase Storage", "success");
+      } catch (err) {
+        showToast("Logo upload error: " + err.message, "error");
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    }
+
+    async function handleSaveSettings(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById("saveSettingsBtn");
+      saveBtn.disabled = true;
+
+      const logo = document.getElementById("settingLogoUrl").value.trim();
+      const title = document.getElementById("settingSiteTitle").value.trim();
+      const marquee = document.getElementById("settingNoticeBar").value.trim();
+
+      try {
+        showToast("Saving settings to Google Sheet...", "info");
+
+        if (logo) {
+          await sendAppsScriptMutation({
+            action: "updateSetting",
+            sheet: "Settings",
+            data: { key: "Logo", value: logo }
+          });
+        }
+
+        if (title) {
+          await sendAppsScriptMutation({
+            action: "updateSetting",
+            sheet: "Settings",
+            data: { key: "Title", value: title }
+          });
+        }
+
+        if (marquee) {
+          await sendAppsScriptMutation({
+            action: "updateSetting",
+            sheet: "Settings",
+            data: { key: "Marquee", value: marquee }
+          });
+        }
+
+        showToast("Website Settings updated successfully!", "success");
+      } catch (err) {
+        showToast("Failed to save settings: " + err.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    function initSettingsFormValues() {
+      document.getElementById("configAppsScriptUrl").value = CONFIG.APPS_SCRIPT_URL;
+      document.getElementById("configAppsScriptKey").value = CONFIG.APPS_SCRIPT_API_KEY;
+      document.getElementById("configSupabaseUrl").value = CONFIG.SUPABASE_URL;
+      document.getElementById("configSupabaseKey").value = CONFIG.SUPABASE_ANON_KEY;
+      if (document.getElementById("configStorageBucket")) {
+        document.getElementById("configStorageBucket").value = CONFIG.STORAGE_BUCKET;
+      }
+    }
+
+    function saveConnectionConfig() {
+      const asUrl = document.getElementById("configAppsScriptUrl").value.trim();
+      const asKey = document.getElementById("configAppsScriptKey").value.trim();
+      const sbUrl = document.getElementById("configSupabaseUrl").value.trim();
+      const sbKey = document.getElementById("configSupabaseKey").value.trim();
+      const bucket = document.getElementById("configStorageBucket").value.trim() || "bnsck";
+
+      localStorage.setItem("BNSCK_APPS_SCRIPT_URL", asUrl);
+      localStorage.setItem("BNSCK_APPS_SCRIPT_KEY", asKey);
+      localStorage.setItem("BNSCK_SUPABASE_URL", sbUrl);
+      localStorage.setItem("BNSCK_SUPABASE_ANON_KEY", sbKey);
+      localStorage.setItem("BNSCK_STORAGE_BUCKET", bucket);
+
+      CONFIG.APPS_SCRIPT_URL = asUrl;
+      CONFIG.APPS_SCRIPT_API_KEY = asKey;
+      CONFIG.SUPABASE_URL = sbUrl;
+      CONFIG.SUPABASE_ANON_KEY = sbKey;
+      CONFIG.STORAGE_BUCKET = bucket;
+
+      initSupabaseClient();
+      showToast("API and Supabase credentials updated!", "success");
+      loadRemoteData(true);
+    }
+
+    /* =========================================================================
+       GENERIC DELETE CONFIRMATION DIALOG (No native confirm() used)
+       ========================================================================= */
+    let pendingDeleteAction = null;
+
+    function confirmDelete(sheet, idField, idValue, displayName) {
+      document.getElementById("confirmTitle").textContent = `Delete ${displayName}?`;
+      document.getElementById("confirmMessage").textContent = `Are you sure you want to delete this record from '${sheet}'? Your live Google Sheet will be updated immediately.`;
+      
+      pendingDeleteAction = async () => {
+        try {
+          showToast(`Deleting from ${sheet}...`, "info");
+          await sendAppsScriptMutation({
+            action: "delete",
+            sheet: sheet,
+            idField: idField,
+            idValue: idValue
+          });
+
+          const key = sheet.toLowerCase();
+          if (state.data[key]) {
+            state.data[key] = state.data[key].filter(item => String(item[idField] || item.title || item.roll || item.description) !== String(idValue));
+          } else if (key === "notice" && state.data.notices) {
+            state.data.notices = state.data.notices.filter(item => String(item[idField] || item.description) !== String(idValue));
+          }
+
+          showToast(`${displayName} deleted successfully`, "success");
+          
+          updateDashboardMetrics();
+          if (sheet.toLowerCase() === "students") renderStudentsTable();
+          if (sheet.toLowerCase() === "notice") renderNoticesTable();
+          if (sheet.toLowerCase() === "timeline") renderTimelineTable();
+          if (sheet.toLowerCase() === "capsule") renderCapsuleTable();
+          if (sheet.toLowerCase() === "gallery") renderGalleryGrid();
+        } catch (err) {
+          showToast("Failed to delete record: " + err.message, "error");
+        } finally {
+          closeConfirmDialog();
+        }
+      };
+
+      document.getElementById("confirmProceedBtn").onclick = pendingDeleteAction;
+      document.getElementById("confirmDialog").classList.remove("hidden");
+    }
+
+    function closeConfirmDialog() {
+      document.getElementById("confirmDialog").classList.add("hidden");
+      pendingDeleteAction = null;
+    }
+
+    /* Floating Toast Alerts (Safe, non-blocking replacement for alert()) */
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border shadow-xl text-xs font-medium fade-in ${
+        type === "success" ? "bg-emerald-950/90 border-emerald-500/30 text-emerald-200" :
+        type === "error" ? "bg-rose-950/90 border-rose-500/30 text-rose-200" :
+        type === "warning" ? "bg-amber-950/90 border-amber-500/30 text-amber-200" :
+        "bg-surface-850/95 border-surface-700/80 text-slate-200"
+      }`;
+
+      const iconName = type === "success" ? "check-circle-2" : type === "error" ? "alert-circle" : "info";
+
+      toast.innerHTML = `
+        <i data-lucide="${iconName}" class="w-4 h-4 shrink-0"></i>
+        <span class="flex-1">${escapeHtml(message)}</span>
+      `;
+
+      container.appendChild(toast);
+      lucide.createIcons();
+
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(-4px)";
+        toast.style.transition = "all 0.2s ease";
+        setTimeout(() => toast.remove(), 200);
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    /* Bootstrap Application on Load */
+    initSupabaseClient();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
