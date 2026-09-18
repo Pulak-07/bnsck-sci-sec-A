@@ -3,21 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BNSCK HSC 2027 Science Section A</title>
+  <title>BNSCK • HSC 2027 Science Section A</title>
   
   <meta name="description" content="Dedicated digital batch archive, notice board, and student capsule for HSC 2027 Science Section A, Bangladesh Noubahini School and College Kaptai. Located at BNS Shaheed Moazzam, Kaptai.">
+  <meta name="theme-color" content="#061225">
+  <meta name="color-scheme" content="dark">
   <link rel="icon" type="image/png" sizes="16x16" href="https://apiimage.astutebd.com/Uploads/bnsck/maincampus/About%20School//1072021113810AMzx.png">
     
   <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com" defer></script>
   
   <!-- Three.js for 3D Visual Constellation Experience -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
-  <!-- Google Fonts: Hind Siliguri for Bengali -->
+  <!-- Fast font loading: Hind Siliguri keeps Bengali text natural; Inter sharpens UI copy -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -29,11 +31,11 @@
     }
 
     * {
-      font-family: "Times New Roman", Times, Georgia, serif !important;
+      font-family: "Inter", "Hind Siliguri", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
     }
 
     .font-bengali {
-      font-family: 'Hind Siliguri', "Times New Roman", serif !important;
+      font-family: "Hind Siliguri", sans-serif !important;
     }
 
     body {
@@ -267,6 +269,10 @@
       transition: width 0.1s linear;
     }
 
+    #constellation-canvas-container {
+      touch-action: none;
+    }
+
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -282,6 +288,130 @@
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #0284c7;
+    }
+
+    /* ==================== REFINED VISUAL SYSTEM ==================== */
+    :root {
+      --ink: #061225;
+      --ink-deep: #020711;
+      --surface: rgba(10, 25, 49, 0.72);
+      --surface-strong: rgba(7, 18, 38, 0.9);
+      --line: rgba(148, 208, 255, 0.16);
+      --line-bright: rgba(66, 211, 255, 0.48);
+      --text-muted: #9aacc4;
+      --cyan-soft: #8cecff;
+      --shadow-soft: 0 20px 55px rgba(0, 4, 14, 0.34);
+    }
+
+    html {
+      background: var(--ink-deep);
+      scroll-padding-top: 104px;
+    }
+
+    body {
+      min-width: 320px;
+      background:
+        radial-gradient(900px 520px at 50% -8%, rgba(18, 83, 145, 0.28), transparent 68%),
+        radial-gradient(650px 420px at 100% 30%, rgba(0, 177, 255, 0.1), transparent 70%),
+        radial-gradient(650px 420px at 0% 70%, rgba(31, 74, 145, 0.12), transparent 70%),
+        var(--ink-deep);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image:
+        linear-gradient(rgba(115, 214, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(115, 214, 255, 0.05) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 80%);
+    }
+
+    main > section {
+      content-visibility: auto;
+      contain-intrinsic-size: 700px;
+    }
+
+    .pill-navbar {
+      background: rgba(4, 14, 31, 0.78);
+      border-color: rgba(140, 232, 255, 0.2);
+      box-shadow: 0 14px 42px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .pill-nav-item {
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    section[id] {
+      scroll-margin-top: 92px;
+    }
+
+    .glass-panel {
+      background: linear-gradient(145deg, rgba(12, 30, 58, 0.78), rgba(5, 14, 31, 0.68));
+      border-color: var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .notice-card,
+    .student-classic-card,
+    .gallery-preview-card {
+      box-shadow: 0 16px 42px rgba(0, 4, 15, 0.26);
+    }
+
+    .notice-card:hover,
+    .student-classic-card:hover,
+    .gallery-preview-card:hover {
+      box-shadow: 0 24px 55px rgba(0, 8, 24, 0.48), 0 0 0 1px rgba(0, 229, 255, 0.12);
+    }
+
+    .student-photo-wrapper img,
+    .gallery-preview-card img {
+      filter: saturate(0.94) contrast(1.04);
+    }
+
+    input::placeholder {
+      color: #72849d;
+    }
+
+    button,
+    a,
+    select,
+    input {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--cyan-soft);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 640px) {
+      .pill-navbar {
+        border-radius: 1.35rem;
+      }
+
+      #nav-pill-links {
+        max-width: calc(100vw - 82px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto !important;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
@@ -460,6 +590,29 @@
             Photo Gallery
           </a>
         </div>
+
+        <!-- Quick cohort snapshot -->
+        <div class="mx-auto mt-8 grid max-w-2xl grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/35 text-left shadow-2xl backdrop-blur-md">
+          <div class="border-r border-white/10 px-3 py-3.5 sm:px-6">
+            <strong class="block text-xl font-extrabold tracking-tight text-white sm:text-2xl">50</strong>
+            <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-widest text-cyan-300/80 sm:text-xs">Classmates</span>
+          </div>
+          <div class="border-r border-white/10 px-3 py-3.5 sm:px-6">
+            <strong class="block text-xl font-extrabold tracking-tight text-white sm:text-2xl">08</strong>
+            <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-widest text-cyan-300/80 sm:text-xs">Mentors</span>
+          </div>
+          <div class="px-3 py-3.5 sm:px-6">
+            <strong class="block text-xl font-extrabold tracking-tight text-white sm:text-2xl">2027</strong>
+            <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-widest text-cyan-300/80 sm:text-xs">HSC Target</span>
+          </div>
+        </div>
+
+        <a href="#story" class="mt-8 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400 transition hover:text-cyan-300" aria-label="Scroll to learn more about Section A">
+          <span class="flex h-8 w-5 items-start justify-center rounded-full border border-cyan-400/40 p-1">
+            <span class="h-1.5 w-1 rounded-full bg-cyan-300 animate-bounce"></span>
+          </span>
+          Explore our story
+        </a>
       </div>
     </section>
 
@@ -1071,7 +1224,7 @@
           if (isImg) {
             previewHtml = `
               <div class="mt-4 rounded-xl overflow-hidden aspect-video bg-black/80 border border-white/10 relative group/img cursor-pointer" onclick="openLightboxFromNoticeUrl('${item.url}')">
-                <img src="${item.url}" alt="${item.title || 'Attachment'}" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300" onerror="this.parentElement.classList.add('hidden');">
+                <img src="${item.url}" alt="${item.title || 'Attachment'}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300" onerror="this.parentElement.classList.add('hidden');">
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center text-xs text-cyan-300 font-bold">
                   <span>Click to view full preview</span>
                 </div>
@@ -1140,6 +1293,11 @@
     function checkAndTriggerPopup() {
       if (!NOTICES_DATA || NOTICES_DATA.length === 0) return;
 
+      // Keep the bulletin useful instead of interrupting every repeat visit.
+      try {
+        if (sessionStorage.getItem('bnsck-notice-seen') === '1') return;
+      } catch (e) {}
+
       // Find any notice that has "pop up" in its logic column
       const popItem = NOTICES_DATA.find(n => {
         const flag = String(n.popup || '').toLowerCase().trim();
@@ -1148,8 +1306,9 @@
 
       if (popItem) {
         setTimeout(() => {
+          try { sessionStorage.setItem('bnsck-notice-seen', '1'); } catch (e) {}
           openNoticePopup(popItem);
-        }, 500);
+        }, 1400);
       }
     }
 
@@ -1710,7 +1869,7 @@
             <div class="student-photo-wrapper">
               ${badgeOverlay}
               
-              <img src="${s.photoUrl || ''}" alt="Student Photo" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${s.photoUrl ? '' : 'hidden'}" />
+              <img src="${s.photoUrl || ''}" alt="${s.name}" loading="lazy" decoding="async" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${s.photoUrl ? '' : 'hidden'}" />
               
               <div class="w-full h-full flex flex-col items-center justify-center text-cyan-300/80 p-4 ${s.photoUrl ? 'hidden' : ''}">
                 <svg class="w-12 h-12 text-cyan-400/60 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1743,7 +1902,7 @@
         leadershipContainer.innerHTML = leaders.map(t => `
           <div class="glass-panel p-6 rounded-3xl border-cyan-400/30 text-center flex flex-col items-center group cursor-pointer hover:border-cyan-400/70 transition-all hover:scale-[1.01]" onclick="openTeacherModal('${t.id}')">
             <div class="w-24 h-24 rounded-full border-2 border-cyan-400 bg-navy-900 flex items-center justify-center mb-3 shadow-lg shadow-cyan-500/20 overflow-hidden relative group-hover:scale-105 transition-transform">
-              <img src="${t.photoUrl || ''}" alt="${t.name}" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover ${t.photoUrl ? '' : 'hidden'}" />
+              <img src="${t.photoUrl || ''}" alt="${t.name}" loading="lazy" decoding="async" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover ${t.photoUrl ? '' : 'hidden'}" />
               <div class="w-full h-full flex items-center justify-center text-cyan-300 ${t.photoUrl ? 'hidden' : ''}">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
               </div>
@@ -1765,7 +1924,7 @@
           classTeacherContainer.innerHTML = `
             <div class="glass-panel p-6 sm:p-7 rounded-3xl border-cyan-400/40 flex flex-col sm:flex-row items-center gap-6 bg-gradient-to-r from-blue-950/50 via-cyan-950/30 to-blue-950/50 cursor-pointer hover:border-cyan-400/80 transition-all hover:scale-[1.01] group" onclick="openTeacherModal('${ct.id}')">
               <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border-2 border-cyan-400 bg-navy-900 flex items-center justify-center flex-shrink-0 shadow-lg shadow-cyan-500/20 overflow-hidden relative group-hover:scale-105 transition-transform">
-                <img src="${ct.photoUrl || ''}" alt="${ct.name}" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover ${ct.photoUrl ? '' : 'hidden'}" />
+                <img src="${ct.photoUrl || ''}" alt="${ct.name}" loading="lazy" decoding="async" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover ${ct.photoUrl ? '' : 'hidden'}" />
                 <div class="w-full h-full flex items-center justify-center text-cyan-300 ${ct.photoUrl ? 'hidden' : ''}">
                   <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 </div>
@@ -1799,7 +1958,7 @@
         subjectContainer.innerHTML = subjects.map(t => `
           <div class="glass-panel p-4 rounded-2xl border-white/10 text-center flex flex-col items-center group cursor-pointer hover:border-cyan-400/60 hover:-translate-y-1 transition-all" onclick="openTeacherModal('${t.id}')">
             <div class="w-20 h-20 rounded-full border border-cyan-400/50 bg-navy-900 flex items-center justify-center mb-2.5 overflow-hidden group-hover:scale-105 transition-transform relative shadow-md">
-              <img src="${t.photoUrl || ''}" alt="${t.name}" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover ${t.photoUrl ? '' : 'hidden'}" />
+              <img src="${t.photoUrl || ''}" alt="${t.name}" loading="lazy" decoding="async" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover ${t.photoUrl ? '' : 'hidden'}" />
               <div class="w-full h-full flex items-center justify-center text-cyan-300 ${t.photoUrl ? 'hidden' : ''}">
                 <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
               </div>
@@ -1975,7 +2134,7 @@
               </div>
 
               ${item.url ? `
-                <img src="${item.url}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" />
+                <img src="${item.url}" alt="${title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" />
                 <div class="w-full h-full flex flex-col items-center justify-center text-cyan-300/80 p-6 hidden">
                   <svg class="w-12 h-12 text-cyan-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                   <span class="text-xs font-bold text-slate-300 mt-2">${title}</span>
@@ -2207,9 +2366,9 @@
 
       let renderer;
       try {
-        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'high-performance' });
         renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
         container.appendChild(renderer.domElement);
       } catch (e) {
         container.innerHTML = `<div class="w-full h-full flex items-center justify-center text-slate-400 text-xs">3D WebGL Canvas Ready</div>`;
@@ -2223,28 +2382,31 @@
       rebuildConstellation(STUDENTS_DATA);
 
       const particleGeo = new THREE.BufferGeometry();
-      const particleCount = 200;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const particleCount = prefersReducedMotion ? 60 : 120;
       const particlePos = [];
       for (let i = 0; i < particleCount * 3; i++) {
         particlePos.push((Math.random() - 0.5) * 160);
       }
       particleGeo.setAttribute('position', new THREE.Float32BufferAttribute(particlePos, 3));
-      const particleMat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.8, transparent: true, opacity: 0.4 });
+      const particleMat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.7, transparent: true, opacity: 0.32 });
       const particles = new THREE.Points(particleGeo, particleMat);
       scene.add(particles);
 
       let isDragging = false;
+      let isVisible = !('IntersectionObserver' in window);
       let prevMousePos = { x: 0, y: 0 };
-      let rotSpeed = { x: 0.001, y: 0.002 };
+      let rotSpeed = prefersReducedMotion ? { x: 0, y: 0 } : { x: 0.001, y: 0.002 };
 
-      container.addEventListener('mousedown', (e) => {
+      container.addEventListener('pointerdown', (e) => {
         isDragging = true;
         prevMousePos = { x: e.clientX, y: e.clientY };
+        container.setPointerCapture?.(e.pointerId);
       });
 
-      window.addEventListener('mouseup', () => { isDragging = false; });
+      window.addEventListener('pointerup', () => { isDragging = false; });
 
-      container.addEventListener('mousemove', (e) => {
+      container.addEventListener('pointermove', (e) => {
         if (!isDragging) return;
         const deltaX = e.clientX - prevMousePos.x;
         const deltaY = e.clientY - prevMousePos.y;
@@ -2282,13 +2444,13 @@
         }
       }
 
-      container.addEventListener('mousemove', updateRaycaster);
+      container.addEventListener('pointermove', updateRaycaster);
 
       container.addEventListener('click', (e) => {
         if (!renderer) return;
         const rect = renderer.domElement.getBoundingClientRect();
-        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(starMeshesGlobal);
         if (intersects.length > 0) {
@@ -2297,6 +2459,7 @@
       });
 
       function animate() {
+        if (!isVisible) return;
         requestAnimationFrame(animate);
         if (!isDragging) {
           constellationGroup.rotation.y += rotSpeed.y;
@@ -2306,6 +2469,15 @@
         renderer.render(scene, camera);
       }
       animate();
+
+      // Pause WebGL work while the section is off-screen.
+      if ('IntersectionObserver' in window) {
+        const visibilityObserver = new IntersectionObserver((entries) => {
+          isVisible = entries[0]?.isIntersecting ?? true;
+          if (isVisible) animate();
+        }, { threshold: 0.05 });
+        visibilityObserver.observe(container);
+      }
 
       window.addEventListener('resize', () => {
         if (!container || !renderer) return;
