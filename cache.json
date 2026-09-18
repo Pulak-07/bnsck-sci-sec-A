@@ -1,0 +1,26 @@
+const CACHE_TIME = 600; // 10 minutes
+
+function getData() {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get("BNSCK_DATA");
+
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
+  const sheet = SpreadsheetApp
+    .openById(SHEET_ID)
+    .getSheetByName("Data");
+
+  const data = sheet.getDataRange().getValues();
+
+  const result = processData(data);
+
+  cache.put(
+    "BNSCK_DATA",
+    JSON.stringify(result),
+    CACHE_TIME
+  );
+
+  return result;
+}
