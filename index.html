@@ -1348,7 +1348,7 @@
       if (!modal || !card) return;
 
       titleEl.innerText = notice.title || "Academic Announcement";
-      dateEl.innerText = notice.date || "Auto closes in 5 seconds";
+      dateEl.innerText = notice.date || "Auto closes in 20 seconds";
 
       // Description Handling: show only if text exists
       if (notice.description && notice.description.trim().length > 0) {
@@ -1422,7 +1422,7 @@
 
     function startPopupTimer() {
       clearPopupTimers();
-      popupSecondsLeft = 5;
+      popupSecondsLeft = 20;
       isPopupPaused = false;
       
       const timerText = document.getElementById('popup-timer-text');
