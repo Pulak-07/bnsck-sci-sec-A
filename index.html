@@ -6,7 +6,7 @@
   <title>BNSCK • HSC 2027 Science Section A</title>
   
   <meta name="description" content="Dedicated digital batch archive, notice board, faculty directory, and student capsule for HSC 2027 Science Section A, Bangladesh Noubahini School and College Kaptai. Located at BNS Shaheed Moazzam, Kaptai.">
-  <meta name="keyword" content="bnsck, hsc27bnsck, Bangladesh Noubahini School and college kaptai, Section A, Bns shaheed moazzam, Hsc27">
+  <meta name="keywords" content="bnsck, hsc27bnsck, Bangladesh Noubahini School and college kaptai, Section A, Bns shaheed moazzam, Hsc27">
   <meta name="theme-color" content="#020712">
   <meta name="color-scheme" content="dark">
   <link rel="icon" type="image/png" sizes="16x16" href="https://apiimage.astutebd.com/Uploads/bnsck/maincampus/About%20School//1072021113810AMzx.png">
@@ -26,7 +26,7 @@
     :root {
       --bg-primary: #020712;
       --navy-glass: rgba(5, 14, 30, 0.78);
-      --border-glass: rgba(0, 229, 255, 0.18);
+      --border-glass: rgba(0, 229, 255, 0.22);
       --accent-cyan: #00e5ff;
       --accent-blue: #1d6fee;
     }
@@ -51,7 +51,7 @@
       padding: 0;
     }
 
-    /* Multi-Photo Interactive Background Layers */
+    /* Dual-layer interactive background container */
     #dynamic-bg-container {
       position: fixed;
       inset: 0;
@@ -61,20 +61,13 @@
       background: #020712;
     }
 
-    .bg-photo-slide {
+    .bg-photo-layer {
       position: absolute;
       inset: 0;
       background-size: cover;
-      background-position: center 35%;
-      opacity: 0;
-      transform: scale(1.04) translateY(0px);
-      transition: opacity 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      background-position: center 38%;
+      transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 6s cubic-bezier(0.2, 0.8, 0.2, 1);
       will-change: opacity, transform;
-    }
-
-    .bg-photo-slide.active-bg {
-      opacity: 0.65;
-      transform: scale(1.0) translateY(0px);
     }
 
     #dynamic-bg-overlay {
@@ -82,7 +75,7 @@
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      background: linear-gradient(180deg, rgba(2, 7, 18, 0.65) 0%, rgba(2, 7, 18, 0.82) 60%, #020712 100%);
+      background: linear-gradient(180deg, rgba(2, 7, 18, 0.68) 0%, rgba(2, 7, 18, 0.84) 60%, #020712 100%);
     }
 
     .glass-panel {
@@ -94,11 +87,11 @@
 
     /* Floating Pill Navbar */
     .pill-navbar {
-      background: rgba(4, 12, 28, 0.78);
+      background: rgba(4, 12, 28, 0.82);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 229, 255, 0.25);
-      box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.75), 0 0 22px rgba(0, 153, 255, 0.2);
+      border: 1px solid rgba(0, 229, 255, 0.28);
+      box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.75), 0 0 22px rgba(0, 153, 255, 0.22);
       border-radius: 9999px;
       transition: all 0.3s ease;
     }
@@ -146,7 +139,7 @@
 
     /* Classic Student Cards & Glowing Badges */
     .student-classic-card {
-      background: rgba(8, 20, 42, 0.75);
+      background: rgba(8, 20, 42, 0.78);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -169,7 +162,7 @@
       overflow: hidden;
     }
 
-    /* Glowing Badge Themes */
+    /* Glowing Leadership Badges */
     .badge-captain-glow {
       background: linear-gradient(135deg, #f59e0b, #fbbf24, #d97706);
       color: #030712;
@@ -199,7 +192,7 @@
     }
 
     .clean-card {
-      background: rgba(6, 16, 36, 0.75);
+      background: rgba(6, 16, 36, 0.78);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -214,7 +207,7 @@
       box-shadow: 0 20px 40px -10px rgba(0, 229, 255, 0.2);
     }
 
-    /* 9-Second Timer Bar */
+    /* 9-Second Timer Progress Bar */
     @keyframes noticeTimerProgress {
       0% { width: 100%; }
       100% { width: 0%; }
@@ -253,9 +246,10 @@
 </head>
 <body class="antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
 
-  <!-- DYNAMIC MULTI-PHOTO BACKGROUND -->
+  <!-- DYNAMIC AUTO-SHUFFLE & SCROLL-CROSSFADE BACKGROUND -->
   <div id="dynamic-bg-container">
-    <!-- Populated by JavaScript with active cross-fading -->
+    <div id="bg-layer-0" class="bg-photo-layer opacity-100 scale-100"></div>
+    <div id="bg-layer-1" class="bg-photo-layer opacity-0 scale-100"></div>
   </div>
   <div id="dynamic-bg-overlay"></div>
 
@@ -353,7 +347,7 @@
           <span id="nav-notice-indicator" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
         </a>
         <a href="#about-us" class="pill-nav-item" data-target="about-us">About Us (Sec A)</a>
-        <a href="#students" class="pill-nav-item" data-target="students">Class Student </a>
+        <a href="#students" class="pill-nav-item" data-target="students">Class Roster</a>
         <a href="#constellation" class="pill-nav-item" data-target="constellation">Network</a>
         <a href="#teachers" class="pill-nav-item" data-target="teachers">Faculty</a>
         <a href="#timeline" class="pill-nav-item" data-target="timeline">Journey</a>
@@ -448,7 +442,7 @@
     <section id="about-us" class="relative py-16 px-4 sm:px-6 max-w-7xl mx-auto animate-pop">
       <div class="glass-panel p-6 sm:p-8 rounded-3xl border-cyan-400/30 shadow-xl">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-8 space-y-3.5 text-slate-300 text-sm sm:text-base leading-relaxed">
+          <div class="lg:col-span-8 space-y-3.5 text-slate-300 text-sm sm:base leading-relaxed">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold uppercase tracking-wider">
               About Us • The Legacy of Section A
             </div>
@@ -480,7 +474,7 @@
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold tracking-wider mb-2">
             ★ COHORT ARCHIVE ★
           </div>
-          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Student  (Section A)</h2>
+          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Roster (Section A)</h2>
           <p class="text-sm sm:text-base text-slate-300 max-w-xl mt-2 italic">
             Currently fifty passionate minds united under our naval banner at BNS Shaheed Moazzam. Badges, titles, and appointments are dynamically updated from the official database.
           </p>
@@ -686,7 +680,7 @@
               <div class="p-4 rounded-2xl glass-panel border-cyan-400/30 text-xs space-y-1.5 shadow-lg">
                 <p class="text-slate-300">Only for Admin & Moderator:</p> 
                 <a href="https://bnsck-admin.vercel.app" target="_blank" rel="noopener noreferrer" class="text-cyan-300 font-bold text-sm hover:underline block drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
-                  Admin Login ↗
+                  Console Login ↗
                 </a>
                 <div class="text-[11px] text-slate-400 font-sans tracking-wide">Admin & Moderator Access</div>
               </div>
@@ -733,7 +727,6 @@
           <span class="text-slate-400">Email Address:</span>
           <a id="modal-email-link" href="" class="text-cyan-300 font-mono hover:underline"></a>
         </div>
-        <!-- Social Media Row -->
         <div id="modal-socials-row" class="hidden flex items-center justify-between pt-1">
           <span class="text-slate-400">Social Connect:</span>
           <div id="modal-socials-icons" class="flex items-center gap-2"></div>
@@ -800,50 +793,102 @@
 
   <script>
     // =========================================================================
-    // DYNAMIC BACKGROUND PHOTO SYSTEM (EASILY ADD/REMOVE PHOTOS HERE)
+    // DYNAMIC BACKGROUND ENGINE WITH AUTO-SHUFFLE ON HOME & SCROLL CROSS-FADE
     // =========================================================================
     const BACKGROUND_PHOTOS = [
       "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/phtoo%201.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3BodG9vIDEuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkxMjAsImV4cCI6MjQyMjAxOTEyMH0.Mp_9u8leTR4pRQtc8Y-Rx08pd5fcATpWSjnhIaqk1ak",
       "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/photo%202.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3Bob3RvIDIuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkxNDIsImV4cCI6MjQyMjAxOTE0Mn0.gCZprzajZLM-fFLj10UEO3GZQzhCeZzoK08pgLKUHCE",
       "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/photo%203.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3Bob3RvIDMuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkxNjksImV4cCI6MjQyMjAxOTE2OX0.pbwViwDZQdVCOgo_rCFgeH-SE4cftj195Omyq3bVsgk",
       "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/photo%204.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3Bob3RvIDQuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkxOTAsImV4cCI6MjQyMjAxOTE5MH0.edbqj8wgFMWnZ5x2VFlR9TR0R-8mqWXgkFMpsSzbm4Y",
-      "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/phtoo%205.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3BodG9vIDUuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkyMTIsImV4cCI6MjQyMjAxOTIxMn0.A09dBzqm0CiZ1H1fFMIeYVYwUC_tB9pMoS1CpBqFRv4"
+      "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/phtoo%205.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3BodG9vIDUuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkyMTIsImV4cCI6MjQyMjAxOTIxMn0.A09dBzqm0CiZ1H1fFMIeYVYwUC_tB9pMoS1CpBqFRv4",
+      "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/public/bnsck/image%207.jpeg",
+      "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/public/bnsck/image%206.jpeg"
     ];
 
-    let currentBgIndex = 0;
+    let currentBgIdx = 0;
+    let activeLayerIndex = 0;
+    let autoShuffleInterval = null;
+    const SHUFFLE_INTERVAL_MS = 6000; // Auto-shuffles every 6 seconds on home
 
     function initDynamicBackground() {
-      const container = document.getElementById('dynamic-bg-container');
-      if (!container || BACKGROUND_PHOTOS.length === 0) return;
+      const layer0 = document.getElementById('bg-layer-0');
+      const layer1 = document.getElementById('bg-layer-1');
+      if (!layer0 || !layer1 || BACKGROUND_PHOTOS.length === 0) return;
 
-      container.innerHTML = BACKGROUND_PHOTOS.map((url, idx) => `
-        <div id="bg-slide-${idx}" class="bg-photo-slide ${idx === 0 ? 'active-bg' : ''}" style="background-image: url('${url}');"></div>
-      `).join('');
+      layer0.style.backgroundImage = `url('${BACKGROUND_PHOTOS[0]}')`;
+      layer0.style.opacity = '0.68';
+      layer1.style.opacity = '0';
+
+      startHomeAutoShuffle();
     }
 
+    function crossfadeToPhoto(index) {
+      if (index < 0 || index >= BACKGROUND_PHOTOS.length) return;
+      const layer0 = document.getElementById('bg-layer-0');
+      const layer1 = document.getElementById('bg-layer-1');
+      if (!layer0 || !layer1) return;
+
+      const nextPhotoUrl = BACKGROUND_PHOTOS[index];
+
+      if (activeLayerIndex === 0) {
+        layer1.style.backgroundImage = `url('${nextPhotoUrl}')`;
+        layer1.style.opacity = '0.68';
+        layer0.style.opacity = '0';
+        activeLayerIndex = 1;
+      } else {
+        layer0.style.backgroundImage = `url('${nextPhotoUrl}')`;
+        layer0.style.opacity = '0.68';
+        layer1.style.opacity = '0';
+        activeLayerIndex = 0;
+      }
+    }
+
+    function startHomeAutoShuffle() {
+      if (autoShuffleInterval) return;
+
+      autoShuffleInterval = setInterval(() => {
+        const heroEl = document.getElementById('hero');
+        const isAtHero = !heroEl || window.scrollY < (heroEl.offsetHeight * 0.75);
+
+        if (isAtHero) {
+          currentBgIdx = (currentBgIdx + 1) % BACKGROUND_PHOTOS.length;
+          crossfadeToPhoto(currentBgIdx);
+        }
+      }, SHUFFLE_INTERVAL_MS);
+    }
+
+    function stopHomeAutoShuffle() {
+      if (autoShuffleInterval) {
+        clearInterval(autoShuffleInterval);
+        autoShuffleInterval = null;
+      }
+    }
+
+    let lastScrollTargetIdx = -1;
     function updateBackgroundOnScroll() {
       const scrollY = window.scrollY;
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight <= 0 || BACKGROUND_PHOTOS.length <= 1) return;
+      const heroEl = document.getElementById('hero');
+      const heroHeight = heroEl ? heroEl.offsetHeight : 700;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-      const progress = scrollY / totalHeight;
-      const nextIndex = Math.min(
-        Math.floor(progress * BACKGROUND_PHOTOS.length),
-        BACKGROUND_PHOTOS.length - 1
-      );
+      if (scrollY < heroHeight * 0.75) {
+        startHomeAutoShuffle();
+      } else {
+        stopHomeAutoShuffle();
 
-      const prevSlide = document.getElementById(`bg-slide-${currentBgIndex}`);
-      const nextSlide = document.getElementById(`bg-slide-${nextIndex}`);
+        if (docHeight > 0) {
+          const scrollPct = (scrollY - (heroHeight * 0.75)) / (docHeight - (heroHeight * 0.75));
+          const targetIdx = Math.min(
+            BACKGROUND_PHOTOS.length - 1,
+            Math.max(0, Math.floor(scrollPct * BACKGROUND_PHOTOS.length))
+          );
 
-      if (nextIndex !== currentBgIndex) {
-        if (prevSlide) prevSlide.classList.remove('active-bg');
-        if (nextSlide) nextSlide.classList.add('active-bg');
-        currentBgIndex = nextIndex;
-      }
-
-      if (nextSlide) {
-        const translateY = Math.round((progress * 40) - 20);
-        nextSlide.style.transform = `scale(1.02) translateY(${translateY}px)`;
+          if (targetIdx !== lastScrollTargetIdx && targetIdx !== currentBgIdx) {
+            lastScrollTargetIdx = targetIdx;
+            currentBgIdx = targetIdx;
+            crossfadeToPhoto(currentBgIdx);
+          }
+        }
       }
     }
 
@@ -1112,7 +1157,6 @@
       }).join('');
     }
 
-    // Alias for compatibility
     const renderNoticeBoard = renderNotices;
 
     function checkAndTriggerPopup() {
@@ -1314,14 +1358,12 @@
               ${roleSubHtml}
               <p class="text-[10px] text-slate-400 ${hasRole ? 'mt-0.5' : 'mt-1'}">Science • Sec A</p>
 
-              <!-- Phone Contact (Only if NOT blank) -->
               ${phone ? `
                 <a href="tel:${phone}" onclick="event.stopPropagation()" class="mt-1.5 inline-flex items-center gap-1 text-[10px] text-cyan-400 font-mono hover:underline">
                   <span>📞</span><span>${phone}</span>
                 </a>
               ` : ''}
 
-              <!-- Social Media Icons (Only if provided) -->
               ${hasSocials ? `
                 <div class="flex items-center justify-center gap-1.5 mt-1.5 pt-1.5 border-t border-white/5" onclick="event.stopPropagation()">
                   ${s.social_whatsapp ? `<a href="https://wa.me/${s.social_whatsapp.replace(/[^0-9]/g, '')}" target="_blank" class="text-emerald-400 text-[10px]" title="WhatsApp">💬</a>` : ''}
@@ -1368,7 +1410,6 @@
         fallbackEl.classList.remove('hidden');
       }
 
-      // CONTACT & SOCIAL DETAILS (HIDDEN IF BLANK)
       const phoneRow = document.getElementById('modal-phone-row');
       const phoneLink = document.getElementById('modal-phone-link');
       if (s.phone && s.phone.trim().length > 0) {
@@ -1476,7 +1517,6 @@
             ` : ''}
           </div>
 
-          <!-- Contact & Social Details: Hidden if blank -->
           <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[11px]" onclick="event.stopPropagation()">
             <div class="flex items-center gap-2">
               ${phone ? `
@@ -1486,7 +1526,7 @@
               ` : ''}
               ${email ? `
                 <a href="mailto:${email}" class="text-slate-300 hover:text-cyan-300 flex items-center gap-1 font-mono truncate max-w-[150px]">
-                  <span>✉️</span><span class="truncate">${email}</span>
+                  <span>✉️️</span><span class="truncate">${email}</span>
                 </a>
               ` : ''}
             </div>
@@ -1643,7 +1683,7 @@
     }
 
     // =========================================================================
-    // 3D CONSTELLATION NETWORK
+    // 3D CONSTELLATION NETWORK (TRANSPARENT BACKDROP & BOLD DESIGN)
     // =========================================================================
     let constellationGroup = null;
     let starMeshes = [];
@@ -1661,7 +1701,7 @@
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-        renderer.setClearColor(0x000000, 0); // 100% transparent background
+        renderer.setClearColor(0x000000, 0); // 100% transparent backdrop
         container.innerHTML = '';
         container.appendChild(renderer.domElement);
       } catch (e) {
@@ -1673,7 +1713,6 @@
       constellationGroup = group;
       starMeshes = [];
 
-      // BOLD Spheres and Halo Geometries
       const starGeometry = new THREE.SphereGeometry(1.4, 18, 18);
       const haloGeometry = new THREE.SphereGeometry(2.3, 10, 10);
       
@@ -1699,7 +1738,6 @@
         mesh.position.set(x, y, z);
         mesh.userData = s;
 
-        // Bold outer halo ring
         const halo = new THREE.Mesh(haloGeometry, hasRole ? leaderHaloMat : defaultHaloMat);
         mesh.add(halo);
 
@@ -1708,7 +1746,6 @@
         positions.push(new THREE.Vector3(x, y, z));
       });
 
-      // BOLD Connecting Neon Network Lines
       const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.45 });
       const lineGeo = new THREE.BufferGeometry();
       const linePoints = [];
@@ -1724,7 +1761,6 @@
       lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePoints, 3));
       group.add(new THREE.LineSegments(lineGeo, lineMaterial));
 
-      // Bold Ambient Star Dust
       const dustGeo = new THREE.BufferGeometry();
       const dustCount = 80;
       const dustPoints = [];
@@ -1752,7 +1788,6 @@
         prevMousePos = { x: e.clientX, y: e.clientY };
       });
 
-      // Raycaster for star hovering and inspection
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
       const hud = document.getElementById('constellation-hud');
