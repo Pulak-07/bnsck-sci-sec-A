@@ -207,6 +207,80 @@
       box-shadow: 0 20px 40px -10px rgba(0, 229, 255, 0.2);
     }
 
+    /* ==================== SCREENSHOT & RECORDING PHOTO SHIELD ==================== */
+    /* Prevents right-click saving, dragging, and inspect-saving */
+    .student-photo-wrapper, #modal-photo-container, #student-modal img {
+      -webkit-user-select: none !important;
+      -webkit-touch-callout: none !important;
+      user-select: none !important;
+      -webkit-user-drag: none !important;
+      touch-action: manipulation;
+    }
+
+    /* Transparent click interceptor layer to defeat mobile long-press image saving */
+    .student-touch-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 25;
+      background: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      pointer-events: auto;
+    }
+
+    /* Heavy blur triggered when screenshot shortcuts, app switcher, or screen recording / window unfocus are detected */
+    .student-photo-shielded img {
+      filter: blur(32px) brightness(0.5) !important;
+      transform: scale(0.95);
+      transition: filter 0.1s ease, transform 0.1s ease;
+      pointer-events: none !important;
+    }
+
+    .student-photo-shield-alert {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2, 7, 18, 0.94);
+      color: #00e5ff;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-align: center;
+      padding: 6px;
+      border: 1px dashed rgba(0, 229, 255, 0.5);
+      border-radius: inherit;
+      z-index: 30;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .student-photo-shielded .student-photo-shield-alert {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media print {
+      /* Hard blur and hide student photos completely on print / print to PDF */
+      .student-photo-wrapper img, #modal-photo {
+        display: none !important;
+      }
+      .student-photo-wrapper::after {
+        content: "PROTECTED STUDENT RECORD";
+        display: block;
+        padding: 20px 10px;
+        color: #000;
+        font-size: 9px;
+        text-align: center;
+        font-weight: bold;
+      }
+    }
+
     /* 9-Second Timer Progress Bar */
     @keyframes noticeTimerProgress {
       0% { width: 100%; }
@@ -347,7 +421,7 @@
           <span id="nav-notice-indicator" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
         </a>
         <a href="#about-us" class="pill-nav-item" data-target="about-us">About Us (Sec A)</a>
-        <a href="#students" class="pill-nav-item" data-target="students">Class Roster</a>
+        <a href="#students" class="pill-nav-item" data-target="students">Class Students</a>
         <a href="#constellation" class="pill-nav-item" data-target="constellation">Network</a>
         <a href="#teachers" class="pill-nav-item" data-target="teachers">Faculty</a>
         <a href="#timeline" class="pill-nav-item" data-target="timeline">Journey</a>
@@ -474,7 +548,7 @@
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold tracking-wider mb-2">
             ★ COHORT ARCHIVE ★
           </div>
-          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Roster (Section A)</h2>
+          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Students (Section A)</h2>
           <p class="text-sm sm:text-base text-slate-300 max-w-xl mt-2 italic">
             Currently fifty passionate minds united under our naval banner at BNS Shaheed Moazzam. Badges, titles, and appointments are dynamically updated from the official database.
           </p>
@@ -509,10 +583,10 @@
       </div>
 
       <!-- Grid of Student Cards -->
-      <div id="student-cards-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
+    <div id="student-cards-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+      <!-- Rendered dynamically -->
+    </div>
+  </section>
 
     <!-- DYNAMIC FACULTY & MENTORS SECTION -->
     <section id="teachers" class="relative py-16 px-4 sm:px-6 max-w-6xl mx-auto animate-pop">
@@ -704,9 +778,14 @@
       <button onclick="closeStudentModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 text-xs">✕</button>
 
       <div class="flex items-center gap-4 mb-4">
-        <div class="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400 bg-slate-900 shrink-0">
-          <img id="modal-photo" src="" alt="Student Photo" class="w-full h-full object-cover hidden" />
+        <div id="modal-photo-container" class="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400 bg-slate-900 shrink-0 relative">
+          <img id="modal-photo" src="" alt="Student Photo" class="w-full h-full object-cover hidden" oncontextmenu="return false;" draggable="false" />
           <div id="modal-fallback" class="w-full h-full flex items-center justify-center text-cyan-400 font-bold font-mono text-sm">A</div>
+          <!-- Screenshot Shield Watermark for Modal -->
+          <div class="student-photo-shield-alert">
+            <svg class="w-5 h-5 mx-auto mb-1 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span>Photo Protected</span>
+          </div>
         </div>
         <div class="overflow-hidden">
           <div id="modal-role-badge" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 inline-block mb-1"></div>
@@ -800,9 +879,7 @@
       "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/photo%202.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3Bob3RvIDIuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkxNDIsImV4cCI6MjQyMjAxOTE0Mn0.gCZprzajZLM-fFLj10UEO3GZQzhCeZzoK08pgLKUHCE",
       "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/photo%203.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3Bob3RvIDMuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkxNjksImV4cCI6MjQyMjAxOTE2OX0.pbwViwDZQdVCOgo_rCFgeH-SE4cftj195Omyq3bVsgk",
       "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/photo%204.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3Bob3RvIDQuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkxOTAsImV4cCI6MjQyMjAxOTE5MH0.edbqj8wgFMWnZ5x2VFlR9TR0R-8mqWXgkFMpsSzbm4Y",
-      "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/phtoo%205.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3BodG9vIDUuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkyMTIsImV4cCI6MjQyMjAxOTIxMn0.A09dBzqm0CiZ1H1fFMIeYVYwUC_tB9pMoS1CpBqFRv4",
-      "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/public/bnsck/image%207.jpeg",
-      "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/public/bnsck/image%206.jpeg"
+      "https://mqkumbvzqjolyjmwmgcf.supabase.co/storage/v1/object/sign/data/phtoo%205.jpeg?token=eyJraWQiOiIwODFmOGZiMC05MDIwLTQ2NTEtOGY0OC1jZjFiODhhOTNlYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkYXRhL3BodG9vIDUuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTEyOTkyMTIsImV4cCI6MjQyMjAxOTIxMn0.A09dBzqm0CiZ1H1fFMIeYVYwUC_tB9pMoS1CpBqFRv4"
     ];
 
     let currentBgIdx = 0;
@@ -901,7 +978,7 @@
         title: "Welcome to BNSCK HSC 2027 Science Section A Portal",
         description: "Official digital capsule, classmate records, academic milestones, and class bulletin board for Section A at BNS Shaheed Moazzam, Kaptai.",
         url: "https://bnsck.edu.bd",
-        popup: "pop up",
+        popup: "",
         date: "Current Bulletin"
       },
       {
@@ -1089,6 +1166,7 @@
     // =========================================================================
     let popupSecondsLeft = 9;
     let popupIntervalTimer = null;
+    let popupTriggerTimeout = null;
     let isPopupPaused = false;
 
     function renderNotices() {
@@ -1113,7 +1191,8 @@
       container.innerHTML = NOTICES_DATA.map((item, idx) => {
         const hasUrl = item.url && item.url.trim().length > 0;
         const hasDesc = item.description && item.description.trim().length > 0;
-        const isPop = item.popup && (item.popup.toLowerCase().includes('pop') || item.popup.toLowerCase() === '');
+        const popupFlag = String(item.popup || '').toLowerCase().trim();
+        const isPop = popupFlag === 'pop up' || popupFlag === 'popup' || popupFlag === 'yes';
 
         return `
           <div class="clean-card p-5 flex flex-col justify-between group">
@@ -1159,11 +1238,37 @@
 
     const renderNoticeBoard = renderNotices;
 
+    // Trigger pop-up ONLY IF configured by Admin Portal
     function checkAndTriggerPopup() {
-      if (!NOTICES_DATA || NOTICES_DATA.length === 0) return;
-      const popItem = NOTICES_DATA.find(n => n.popup && n.popup.toLowerCase().includes('pop')) || NOTICES_DATA[0];
+      if (popupTriggerTimeout) {
+        clearTimeout(popupTriggerTimeout);
+        popupTriggerTimeout = null;
+      }
+
+      if (!NOTICES_DATA || NOTICES_DATA.length === 0) {
+        closeNoticePopup();
+        return;
+      }
+
+      // Find explicitly enabled pop-up notice
+      const popItem = NOTICES_DATA.find(n => {
+        if (!n || !n.popup) return false;
+        const flag = String(n.popup).toLowerCase().trim();
+        return flag === 'pop up' || flag === 'popup' || flag === 'yes' || flag === 'true';
+      });
+
+      // Update navbar indicator ping to only show if there is an active pop-up
+      const navIndicator = document.getElementById('nav-notice-indicator');
+      if (navIndicator) {
+        if (popItem) navIndicator.classList.remove('hidden');
+        else navIndicator.classList.add('hidden');
+      }
+
+      // Strictly open ONLY if a notice has popup enabled, otherwise force close
       if (popItem) {
-        setTimeout(() => openNoticePopup(popItem), 1200);
+        popupTriggerTimeout = setTimeout(() => openNoticePopup(popItem), 1200);
+      } else {
+        closeNoticePopup();
       }
     }
 
@@ -1254,6 +1359,10 @@
     }
 
     function closeNoticePopup() {
+      if (popupTriggerTimeout) {
+        clearTimeout(popupTriggerTimeout);
+        popupTriggerTimeout = null;
+      }
       clearPopupTimers();
       const modal = document.getElementById('notice-popup-modal');
       const card = document.getElementById('notice-popup-card');
@@ -1335,10 +1444,13 @@
 
         return `
           <div class="student-classic-card group cursor-pointer" onclick="openStudentModal('${s.roll}')">
-            <div class="student-photo-wrapper">
+            <div class="student-photo-wrapper" oncontextmenu="return false;">
               ${badgeOverlay}
 
-              <img src="${photo || ''}" alt="${escapeHtml(s.name)}" loading="lazy" decoding="async" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${photo ? '' : 'hidden'}" />
+              <!-- Mobile Touch Shield (Blocks iOS/Android Long-Press Image Saving) -->
+              <div class="student-touch-shield" oncontextmenu="return false;"></div>
+
+              <img src="${photo || ''}" alt="${escapeHtml(s.name)}" loading="lazy" decoding="async" draggable="false" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 pointer-events-none select-none ${photo ? '' : 'hidden'}" />
 
               <div class="w-full h-full flex flex-col items-center justify-center text-cyan-300/80 p-4 ${photo ? 'hidden' : ''}">
                 <svg class="w-12 h-12 text-cyan-400/60 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1348,7 +1460,13 @@
                 <span class="mt-2 text-xs font-bold text-cyan-400">Roll ${s.roll}</span>
               </div>
 
-              <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-slate-950/85 border border-cyan-400/40 text-[10px] text-cyan-300 font-bold shadow-md">
+              <!-- Protected Watermark Banner for Screen Snip Protection -->
+              <div class="student-photo-shield-alert">
+                <svg class="w-4 h-4 text-cyan-400 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <span>Protected Record</span>
+              </div>
+
+              <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-slate-950/85 border border-cyan-400/40 text-[10px] text-cyan-300 font-bold shadow-md z-20">
                 ${s.roll}
               </div>
             </div>
@@ -1529,15 +1647,15 @@
                   <span>✉️️</span><span class="truncate">${email}</span>
                 </a>
               ` : ''}
-            </div>
-
-            ${hasSocials ? `
-              <div class="flex items-center gap-1.5">
-                ${t.social_whatsapp ? `<a href="https://wa.me/${t.social_whatsapp.replace(/[^0-9]/g, '')}" target="_blank" class="text-emerald-400 text-xs" title="WhatsApp">💬</a>` : ''}
-                ${t.social_facebook ? `<a href="${t.social_facebook}" target="_blank" class="text-blue-400 text-xs" title="Facebook">📘</a>` : ''}
-                ${t.social_instagram ? `<a href="${t.social_instagram}" target="_blank" class="text-pink-400 text-xs" title="Instagram">📷</a>` : ''}
-              </div>
-            ` : ''}
+      <div class="flex items-center gap-4 mb-4">
+        <div id="modal-photo-container" class="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400 bg-slate-900 shrink-0 relative" oncontextmenu="return false;">
+          <div class="student-touch-shield" oncontextmenu="return false;"></div>
+          <img id="modal-photo" src="" alt="Student Photo" class="w-full h-full object-cover hidden pointer-events-none select-none" oncontextmenu="return false;" draggable="false" />
+          <div id="modal-fallback" class="w-full h-full flex items-center justify-center text-cyan-400 font-bold font-mono text-sm">A</div>
+          <!-- Screenshot Shield Watermark for Modal -->
+          <div class="student-photo-shield-alert">
+            <svg class="w-5 h-5 mx-auto mb-1 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span>Photo Protected</span>
           </div>
         </div>
       `;
@@ -1941,6 +2059,110 @@
     }
 
     // =========================================================================
+    // STUDENT PHOTO SCREENSHOT & SCREEN-CAPTURE ANTI-HARVESTING SHIELD
+    // =========================================================================
+    let shieldResetTimer = null;
+
+    function activateStudentPhotoShield() {
+      // Shield ONLY student photo containers, leaving the rest of the site untouched
+      document.querySelectorAll('.student-photo-wrapper, #modal-photo-container').forEach(el => {
+        el.classList.add('student-photo-shielded');
+      });
+
+      if (shieldResetTimer) clearTimeout(shieldResetTimer);
+      // Automatically unblur after 2.8s when capture attempt finishes
+      shieldResetTimer = setTimeout(() => {
+        deactivateStudentPhotoShield();
+      }, 2800);
+    }
+
+    function deactivateStudentPhotoShield() {
+      document.querySelectorAll('.student-photo-wrapper, #modal-photo-container').forEach(el => {
+        el.classList.remove('student-photo-shielded');
+      });
+    }
+
+    function setupScreenshotProtection() {
+      // 1. Desktop Keyboard Interception (PrintScreen, Snipping Tools, Mac Keys)
+      window.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen' || e.keyCode === 44) {
+          activateStudentPhotoShield();
+          try {
+            navigator.clipboard.writeText('Protected Batch Archive — Bangladesh Noubahini School and College Kaptai');
+          } catch(err) {}
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        const isWinSnip = (e.key === 'S' || e.key === 's') && e.shiftKey && (e.metaKey || e.ctrlKey);
+        const isMacSnip = (e.metaKey || e.ctrlKey) && e.shiftKey && ['3', '4', '5'].includes(e.key);
+        const isPrint = (e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P');
+
+        if (e.key === 'PrintScreen' || isWinSnip || isMacSnip || isPrint) {
+          activateStudentPhotoShield();
+        }
+      });
+
+      // 2. Mobile App Switcher & Background Blur (Android & Apple iOS)
+      // When iOS or Android users swipe up to view the app switcher or trigger screenshot tools:
+      window.addEventListener('blur', () => {
+        activateStudentPhotoShield();
+      });
+
+      window.addEventListener('focus', () => {
+        // Allow brief protection window before unblurring
+        if (shieldResetTimer) clearTimeout(shieldResetTimer);
+        shieldResetTimer = setTimeout(() => {
+          deactivateStudentPhotoShield();
+        }, 800);
+      });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          activateStudentPhotoShield();
+        } else {
+          if (shieldResetTimer) clearTimeout(shieldResetTimer);
+          shieldResetTimer = setTimeout(() => {
+            deactivateStudentPhotoShield();
+          }, 800);
+        }
+      });
+
+      window.addEventListener('pagehide', () => {
+        activateStudentPhotoShield();
+      });
+
+      // 3. Prevent Touch Long-Press & Image Extraction on Mobile (iOS Safari & Android Chrome)
+      const preventTouchHold = (e) => {
+        if (e.target.closest('.student-photo-wrapper') || e.target.closest('#modal-photo-container') || e.target.closest('.student-touch-shield')) {
+          e.preventDefault();
+        }
+      };
+
+      document.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 2) {
+          // Detect 3-finger screenshot gestures (common on Android MIUI/ColorOS/OxygenOS)
+          activateStudentPhotoShield();
+        }
+      }, { passive: true });
+
+      document.addEventListener('contextmenu', (e) => {
+        if (e.target.closest('.student-photo-wrapper') || e.target.closest('#modal-photo-container')) {
+          e.preventDefault();
+          activateStudentPhotoShield();
+          return false;
+        }
+      });
+
+      document.addEventListener('dragstart', (e) => {
+        if (e.target.closest('.student-photo-wrapper') || e.target.closest('#modal-photo-container')) {
+          e.preventDefault();
+          return false;
+        }
+      });
+    }
+
+    // =========================================================================
     // INITIALIZATION & EVENT LISTENERS
     // =========================================================================
     document.addEventListener('DOMContentLoaded', () => {
@@ -1951,8 +2173,9 @@
       renderTimeline();
       renderCapsule();
       renderGallery();
-      checkAndTriggerPopup();
+      // Only check and trigger popups once live data is retrieved from Supabase
       fetchSupabaseData();
+      setupScreenshotProtection();
 
       setTimeout(initConstellation3D, 200);
 
