@@ -1113,7 +1113,7 @@
       container.innerHTML = NOTICES_DATA.map((item, idx) => {
         const hasUrl = item.url && item.url.trim().length > 0;
         const hasDesc = item.description && item.description.trim().length > 0;
-        const isPop = item.popup && (item.popup.toLowerCase().includes('pop') || item.popup.toLowerCase() === 'yes');
+        const isPop = item.popup && (item.popup.toLowerCase().includes('pop') || item.popup.toLowerCase() === '');
 
         return `
           <div class="clean-card p-5 flex flex-col justify-between group">
