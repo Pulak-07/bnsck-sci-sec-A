@@ -25,7 +25,7 @@
   <style>
     :root {
       --bg-primary: #020712;
-      --navy-glass: rgba(5, 14, 30, 0.78);
+      --navy-glass: rgba(5, 14, 30, 0.82);
       --border-glass: rgba(0, 229, 255, 0.22);
       --accent-cyan: #00e5ff;
       --accent-blue: #1d6fee;
@@ -66,8 +66,8 @@
       inset: 0;
       background-size: cover;
       background-position: center 38%;
-      transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 6s cubic-bezier(0.2, 0.8, 0.2, 1);
-      will-change: opacity, transform;
+      transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: opacity;
     }
 
     #dynamic-bg-overlay {
@@ -75,7 +75,7 @@
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      background: linear-gradient(180deg, rgba(2, 7, 18, 0.68) 0%, rgba(2, 7, 18, 0.84) 60%, #020712 100%);
+      background: linear-gradient(180deg, rgba(2, 7, 18, 0.72) 0%, rgba(2, 7, 18, 0.86) 60%, #020712 100%);
     }
 
     .glass-panel {
@@ -87,7 +87,7 @@
 
     /* Floating Pill Navbar */
     .pill-navbar {
-      background: rgba(4, 12, 28, 0.82);
+      background: rgba(4, 12, 28, 0.86);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(0, 229, 255, 0.28);
@@ -137,9 +137,9 @@
       box-shadow: 0 4px 16px rgba(29, 111, 238, 0.6), 0 0 12px rgba(0, 229, 255, 0.4);
     }
 
-    /* Classic Student Cards & Glowing Badges */
+    /* Student Cards & Badges */
     .student-classic-card {
-      background: rgba(8, 20, 42, 0.78);
+      background: rgba(8, 20, 42, 0.82);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -160,6 +160,8 @@
       aspect-ratio: 4 / 4.5;
       background: linear-gradient(180deg, #0d1b33 0%, #060e1d 100%);
       overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     /* Glowing Leadership Badges */
@@ -192,7 +194,7 @@
     }
 
     .clean-card {
-      background: rgba(6, 16, 36, 0.78);
+      background: rgba(6, 16, 36, 0.82);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -207,34 +209,23 @@
       box-shadow: 0 20px 40px -10px rgba(0, 229, 255, 0.2);
     }
 
-    /* ==================== SCREENSHOT & RECORDING PHOTO SHIELD ==================== */
-    /* Prevents right-click saving, dragging, and inspect-saving */
-    .student-photo-wrapper, #modal-photo-container, #student-modal img {
-      -webkit-user-select: none !important;
+    /* Screen Capture / Print Protection for Student Avatars */
+    .student-photo-wrapper, #modal-photo-container {
       -webkit-touch-callout: none !important;
-      user-select: none !important;
       -webkit-user-drag: none !important;
-      touch-action: manipulation;
     }
 
-    /* Transparent click interceptor layer to defeat mobile long-press image saving */
     .student-touch-shield {
       position: absolute;
       inset: 0;
-      z-index: 25;
+      z-index: 10;
       background: transparent;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
       pointer-events: auto;
     }
 
-    /* Heavy blur triggered when screenshot shortcuts, app switcher, or screen recording / window unfocus are detected */
     .student-photo-shielded img {
-      filter: blur(32px) brightness(0.5) !important;
-      transform: scale(0.95);
-      transition: filter 0.1s ease, transform 0.1s ease;
-      pointer-events: none !important;
+      filter: blur(28px) brightness(0.6) !important;
+      transition: filter 0.1s ease;
     }
 
     .student-photo-shield-alert {
@@ -244,7 +235,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: rgba(2, 7, 18, 0.94);
+      background: rgba(2, 7, 18, 0.92);
       color: #00e5ff;
       font-size: 10px;
       font-weight: 800;
@@ -254,7 +245,7 @@
       padding: 6px;
       border: 1px dashed rgba(0, 229, 255, 0.5);
       border-radius: inherit;
-      z-index: 30;
+      z-index: 20;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.15s ease;
@@ -266,16 +257,15 @@
     }
 
     @media print {
-      /* Hard blur and hide student photos completely on print / print to PDF */
       .student-photo-wrapper img, #modal-photo {
         display: none !important;
       }
       .student-photo-wrapper::after {
         content: "PROTECTED STUDENT RECORD";
         display: block;
-        padding: 20px 10px;
+        padding: 24px 10px;
         color: #000;
-        font-size: 9px;
+        font-size: 10px;
         text-align: center;
         font-weight: bold;
       }
@@ -322,8 +312,8 @@
 
   <!-- DYNAMIC AUTO-SHUFFLE & SCROLL-CROSSFADE BACKGROUND -->
   <div id="dynamic-bg-container">
-    <div id="bg-layer-0" class="bg-photo-layer opacity-100 scale-100"></div>
-    <div id="bg-layer-1" class="bg-photo-layer opacity-0 scale-100"></div>
+    <div id="bg-layer-0" class="bg-photo-layer opacity-100"></div>
+    <div id="bg-layer-1" class="bg-photo-layer opacity-0"></div>
   </div>
   <div id="dynamic-bg-overlay"></div>
 
@@ -418,10 +408,10 @@
         <a href="#hero" class="pill-nav-item active-pill" data-target="hero">Home</a>
         <a href="#notices" class="pill-nav-item flex items-center gap-1.5" data-target="notices">
           <span>Notices</span>
-          <span id="nav-notice-indicator" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+          <span id="nav-notice-indicator" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping hidden"></span>
         </a>
         <a href="#about-us" class="pill-nav-item" data-target="about-us">About Us (Sec A)</a>
-        <a href="#students" class="pill-nav-item" data-target="students">Class Students</a>
+        <a href="#students" class="pill-nav-item" data-target="students">Class Roster</a>
         <a href="#constellation" class="pill-nav-item" data-target="constellation">Network</a>
         <a href="#teachers" class="pill-nav-item" data-target="teachers">Faculty</a>
         <a href="#timeline" class="pill-nav-item" data-target="timeline">Journey</a>
@@ -541,14 +531,14 @@
       </div>
     </section>
 
-    <!-- PREVIOUS DESIGN RESTORED: STUDENTS ROSTER SECTION -->
+    <!-- STUDENTS ROSTER SECTION -->
     <section id="students" class="relative py-16 px-4 sm:px-6 max-w-7xl mx-auto animate-pop">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold tracking-wider mb-2">
             ★ COHORT ARCHIVE ★
           </div>
-          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Students (Section A)</h2>
+          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Roster (Section A)</h2>
           <p class="text-sm sm:text-base text-slate-300 max-w-xl mt-2 italic">
             Currently fifty passionate minds united under our naval banner at BNS Shaheed Moazzam. Badges, titles, and appointments are dynamically updated from the official database.
           </p>
@@ -583,10 +573,10 @@
       </div>
 
       <!-- Grid of Student Cards -->
-    <div id="student-cards-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-      <!-- Rendered dynamically -->
-    </div>
-  </section>
+      <div id="student-cards-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
 
     <!-- DYNAMIC FACULTY & MENTORS SECTION -->
     <section id="teachers" class="relative py-16 px-4 sm:px-6 max-w-6xl mx-auto animate-pop">
@@ -608,7 +598,7 @@
 
       <!-- Subject Teachers Grid -->
       <div class="text-center mb-4">
-        <h4 class="text-lg font-bold text-slate-300 uppercase tracking-wider text-xs">Subject Lecturers</h4>
+        <h4 class="text-slate-300 uppercase tracking-wider text-xs font-bold">Subject Lecturers</h4>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="subject-teachers-grid"></div>
     </section>
@@ -633,7 +623,7 @@
         <div id="constellation-canvas-container" class="w-full h-full cursor-grab active:cursor-grabbing bg-transparent"></div>
         
         <!-- Bold Floating HUD -->
-        <div id="constellation-hud" class="absolute bottom-5 left-5 pointer-events-none bg-slate-950/80 backdrop-blur-xl px-5 py-3 rounded-2xl border-2 border-cyan-400 shadow-[0_0_30px_rgba(0,229,255,0.5)] opacity-0 transition-opacity duration-300">
+        <div id="constellation-hud" class="absolute bottom-5 left-5 pointer-events-none bg-slate-950/85 backdrop-blur-xl px-5 py-3 rounded-2xl border-2 border-cyan-400 shadow-[0_0_30px_rgba(0,229,255,0.5)] opacity-0 transition-opacity duration-300">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
             <div id="hud-name" class="font-extrabold text-base text-white tracking-wide">Classmate</div>
@@ -683,7 +673,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-container"></div>
     </section>
 
-    <!-- CLASSIC PREVIOUS MULTI-COLUMN FOOTER RESTORED -->
+    <!-- CLASSIC MULTI-COLUMN FOOTER -->
     <footer class="relative bg-slate-950/95 border-t border-white/10 pt-16 pb-12 text-slate-400 text-sm">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-white/10">
@@ -772,35 +762,30 @@
 
   </main>
 
-  <!-- STUDENT MODAL -->
-  <div id="student-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="relative w-full max-w-md glass-panel rounded-3xl border-cyan-400/40 p-6 bg-slate-950/95 shadow-2xl">
-      <button onclick="closeStudentModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 text-xs">✕</button>
+  <!-- STUDENT MODAL (STANDALONE CLEAN DOM CONTAINER) -->
+  <div id="student-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="relative w-full max-w-md glass-panel rounded-3xl border border-cyan-400/40 p-6 sm:p-7 bg-slate-950/95 shadow-2xl">
+      <button onclick="closeStudentModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 text-xs transition">✕</button>
 
       <div class="flex items-center gap-4 mb-4">
-        <div id="modal-photo-container" class="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400 bg-slate-900 shrink-0 relative">
-          <img id="modal-photo" src="" alt="Student Photo" class="w-full h-full object-cover hidden" oncontextmenu="return false;" draggable="false" />
-          <div id="modal-fallback" class="w-full h-full flex items-center justify-center text-cyan-400 font-bold font-mono text-sm">A</div>
-          <!-- Screenshot Shield Watermark for Modal -->
-          <div class="student-photo-shield-alert">
-            <svg class="w-5 h-5 mx-auto mb-1 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            <span>Photo Protected</span>
-          </div>
+        <div id="modal-photo-container" class="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400/60 bg-slate-900 shrink-0 relative flex items-center justify-center">
+          <img id="modal-photo" src="" alt="Student Photo" class="w-full h-full object-cover hidden" draggable="false" />
+          <div id="modal-fallback" class="w-full h-full flex items-center justify-center text-cyan-400 font-bold font-mono text-base">A</div>
         </div>
         <div class="overflow-hidden">
           <div id="modal-role-badge" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 inline-block mb-1"></div>
           <h3 id="modal-name" class="text-lg font-bold text-white truncate">Student Name</h3>
-          <p id="modal-roll" class="text-xs text-cyan-400 font-mono">Roll: 01</p>
+          <p id="modal-roll" class="text-xs text-cyan-400 font-mono">Roll: 01 • Science Section A</p>
         </div>
       </div>
 
-      <p id="modal-bio" class="text-xs text-slate-300 italic mb-4 p-3 rounded-xl bg-slate-900/60 border border-white/5">Bio...</p>
+      <p id="modal-bio" class="text-xs text-slate-300 italic mb-4 p-3 rounded-xl bg-slate-900/60 border border-white/5">Member of HSC 2027 Science Section A, Kaptai.</p>
 
-      <!-- Student Contact Details (HIDDEN IF BLANK) -->
+      <!-- Student Contact Details (CONDITIONALLY DISPLAYED) -->
       <div id="modal-contact-container" class="space-y-2 pt-3 border-t border-white/10 text-xs">
         <div id="modal-phone-row" class="hidden flex items-center justify-between">
           <span class="text-slate-400">Contact Number:</span>
-          <a id="modal-phone-link" href="" class="text-cyan-300 font-mono hover:underline"></a>
+          <a id="modal-phone-link" href="" class="text-cyan-300 font-mono hover:underline font-semibold"></a>
         </div>
         <div id="modal-email-row" class="hidden flex items-center justify-between">
           <span class="text-slate-400">Email Address:</span>
@@ -815,14 +800,14 @@
   </div>
 
   <!-- TEACHER MODAL -->
-  <div id="teacher-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="relative w-full max-w-lg glass-panel rounded-3xl border-cyan-400/50 p-6 sm:p-7 bg-slate-950/95 shadow-2xl">
-      <button onclick="closeTeacherModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 text-xs">✕</button>
+  <div id="teacher-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="relative w-full max-w-lg glass-panel rounded-3xl border border-cyan-400/50 p-6 sm:p-7 bg-slate-950/95 shadow-2xl">
+      <button onclick="closeTeacherModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 text-xs transition">✕</button>
 
       <div class="flex items-center gap-4 mb-4">
-        <div class="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400 bg-slate-900 shrink-0">
+        <div class="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400/60 bg-slate-900 shrink-0 flex items-center justify-center">
           <img id="teacher-modal-photo" src="" alt="Teacher" class="w-full h-full object-cover hidden" />
-          <div id="teacher-modal-fallback" class="w-full h-full flex items-center justify-center text-cyan-400 text-sm font-bold font-mono">T</div>
+          <div id="teacher-modal-fallback" class="w-full h-full flex items-center justify-center text-cyan-400 text-base font-bold font-mono">T</div>
         </div>
         <div>
           <span id="teacher-modal-category" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 inline-block mb-1">Faculty</span>
@@ -837,7 +822,7 @@
         <p id="teacher-modal-message" class="text-xs text-slate-200 italic leading-relaxed whitespace-pre-line"></p>
       </div>
 
-      <!-- Teacher Contact Info (HIDDEN IF BLANK) -->
+      <!-- Teacher Contact Info -->
       <div id="teacher-contact-container" class="space-y-2 pt-2 border-t border-white/10 text-xs">
         <div id="teacher-phone-row" class="hidden flex items-center justify-between">
           <span class="text-slate-400">Contact Number:</span>
@@ -872,6 +857,21 @@
 
   <script>
     // =========================================================================
+    // IMAGE URL NORMALIZER
+    // Resolves Google Drive thumbnails, Supabase links, and plain URLs reliably
+    // =========================================================================
+    function normalizeImageUrl(url) {
+      if (!url || typeof url !== 'string') return '';
+      url = url.trim();
+      if (!url) return '';
+      const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (driveMatch && driveMatch[1]) {
+        return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`;
+      }
+      return url;
+    }
+
+    // =========================================================================
     // DYNAMIC BACKGROUND ENGINE WITH AUTO-SHUFFLE ON HOME & SCROLL CROSS-FADE
     // =========================================================================
     const BACKGROUND_PHOTOS = [
@@ -885,7 +885,7 @@
     let currentBgIdx = 0;
     let activeLayerIndex = 0;
     let autoShuffleInterval = null;
-    const SHUFFLE_INTERVAL_MS = 6000; // Auto-shuffles every 6 seconds on home
+    const SHUFFLE_INTERVAL_MS = 6000;
 
     function initDynamicBackground() {
       const layer0 = document.getElementById('bg-layer-0');
@@ -893,7 +893,7 @@
       if (!layer0 || !layer1 || BACKGROUND_PHOTOS.length === 0) return;
 
       layer0.style.backgroundImage = `url('${BACKGROUND_PHOTOS[0]}')`;
-      layer0.style.opacity = '0.68';
+      layer0.style.opacity = '0.72';
       layer1.style.opacity = '0';
 
       startHomeAutoShuffle();
@@ -909,12 +909,12 @@
 
       if (activeLayerIndex === 0) {
         layer1.style.backgroundImage = `url('${nextPhotoUrl}')`;
-        layer1.style.opacity = '0.68';
+        layer1.style.opacity = '0.72';
         layer0.style.opacity = '0';
         activeLayerIndex = 1;
       } else {
         layer0.style.backgroundImage = `url('${nextPhotoUrl}')`;
-        layer0.style.opacity = '0.68';
+        layer0.style.opacity = '0.72';
         layer1.style.opacity = '0';
         activeLayerIndex = 0;
       }
@@ -1238,7 +1238,7 @@
 
     const renderNoticeBoard = renderNotices;
 
-    // Trigger pop-up ONLY IF configured by Admin Portal
+    // Strict trigger: ONLY IF configured in the database
     function checkAndTriggerPopup() {
       if (popupTriggerTimeout) {
         clearTimeout(popupTriggerTimeout);
@@ -1250,21 +1250,19 @@
         return;
       }
 
-      // Find explicitly enabled pop-up notice
+      // Look for explicitly enabled pop-up notice
       const popItem = NOTICES_DATA.find(n => {
         if (!n || !n.popup) return false;
         const flag = String(n.popup).toLowerCase().trim();
         return flag === 'pop up' || flag === 'popup' || flag === 'yes' || flag === 'true';
       });
 
-      // Update navbar indicator ping to only show if there is an active pop-up
       const navIndicator = document.getElementById('nav-notice-indicator');
       if (navIndicator) {
         if (popItem) navIndicator.classList.remove('hidden');
         else navIndicator.classList.add('hidden');
       }
 
-      // Strictly open ONLY if a notice has popup enabled, otherwise force close
       if (popItem) {
         popupTriggerTimeout = setTimeout(() => openNoticePopup(popItem), 1200);
       } else {
@@ -1429,7 +1427,8 @@
       if (countEl) countEl.innerText = list.length;
 
       container.innerHTML = list.map(s => {
-        const photo = s.photo_url || s.photourl || '';
+        const rawPhoto = s.photo_url || s.photourl || s.photo || '';
+        const photo = normalizeImageUrl(rawPhoto);
         const role = s.role || '';
         const phone = s.phone || '';
         const hasRole = role && role.trim().length > 0;
@@ -1444,11 +1443,10 @@
 
         return `
           <div class="student-classic-card group cursor-pointer" onclick="openStudentModal('${s.roll}')">
-            <div class="student-photo-wrapper" oncontextmenu="return false;">
+            <div class="student-photo-wrapper">
               ${badgeOverlay}
 
-              <!-- Mobile Touch Shield (Blocks iOS/Android Long-Press Image Saving) -->
-              <div class="student-touch-shield" oncontextmenu="return false;"></div>
+              <div class="student-touch-shield"></div>
 
               <img src="${photo || ''}" alt="${escapeHtml(s.name)}" loading="lazy" decoding="async" draggable="false" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 pointer-events-none select-none ${photo ? '' : 'hidden'}" />
 
@@ -1460,13 +1458,12 @@
                 <span class="mt-2 text-xs font-bold text-cyan-400">Roll ${s.roll}</span>
               </div>
 
-              <!-- Protected Watermark Banner for Screen Snip Protection -->
               <div class="student-photo-shield-alert">
                 <svg class="w-4 h-4 text-cyan-400 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                 <span>Protected Record</span>
               </div>
 
-              <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-slate-950/85 border border-cyan-400/40 text-[10px] text-cyan-300 font-bold shadow-md z-20">
+              <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-slate-950/85 border border-cyan-400/40 text-[10px] text-cyan-300 font-bold shadow-md z-10">
                 ${s.roll}
               </div>
             </div>
@@ -1518,16 +1515,29 @@
         roleBadge.classList.add('hidden');
       }
 
-      const photo = s.photo_url || s.photourl || '';
+      const rawPhoto = s.photo_url || s.photourl || s.photo || '';
+      const photo = normalizeImageUrl(rawPhoto);
+
       if (photo) {
         photoEl.src = photo;
+        photoEl.onload = () => {
+          photoEl.classList.remove('hidden');
+          fallbackEl.classList.add('hidden');
+        };
+        photoEl.onerror = () => {
+          photoEl.classList.add('hidden');
+          fallbackEl.classList.remove('hidden');
+          fallbackEl.textContent = (s.name && s.name.charAt(0)) ? s.name.charAt(0).toUpperCase() : 'A';
+        };
         photoEl.classList.remove('hidden');
         fallbackEl.classList.add('hidden');
       } else {
         photoEl.classList.add('hidden');
         fallbackEl.classList.remove('hidden');
+        fallbackEl.textContent = (s.name && s.name.charAt(0)) ? s.name.charAt(0).toUpperCase() : 'A';
       }
 
+      // Conditional Contact Details
       const phoneRow = document.getElementById('modal-phone-row');
       const phoneLink = document.getElementById('modal-phone-link');
       if (s.phone && s.phone.trim().length > 0) {
@@ -1582,30 +1592,30 @@
     }
 
     // =========================================================================
-    // FACULTY & MENTORS RENDERING
+    // FACULTY & MENTORS RENDERING (CLEAN DOM STRUCTURE)
     // =========================================================================
     function renderTeachers() {
       const leadershipContainer = document.getElementById('leadership-teachers-container');
       const leaders = TEACHERS_DATA.filter(t => t.category === "Principal" || t.category === "Deputy Principal");
       if (leadershipContainer) {
-        leadershipContainer.innerHTML = leaders.map(t => generateTeacherCardHTML(t, 'leader')).join('');
+        leadershipContainer.innerHTML = leaders.map(t => generateTeacherCardHTML(t)).join('');
       }
 
       const ctContainer = document.getElementById('class-teacher-container');
       const ct = TEACHERS_DATA.find(t => t.category === "Class Teacher") || TEACHERS_DATA[2];
       if (ctContainer && ct) {
-        ctContainer.innerHTML = generateTeacherCardHTML(ct, 'class-teacher');
+        ctContainer.innerHTML = generateTeacherCardHTML(ct);
       }
 
       const subjectContainer = document.getElementById('subject-teachers-grid');
       const subjects = TEACHERS_DATA.filter(t => t !== ct && !leaders.includes(t));
       if (subjectContainer) {
-        subjectContainer.innerHTML = subjects.map(t => generateTeacherCardHTML(t, 'subject')).join('');
+        subjectContainer.innerHTML = subjects.map(t => generateTeacherCardHTML(t)).join('');
       }
     }
 
-    function generateTeacherCardHTML(t, styleType) {
-      const photo = t.photo_url || '';
+    function generateTeacherCardHTML(t) {
+      const photo = normalizeImageUrl(t.photo_url || t.photourl || '');
       const phone = t.phone || '';
       const email = t.email || '';
       const hasSocials = t.social_facebook || t.social_whatsapp || t.social_instagram;
@@ -1614,9 +1624,10 @@
         <div class="clean-card p-5 flex flex-col justify-between group cursor-pointer hover:border-cyan-400/60" onclick="openTeacherModal(${t.id})">
           <div>
             <div class="flex items-center gap-3.5 mb-3">
-              <div class="w-14 h-14 rounded-2xl overflow-hidden border border-cyan-400/50 bg-slate-900 shrink-0">
+              <div class="w-14 h-14 rounded-2xl overflow-hidden border border-cyan-400/50 bg-slate-900 shrink-0 flex items-center justify-center">
                 ${photo ? `
-                  <img src="${photo}" alt="${escapeHtml(t.name)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" onerror="this.style.display='none';">
+                  <img src="${photo}" alt="${escapeHtml(t.name)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                  <div class="w-full h-full hidden items-center justify-center text-cyan-300 font-bold font-mono">T</div>
                 ` : `
                   <div class="w-full h-full flex items-center justify-center text-cyan-300 font-bold font-mono">T</div>
                 `}
@@ -1644,18 +1655,18 @@
               ` : ''}
               ${email ? `
                 <a href="mailto:${email}" class="text-slate-300 hover:text-cyan-300 flex items-center gap-1 font-mono truncate max-w-[150px]">
-                  <span>✉️️</span><span class="truncate">${email}</span>
+                  <span>✉</span><span class="truncate">${email}</span>
                 </a>
               ` : ''}
-      <div class="flex items-center gap-4 mb-4">
-        <div id="modal-photo-container" class="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400 bg-slate-900 shrink-0 relative" oncontextmenu="return false;">
-          <div class="student-touch-shield" oncontextmenu="return false;"></div>
-          <img id="modal-photo" src="" alt="Student Photo" class="w-full h-full object-cover hidden pointer-events-none select-none" oncontextmenu="return false;" draggable="false" />
-          <div id="modal-fallback" class="w-full h-full flex items-center justify-center text-cyan-400 font-bold font-mono text-sm">A</div>
-          <!-- Screenshot Shield Watermark for Modal -->
-          <div class="student-photo-shield-alert">
-            <svg class="w-5 h-5 mx-auto mb-1 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            <span>Photo Protected</span>
+            </div>
+
+            ${hasSocials ? `
+              <div class="flex items-center gap-1.5">
+                ${t.social_whatsapp ? `<a href="https://wa.me/${t.social_whatsapp.replace(/[^0-9]/g, '')}" target="_blank" class="text-emerald-400 text-xs" title="WhatsApp">💬</a>` : ''}
+                ${t.social_facebook ? `<a href="${t.social_facebook}" target="_blank" class="text-blue-400 text-xs" title="Facebook">📘</a>` : ''}
+                ${t.social_instagram ? `<a href="${t.social_instagram}" target="_blank" class="text-pink-400 text-xs" title="Instagram">📷</a>` : ''}
+              </div>
+            ` : ''}
           </div>
         </div>
       `;
@@ -1674,8 +1685,18 @@
 
       const photoEl = document.getElementById('teacher-modal-photo');
       const fallbackEl = document.getElementById('teacher-modal-fallback');
-      if (t.photo_url) {
-        photoEl.src = t.photo_url;
+      const photo = normalizeImageUrl(t.photo_url || t.photourl || '');
+
+      if (photo) {
+        photoEl.src = photo;
+        photoEl.onload = () => {
+          photoEl.classList.remove('hidden');
+          fallbackEl.classList.add('hidden');
+        };
+        photoEl.onerror = () => {
+          photoEl.classList.add('hidden');
+          fallbackEl.classList.remove('hidden');
+        };
         photoEl.classList.remove('hidden');
         fallbackEl.classList.add('hidden');
       } else {
@@ -1801,7 +1822,7 @@
     }
 
     // =========================================================================
-    // 3D CONSTELLATION NETWORK (TRANSPARENT BACKDROP & BOLD DESIGN)
+    // 3D CONSTELLATION NETWORK
     // =========================================================================
     let constellationGroup = null;
     let starMeshes = [];
@@ -1819,7 +1840,7 @@
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-        renderer.setClearColor(0x000000, 0); // 100% transparent backdrop
+        renderer.setClearColor(0x000000, 0);
         container.innerHTML = '';
         container.appendChild(renderer.domElement);
       } catch (e) {
@@ -2059,110 +2080,6 @@
     }
 
     // =========================================================================
-    // STUDENT PHOTO SCREENSHOT & SCREEN-CAPTURE ANTI-HARVESTING SHIELD
-    // =========================================================================
-    let shieldResetTimer = null;
-
-    function activateStudentPhotoShield() {
-      // Shield ONLY student photo containers, leaving the rest of the site untouched
-      document.querySelectorAll('.student-photo-wrapper, #modal-photo-container').forEach(el => {
-        el.classList.add('student-photo-shielded');
-      });
-
-      if (shieldResetTimer) clearTimeout(shieldResetTimer);
-      // Automatically unblur after 2.8s when capture attempt finishes
-      shieldResetTimer = setTimeout(() => {
-        deactivateStudentPhotoShield();
-      }, 2800);
-    }
-
-    function deactivateStudentPhotoShield() {
-      document.querySelectorAll('.student-photo-wrapper, #modal-photo-container').forEach(el => {
-        el.classList.remove('student-photo-shielded');
-      });
-    }
-
-    function setupScreenshotProtection() {
-      // 1. Desktop Keyboard Interception (PrintScreen, Snipping Tools, Mac Keys)
-      window.addEventListener('keyup', (e) => {
-        if (e.key === 'PrintScreen' || e.keyCode === 44) {
-          activateStudentPhotoShield();
-          try {
-            navigator.clipboard.writeText('Protected Batch Archive — Bangladesh Noubahini School and College Kaptai');
-          } catch(err) {}
-        }
-      });
-
-      window.addEventListener('keydown', (e) => {
-        const isWinSnip = (e.key === 'S' || e.key === 's') && e.shiftKey && (e.metaKey || e.ctrlKey);
-        const isMacSnip = (e.metaKey || e.ctrlKey) && e.shiftKey && ['3', '4', '5'].includes(e.key);
-        const isPrint = (e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P');
-
-        if (e.key === 'PrintScreen' || isWinSnip || isMacSnip || isPrint) {
-          activateStudentPhotoShield();
-        }
-      });
-
-      // 2. Mobile App Switcher & Background Blur (Android & Apple iOS)
-      // When iOS or Android users swipe up to view the app switcher or trigger screenshot tools:
-      window.addEventListener('blur', () => {
-        activateStudentPhotoShield();
-      });
-
-      window.addEventListener('focus', () => {
-        // Allow brief protection window before unblurring
-        if (shieldResetTimer) clearTimeout(shieldResetTimer);
-        shieldResetTimer = setTimeout(() => {
-          deactivateStudentPhotoShield();
-        }, 800);
-      });
-
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          activateStudentPhotoShield();
-        } else {
-          if (shieldResetTimer) clearTimeout(shieldResetTimer);
-          shieldResetTimer = setTimeout(() => {
-            deactivateStudentPhotoShield();
-          }, 800);
-        }
-      });
-
-      window.addEventListener('pagehide', () => {
-        activateStudentPhotoShield();
-      });
-
-      // 3. Prevent Touch Long-Press & Image Extraction on Mobile (iOS Safari & Android Chrome)
-      const preventTouchHold = (e) => {
-        if (e.target.closest('.student-photo-wrapper') || e.target.closest('#modal-photo-container') || e.target.closest('.student-touch-shield')) {
-          e.preventDefault();
-        }
-      };
-
-      document.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 2) {
-          // Detect 3-finger screenshot gestures (common on Android MIUI/ColorOS/OxygenOS)
-          activateStudentPhotoShield();
-        }
-      }, { passive: true });
-
-      document.addEventListener('contextmenu', (e) => {
-        if (e.target.closest('.student-photo-wrapper') || e.target.closest('#modal-photo-container')) {
-          e.preventDefault();
-          activateStudentPhotoShield();
-          return false;
-        }
-      });
-
-      document.addEventListener('dragstart', (e) => {
-        if (e.target.closest('.student-photo-wrapper') || e.target.closest('#modal-photo-container')) {
-          e.preventDefault();
-          return false;
-        }
-      });
-    }
-
-    // =========================================================================
     // INITIALIZATION & EVENT LISTENERS
     // =========================================================================
     document.addEventListener('DOMContentLoaded', () => {
@@ -2173,9 +2090,7 @@
       renderTimeline();
       renderCapsule();
       renderGallery();
-      // Only check and trigger popups once live data is retrieved from Supabase
       fetchSupabaseData();
-      setupScreenshotProtection();
 
       setTimeout(initConstellation3D, 200);
 
