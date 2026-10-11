@@ -137,6 +137,33 @@
       box-shadow: 0 4px 16px rgba(29, 111, 238, 0.6), 0 0 12px rgba(0, 229, 255, 0.4);
     }
 
+    /* CONTINUOUS SEAMLESS NOTICE TICKER ANIMATION (SLOWED DOWN FOR COMFORTABLE READING) */
+    @keyframes tickerLoop {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+
+    .notice-ticker-track {
+      display: flex;
+      width: max-content;
+      align-items: center;
+      animation: tickerLoop 75s linear infinite;
+      will-change: transform;
+    }
+
+    .notice-ticker-track:hover {
+      animation-play-state: paused;
+    }
+
+    .ticker-fade-mask {
+      mask-image: linear-gradient(to right, transparent, black 28px, black calc(100% - 28px), transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 28px, black calc(100% - 28px), transparent);
+    }
+
     /* Student Cards & Badges */
     .student-classic-card {
       background: rgba(8, 20, 42, 0.82);
@@ -411,7 +438,7 @@
           <span id="nav-notice-indicator" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping hidden"></span>
         </a>
         <a href="#about-us" class="pill-nav-item" data-target="about-us">About Us (Sec A)</a>
-        <a href="#students" class="pill-nav-item" data-target="students">Students </a>
+        <a href="#students" class="pill-nav-item" data-target="students">Students</a>
         <a href="#constellation" class="pill-nav-item" data-target="constellation">Network</a>
         <a href="#teachers" class="pill-nav-item" data-target="teachers">Faculty</a>
         <a href="#timeline" class="pill-nav-item" data-target="timeline">Journey</a>
@@ -423,7 +450,21 @@
     </div>
   </header>
 
-  <main class="relative z-10 pt-24 sm:pt-32">
+  <main class="relative z-10 pt-20 sm:pt-24">
+
+    <!-- ==================== CONTINUOUS SCROLLING NOTICE BAR (TOP UNDER NAVBAR) ==================== -->
+    <div id="top-notice-ticker-container" class="hidden relative max-w-6xl mx-auto px-3 sm:px-6 mb-4 sm:mb-6 pointer-events-auto">
+      <div class="rounded-2xl border border-cyan-400/25 bg-transparent backdrop-blur-sm shadow-[0_0_20px_rgba(0,229,255,0.08)] flex items-center overflow-hidden py-1.5 sm:py-2 px-2">
+
+        <!-- Continuous Seamless Marquee Track (Transparent & Full Width) -->
+        <div class="relative flex-1 overflow-hidden ticker-fade-mask">
+          <div id="notice-ticker-track" class="notice-ticker-track">
+            <!-- Rendered dynamically from NOTICES_DATA -->
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- HERO SECTION -->
     <section id="hero" class="relative min-h-[85vh] flex items-center justify-center text-center px-4 py-12 sm:py-16 overflow-hidden">
@@ -538,7 +579,7 @@
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold tracking-wider mb-2">
             ★ COHORT ARCHIVE ★
           </div>
-          <h2 class="text-3xl sm:text-5xl font-bold text-white">Students  (Section A)</h2>
+          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Student (Section A)</h2>
           <p class="text-sm sm:text-base text-slate-300 max-w-xl mt-2 italic">
             Currently fifty passionate minds united under our naval banner at BNS Shaheed Moazzam. Badges, titles, and appointments are dynamically updated from the official database.
           </p>
@@ -1035,7 +1076,7 @@
         name: "Md. Jahangir Alam Sir",
         designation: "Vice Principal",
         subject: "Academic Administration",
-        category: "Vice Principal",
+        category: "Deputy Principal",
         photo_url: "https://apiimage.astutebd.com/Uploads/bnsck/maincampus/Employees/Bangla/1025202131130PMVP.jpg",
         phone: "",
         email: "vp@bnsck.edu.bd",
@@ -1162,14 +1203,71 @@
     ];
 
     // =========================================================================
-    // NOTICE BOARD & 9-SECOND POPUP CONTROLLER
+    // NOTICE BOARD, TOP CONTINUOUS TICKER & 9-SECOND POPUP CONTROLLER
     // =========================================================================
     let popupSecondsLeft = 9;
     let popupIntervalTimer = null;
     let popupTriggerTimeout = null;
     let isPopupPaused = false;
 
+    // Continuous Scrolling Notice Ticker Renderer (TEXT ONLY - NO ATTACHMENTS, REDUCED SPEED)
+    function renderTopNoticeTicker() {
+      const tickerContainer = document.getElementById('top-notice-ticker-container');
+      const tickerTrack = document.getElementById('notice-ticker-track');
+      if (!tickerContainer || !tickerTrack) return;
+
+      // Filter text-only notices (STRICTLY exclude any notices that have an attachment / URL)
+      const textOnlyNotices = (NOTICES_DATA || []).filter(item => {
+        const title = (item.title || '').trim();
+        const desc = (item.description || '').trim();
+        const hasUrl = item.url && item.url.trim().length > 0;
+        
+        // Exclude attachment notices: only show notices without attachments that have valid text
+        return !hasUrl && (title.length > 0 || desc.length > 0);
+      });
+
+      // If no text-only notices exist, do not display the scrolling bar
+      if (textOnlyNotices.length === 0) {
+        tickerContainer.classList.add('hidden');
+        tickerTrack.innerHTML = '';
+        return;
+      }
+
+      // Generate HTML items strictly for text-only notices
+      const itemsHtml = textOnlyNotices.map((item) => {
+        const titleText = escapeHtml(item.title || 'Announcement');
+        const descText = item.description ? escapeHtml(item.description) : '';
+        const originalIdx = (NOTICES_DATA || []).findIndex(n => n.id === item.id);
+
+        return `
+          <div class="notice-ticker-item flex items-center px-6 sm:px-10 border-r border-cyan-400/20 shrink-0 group">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0 mr-2.5 group-hover:scale-125 transition-transform shadow-[0_0_8px_#00e5ff]"></span>
+            <button type="button" onclick="openNoticeModalByIdx(${originalIdx >= 0 ? originalIdx : 0})" class="text-xs sm:text-sm font-semibold text-slate-100 hover:text-cyan-300 transition-colors text-left flex items-center gap-2 max-w-xl truncate">
+              <span class="font-bold text-white group-hover:text-cyan-200">${titleText}</span>
+              ${descText ? `<span class="text-xs text-slate-400 font-normal hidden md:inline truncate max-w-sm">— ${descText}</span>` : ''}
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Create seamless continuous looping without gaps by repeating identical sequences for translate3d(-50%, 0, 0)
+      let repeatFactor = 2;
+      if (textOnlyNotices.length === 1) repeatFactor = 6;
+      else if (textOnlyNotices.length <= 3) repeatFactor = 4;
+
+      const singleSequence = itemsHtml.repeat(repeatFactor);
+      tickerTrack.innerHTML = singleSequence + singleSequence;
+
+      // Significantly reduced scrolling speed for smooth, calm, legible reading
+      const durationSec = Math.max(65, textOnlyNotices.length * 35);
+      tickerTrack.style.animationDuration = `${durationSec}s`;
+
+      tickerContainer.classList.remove('hidden');
+    }
+
     function renderNotices() {
+      renderTopNoticeTicker();
+
       const container = document.getElementById('notice-board-grid');
       const footerText = document.getElementById('footer-notice-text');
       if (!container) return;
@@ -1388,7 +1486,7 @@
     }
 
     // =========================================================================
-    // Students  ENGINE & GLOWING BADGES
+    // CLASS ROSTER ENGINE & GLOWING BADGES
     // =========================================================================
     function getBadgeStyle(role) {
       if (!role || !role.trim()) return null;
