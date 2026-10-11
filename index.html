@@ -579,7 +579,7 @@
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold tracking-wider mb-2">
             ★ COHORT ARCHIVE ★
           </div>
-          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Xll (Section A)</h2>
+          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class XII Students (Section A)</h2>
           <p class="text-sm sm:text-base text-slate-300 max-w-xl mt-2 italic">
             Currently fifty passionate minds united under our naval banner at BNS Shaheed Moazzam. Badges, titles, and appointments are dynamically updated from the official database.
           </p>
@@ -759,7 +759,7 @@
                 <span>Notice Board</span>
                 <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
               </a></li>
-              <li><a href="#about-us" class="hover:text-cyan-300">About Us (Sec A)</a></li>
+              <li><a href="#about-us" class="hover:text-cyan-300">About Class Xll (Sec A)</a></li>
               <li><a href="#constellation" class="hover:text-cyan-300">3D Stars Constellation</a></li>
               <li><a href="#teachers" class="hover:text-cyan-300">Faculty & Mentors</a></li>
               <li><a href="#gallery" class="hover:text-cyan-300">Photo Gallery</a></li>
@@ -1210,23 +1210,26 @@
     let popupTriggerTimeout = null;
     let isPopupPaused = false;
 
-    // Continuous Scrolling Notice Ticker Renderer (TEXT ONLY - NO ATTACHMENTS, REDUCED SPEED)
+    // Continuous Scrolling Notice Ticker Renderer (TEXT ONLY + CURRENT BULLETIN ONLY)
     function renderTopNoticeTicker() {
       const tickerContainer = document.getElementById('top-notice-ticker-container');
       const tickerTrack = document.getElementById('notice-ticker-track');
       if (!tickerContainer || !tickerTrack) return;
 
-      // Filter text-only notices (STRICTLY exclude any notices that have an attachment / URL)
+      // Filter notices:
+      // শর্ত ১: date ট্যাগে অবশ্যই "Current Bulletin" থাকতে হবে (case-insensitive)
+      // শর্ত ২: কোনো attachment / URL থাকা চলবে না (শুধুমাত্র টেক্সট নোটিশ)
       const textOnlyNotices = (NOTICES_DATA || []).filter(item => {
         const title = (item.title || '').trim();
         const desc = (item.description || '').trim();
         const hasUrl = item.url && item.url.trim().length > 0;
-        
-        // Exclude attachment notices: only show notices without attachments that have valid text
-        return !hasUrl && (title.length > 0 || desc.length > 0);
+        const dateTag = (item.date || '').trim().toLowerCase();
+        const isCurrentBulletin = dateTag === 'current bulletin';
+
+        return isCurrentBulletin && !hasUrl && (title.length > 0 || desc.length > 0);
       });
 
-      // If no text-only notices exist, do not display the scrolling bar
+      // If no notices match both conditions, do not display the scrolling bar
       if (textOnlyNotices.length === 0) {
         tickerContainer.classList.add('hidden');
         tickerTrack.innerHTML = '';
