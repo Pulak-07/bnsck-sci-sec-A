@@ -579,7 +579,7 @@
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold tracking-wider mb-2">
             ★ COHORT ARCHIVE ★
           </div>
-          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Student (Section A)</h2>
+          <h2 class="text-3xl sm:text-5xl font-bold text-white">Class Xll (Section A)</h2>
           <p class="text-sm sm:text-base text-slate-300 max-w-xl mt-2 italic">
             Currently fifty passionate minds united under our naval banner at BNS Shaheed Moazzam. Badges, titles, and appointments are dynamically updated from the official database.
           </p>
@@ -1233,18 +1233,23 @@
         return;
       }
 
-      // Generate HTML items strictly for text-only notices
+      // Calculate total text length to dynamically set comfortable reading speed
+      const totalChars = textOnlyNotices.reduce((acc, item) => {
+        return acc + (item.title || '').length + (item.description || '').length;
+      }, 0);
+
+      // Generate HTML items strictly for text-only notices with FULL complete text (no truncate, no hiding)
       const itemsHtml = textOnlyNotices.map((item) => {
         const titleText = escapeHtml(item.title || 'Announcement');
         const descText = item.description ? escapeHtml(item.description) : '';
         const originalIdx = (NOTICES_DATA || []).findIndex(n => n.id === item.id);
 
         return `
-          <div class="notice-ticker-item flex items-center px-6 sm:px-10 border-r border-cyan-400/20 shrink-0 group">
+          <div class="notice-ticker-item flex items-center px-6 sm:px-10 border-r border-cyan-400/20 shrink-0 group whitespace-nowrap">
             <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0 mr-2.5 group-hover:scale-125 transition-transform shadow-[0_0_8px_#00e5ff]"></span>
-            <button type="button" onclick="openNoticeModalByIdx(${originalIdx >= 0 ? originalIdx : 0})" class="text-xs sm:text-sm font-semibold text-slate-100 hover:text-cyan-300 transition-colors text-left flex items-center gap-2 max-w-xl truncate">
+            <button type="button" onclick="openNoticeModalByIdx(${originalIdx >= 0 ? originalIdx : 0})" class="text-xs sm:text-sm font-semibold text-slate-100 hover:text-cyan-300 transition-colors text-left inline-flex items-center gap-2 whitespace-nowrap cursor-pointer">
               <span class="font-bold text-white group-hover:text-cyan-200">${titleText}</span>
-              ${descText ? `<span class="text-xs text-slate-400 font-normal hidden md:inline truncate max-w-sm">— ${descText}</span>` : ''}
+              ${descText ? `<span class="text-xs sm:text-sm text-slate-300 font-normal">— ${descText}</span>` : ''}
             </button>
           </div>
         `;
@@ -1252,14 +1257,15 @@
 
       // Create seamless continuous looping without gaps by repeating identical sequences for translate3d(-50%, 0, 0)
       let repeatFactor = 2;
-      if (textOnlyNotices.length === 1) repeatFactor = 6;
-      else if (textOnlyNotices.length <= 3) repeatFactor = 4;
+      if (totalChars < 120) repeatFactor = 6;
+      else if (totalChars < 300) repeatFactor = 4;
+      else if (totalChars < 600) repeatFactor = 3;
 
       const singleSequence = itemsHtml.repeat(repeatFactor);
       tickerTrack.innerHTML = singleSequence + singleSequence;
 
-      // Significantly reduced scrolling speed for smooth, calm, legible reading
-      const durationSec = Math.max(65, textOnlyNotices.length * 35);
+      // Dynamically adjusted scroll duration based on full text volume for comfortable, calm reading
+      const durationSec = Math.max(65, Math.round(totalChars * 0.45));
       tickerTrack.style.animationDuration = `${durationSec}s`;
 
       tickerContainer.classList.remove('hidden');
